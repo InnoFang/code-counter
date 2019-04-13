@@ -88,7 +88,7 @@ def search(path, input_path, output_path=None):
         listDir(path, f)
     elif os.path.isfile(path):
         if os.path.exists(path):
-            listDir(path)
+            listDir(path, f)
         else:
             print('{} is not a validate path.'.format(path))
             exit(0)

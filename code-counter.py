@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import time
+import argparse
 from collections import defaultdict
 from config import config
 
@@ -58,7 +59,7 @@ def listDir(path):
                 print(e)
 
 
-def main(input_path, output_path):
+def search(path, input_path, output_path=None):
     global total_file_lines, total_code_lines, total_space_lines
 
     if not os.path.exists(input_path):
@@ -67,18 +68,25 @@ def main(input_path, output_path):
 
     f = open(output_path, 'w')
 
-    with open(input_path) as file:
-        print('\n\t{}'.format("SEARCHING"))
-        print("\t{}".format('=' * 20))
-        print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format("File Type", "Line of File", "Code of File",
-                                                                      "Space of File", "File Path"))
-        print("\t{}".format('-' * 100))
-        for line in file.readlines():
-            line = line.strip()
-            if os.path.exists(line):
-                listDir(line)
-            else:
-                print('{} is not a validate path.'.format(line))
+    print('\n\t{}'.format("SEARCHING"))
+    print("\t{}".format('=' * 20))
+    print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format("File Type", "Line of File", "Code of File",
+                                                                  "Space of File", "File Path"))
+    print("\t{}".format('-' * 100))
+
+    if not path:
+        with open(input_path) as file:
+            for l in file.readlines():
+                l_strip = l.strip()
+                if os.path.exists(l_strip):
+                    listDir(l_strip)
+                else:
+                    print('{} is not a validate path.'.format(l))
+    else:
+        if os.path.exists(path):
+            listDir(path)
+        else:
+            print('{} is not a validate path.'.format(path))
 
     f.write('\n\t{}\n'.format("RESULT"))
     f.write("\t{}\n".format('=' * 20))
@@ -109,25 +117,48 @@ def main(input_path, output_path):
     f.close()
 
 
+def args_parser():
+    # if len(sys.argv) < 3:
+    #     print('Please specify the input file and output file.')
+    #     print('Usage: python code-counter.py <input file> <output file>\n')
+    #     print("""
+    # TIPS: for the format of input file, it's content should be a list of file path (or directory path), just as follow:
+    #
+    #     F:/Github/Android
+    #     F:/Github/Java
+    #     F:/Github/Python/line-counter/code-counter.py
+    #     ...
+    #         """)
+    #     exit(1)
+    #
+    # return sys.argv[1], sys.argv[2]
+    parser = argparse.ArgumentParser(prog="code-counter", description="Let's get count your code")
+    parser.add_argument('-i', '--input', dest='input',
+                        help="the file contains a list of file path, "
+                             "which can make you search more than one file or directory")
+    parser.add_argument('-p', '--path', dest='path',
+                        help="specify a file or directory path you want to search")
+    parser.add_argument('-o', '--output', dest='output',
+                        help="specify a output path if you want to store the result")
+
+    args = parser.parse_args()
+
+    if not args.path and not args.input:
+        print('please specify a input: specify <--path> or <--input>')
+        print(parser.print_help())
+
+    if args.path and args.input:
+        print('specify one input is sufficient, the <--path> will be cover <--input>')
+
+    return args.path, args.input, args.output
+
+
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print('Please specify the input file and output file.')
-        print('Usage: python code-counter.py <input file> <output file>\n')
-        print("""
-TIPS: for the format of input file, it's content should be a list of file path (or directory path), just as follow:
 
-    F:/Github/Android
-    F:/Github/Java
-    F:/Github/Python/line-counter/code-counter.py
-    ...
-        """)
-        exit(1)
-
-    intput_path = sys.argv[1]
-    output_path = sys.argv[2]
+    path, input_path, output_path = args_parser()
 
     time_start = time.time()
-    main(intput_path, output_path)
+    search(path, input_path, output_path)
     time_end = time.time()
 
     with open(output_path) as f:

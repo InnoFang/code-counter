@@ -96,13 +96,13 @@ def main(input_path, output_path):
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         print('Please specify the input file and output file.')
-        print('Usage: python line-counter.py <input file> <output file>\n')
+        print('Usage: python code-counter.py <input file> <output file>\n')
         print("""
 TIPS: for the format of input file, it's content should be a list of file path (or directory path), just as follow:
 
     F:/Github/Android
     F:/Github/Java
-    F:/Github/Python/line-counter/line-counter.py
+    F:/Github/Python/line-counter/code-counter.py
     ...
         """)
         exit(1)

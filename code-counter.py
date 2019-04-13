@@ -126,20 +126,6 @@ def search(path, input_path, output_path=None):
 
 
 def args_parser():
-    # if len(sys.argv) < 3:
-    #     print('Please specify the input file and output file.')
-    #     print('Usage: python code-counter.py <input file> <output file>\n')
-    #     print("""
-    # TIPS: for the format of input file, it's content should be a list of file path (or directory path), just as follow:
-    #
-    #     F:/Github/Android
-    #     F:/Github/Java
-    #     F:/Github/Python/line-counter/code-counter.py
-    #     ...
-    #         """)
-    #     exit(1)
-    #
-    # return sys.argv[1], sys.argv[2]
     parser = argparse.ArgumentParser(prog="code-counter", description="Let's get count your code")
     parser.add_argument('-i', '--input', dest='input',
                         help="the file contains a list of file path, "
@@ -152,11 +138,12 @@ def args_parser():
     args = parser.parse_args()
 
     if not args.path and not args.input:
-        print('please specify a input: specify <--path> or <--input>')
+        print('\033[0;31;0m[ERROR] Please specify a input: specify <--path> or <--input>\033[0m')
         print(parser.print_help())
+        exit(0)
 
     if args.path and args.input:
-        print('specify one input is sufficient, the <--path> will be cover <--input>')
+        print('\033[0;33;0m[WARN] Specify one input is sufficient, the <--path> will be cover <--input>\033[0m')
 
     return args.path, args.input, args.output
 

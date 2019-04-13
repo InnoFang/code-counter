@@ -32,31 +32,38 @@ def countFileLines(filename):
     return line_of_file, line_of_code, line_of_space
 
 
-def listDir(path):
-    global total_file_lines, total_code_lines, total_space_lines, pattern, files_of_language
+def formatOutput(file):
+    global total_file_lines, total_code_lines, total_space_lines
+    file_path = os.path.join(path, file)
+    try:
+        res = re.match(pattern, file)
+        if res:
+            line_of_file, line_of_code, line_of_space = countFileLines(file_path)
+            file_type = os.path.splitext(file)[1][1:]
+            files_of_language[file_type] += 1
+            print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format(file_type, line_of_file, line_of_code,
+                                                                          line_of_space, file_path))
+            total_file_lines += line_of_file
+            total_code_lines += line_of_code
+            total_space_lines += line_of_space
+            lines_of_language[file_type] += line_of_code
+    except AttributeError as e:
+        print(e)
 
-    files = os.listdir(path)
-    for file in files:
-        file_path = os.path.join(path, file)
-        if os.path.isdir(file_path):
-            if os.path.split(file_path)[-1] in ignore:
-                continue
-            listDir(file_path)
-        elif os.path:
-            try:
-                res = re.match(pattern, file)
-                if res:
-                    line_of_file, line_of_code, line_of_space = countFileLines(file_path)
-                    file_type = os.path.splitext(file)[1][1:]
-                    files_of_language[file_type] += 1
-                    print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format(file_type, line_of_file, line_of_code,
-                                                                                  line_of_space, file_path))
-                    total_file_lines += line_of_file
-                    total_code_lines += line_of_code
-                    total_space_lines += line_of_space
-                    lines_of_language[file_type] += line_of_code
-            except AttributeError as e:
-                print(e)
+
+def listDir(path):
+    if os.path.isdir(path):
+        files = os.listdir(path)
+        for file in files:
+            file_path = os.path.join(path, file)
+            if os.path.isdir(file_path):
+                if os.path.split(file_path)[-1] in ignore:
+                    continue
+                listDir(file_path)
+            elif os.path:
+                formatOutput(file)
+    elif os.path.isfile(path):
+        formatOutput(path)
 
 
 def search(path, input_path, output_path=None):
@@ -87,6 +94,7 @@ def search(path, input_path, output_path=None):
             listDir(path)
         else:
             print('{} is not a validate path.'.format(path))
+            exit(0)
 
     f.write('\n\t{}\n'.format("RESULT"))
     f.write("\t{}\n".format('=' * 20))

@@ -68,10 +68,6 @@ def listDir(path, f):
 def search(path, input_path, output_path=None):
     global total_file_lines, total_code_lines, total_space_lines
 
-    if not os.path.exists(input_path):
-        print('{} is not exist, please create it and add some file path you want to count.'.format(input_path))
-        exit(0)
-
     f = open(output_path, 'w') if output_path else None
 
     print('\n\t{}'.format("SEARCHING"), file=f)
@@ -88,12 +84,17 @@ def search(path, input_path, output_path=None):
                     listDir(l_strip, f)
                 else:
                     print('{} is not a validate path.'.format(l))
-    else:
+    elif os.path.isdir(path):
+        listDir(path, f)
+    elif os.path.isfile(path):
         if os.path.exists(path):
             listDir(path)
         else:
             print('{} is not a validate path.'.format(path))
             exit(0)
+    else:
+        print('{} is not a validate path.'.format(path))
+        exit(0)
 
     print('\n\t{}'.format("RESULT"), file=f)
     print("\t{}".format('=' * 20), file=f)

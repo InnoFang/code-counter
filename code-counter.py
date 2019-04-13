@@ -1,6 +1,5 @@
 import os
 import re
-import sys
 import time
 import argparse
 from collections import defaultdict
@@ -22,27 +21,26 @@ def countFileLines(filename):
     line_of_code = 0
     line_of_space = 0
     with open(filename, 'rb') as handle:
-        for line in handle:
-            line = line.strip()
+        for l in handle:
+            l_strip = l.strip()
             line_of_file += 1
-            if not line:
+            if not l_strip:
                 line_of_space += 1
             else:
                 line_of_code += 1
     return line_of_file, line_of_code, line_of_space
 
 
-def formatOutput(file):
+def formatOutput(file_path, f):
     global total_file_lines, total_code_lines, total_space_lines
-    file_path = os.path.join(path, file)
     try:
-        res = re.match(pattern, file)
+        res = re.match(pattern, file_path)
         if res:
             line_of_file, line_of_code, line_of_space = countFileLines(file_path)
-            file_type = os.path.splitext(file)[1][1:]
+            file_type = os.path.splitext(file_path)[1][1:]
             files_of_language[file_type] += 1
             print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format(file_type, line_of_file, line_of_code,
-                                                                          line_of_space, file_path))
+                                                                          line_of_space, file_path), file=f)
             total_file_lines += line_of_file
             total_code_lines += line_of_code
             total_space_lines += line_of_space
@@ -51,7 +49,7 @@ def formatOutput(file):
         print(e)
 
 
-def listDir(path):
+def listDir(path, f):
     if os.path.isdir(path):
         files = os.listdir(path)
         for file in files:
@@ -59,11 +57,12 @@ def listDir(path):
             if os.path.isdir(file_path):
                 if os.path.split(file_path)[-1] in ignore:
                     continue
-                listDir(file_path)
+                listDir(file_path, f)
             elif os.path:
-                formatOutput(file)
+                file_path = os.path.join(path, file)
+                formatOutput(file_path, f)
     elif os.path.isfile(path):
-        formatOutput(path)
+        formatOutput(path, f)
 
 
 def search(path, input_path, output_path=None):
@@ -73,20 +72,20 @@ def search(path, input_path, output_path=None):
         print('{} is not exist, please create it and add some file path you want to count.'.format(input_path))
         exit(0)
 
-    f = open(output_path, 'w')
+    f = open(output_path, 'w') if output_path else None
 
-    print('\n\t{}'.format("SEARCHING"))
-    print("\t{}".format('=' * 20))
+    print('\n\t{}'.format("SEARCHING"), file=f)
+    print("\t{}".format('=' * 20), file=f)
     print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format("File Type", "Line of File", "Code of File",
-                                                                  "Space of File", "File Path"))
-    print("\t{}".format('-' * 100))
+                                                                  "Space of File", "File Path"), file=f)
+    print("\t{}".format('-' * 100), file=f)
 
     if not path:
         with open(input_path) as file:
             for l in file.readlines():
                 l_strip = l.strip()
                 if os.path.exists(l_strip):
-                    listDir(l_strip)
+                    listDir(l_strip, f)
                 else:
                     print('{} is not a validate path.'.format(l))
     else:
@@ -96,31 +95,30 @@ def search(path, input_path, output_path=None):
             print('{} is not a validate path.'.format(path))
             exit(0)
 
-    f.write('\n\t{}\n'.format("RESULT"))
-    f.write("\t{}\n".format('=' * 20))
-    f.write("\t{:^25}|{:^15}|{:^15}|{:^15}|{:^15}\n"
-            .format("Item", "File Count", 'File Ratio', 'Code Count', 'Code Ratio'))
-    f.write("\t{}\n".format('-' * 90))
-    f.write("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}\n"
-            .format("Total line of files", '----', '----', total_file_lines, '100.00%'))
-    f.write("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}\n"
-            .format("Total line of codes", '----', '----',
-                    total_code_lines, "%.2f%%" % (total_code_lines / total_file_lines * 100)))
-    f.write("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}\n"
-            .format("Total line of space", '----', '----',
-                    total_space_lines, "%.2f%%" % (total_space_lines / total_file_lines * 100)))
+    print('\n\t{}'.format("RESULT"), file=f)
+    print("\t{}".format('=' * 20), file=f)
+    print("\t{:^25}|{:^15}|{:^15}|{:^15}|{:^15}"
+          .format("Item", "File Count", 'File Ratio', 'Code Count', 'Code Ratio'), file=f)
+    print("\t{}".format('-' * 90), file=f)
+    print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}"
+          .format("Total line of files", '----', '----', total_file_lines, '100.00%'), file=f)
+    print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}"
+          .format("Total line of codes", '----', '----',
+                  total_code_lines, "%.2f%%" % (total_code_lines / total_file_lines * 100)), file=f)
+    print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}"
+          .format("Total line of space", '----', '----',
+                  total_space_lines, "%.2f%%" % (total_space_lines / total_file_lines * 100)), file=f)
 
     total_files = 0
 
-    # py|java|c|cpp|js|pde|kt|dart
     for _, count in files_of_language.items():
         total_files += count
 
     for tp, count in files_of_language.items():
         code_line = lines_of_language[tp]
-        f.write("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}\n".format(
+        print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}".format(
             "For '.%s' files" % tp, count, '%.2f%%' % (count / total_files * 100),
-            code_line, '%.2f%%' % (code_line / total_code_lines * 100)))
+            code_line, '%.2f%%' % (code_line / total_code_lines * 100)), file=f)
 
     f.close()
 
@@ -156,8 +154,8 @@ if __name__ == '__main__':
     search(path, input_path, output_path)
     time_end = time.time()
 
-    with open(output_path) as f:
-        for line in f:
+    with open(output_path) as file:
+        for line in file:
             print(line, end='')
 
     print('\n\tTotally cost {}s.'.format(time_end - time_start))

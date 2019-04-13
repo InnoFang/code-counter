@@ -2,7 +2,17 @@
 
 Do you wander how many code you have been written? Come on, let's get count it.
 
-## Usage
+## How to run
+
+```shell
+$ git clone https://github.com/innofang/code-counter.git
+$ cd code-counter/
+$ python code-counter.py -p code-counter.py
+```
+
+Refer to [Usage](#usage) and [Example](#example) below for more usage
+
+<h2 id="usage">Usage</h2>
 
 ```shell 
 usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT]
@@ -41,7 +51,7 @@ config = {
 and there are some code generate by the project automatically which is not belong to you, 
 so ignore them is fair
 
-## Example
+<h2 id="example">Example</h2>
 
 #### Specify a file or directory path directly
 
@@ -97,3 +107,21 @@ $ python code-counter.py -i F:/Github/playground/Python/line-counter -o output.t
 ```
 
 the output path is optional.
+
+## [License](./LICENSE)
+
+    Code Counter: Count your code lines
+    Copyright (C) 2019  InnoFang
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.

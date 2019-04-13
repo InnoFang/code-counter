@@ -8,10 +8,12 @@ from config import config
 total_file_lines = 0
 total_code_lines = 0
 total_space_lines = 0
+files_of_language = defaultdict(int)
+lines_of_language = {suffix: 0 for suffix in config['suffix']}
+
 ignore = config['ignore']
 regex = '.*\.({})$'.format('|'.join(config['suffix']))
 pattern = re.compile(regex)
-file_dict = defaultdict(int)
 
 
 def countFileLines(filename):
@@ -30,7 +32,7 @@ def countFileLines(filename):
 
 
 def listDir(path):
-    global total_file_lines, total_code_lines, total_space_lines, pattern, file_dict
+    global total_file_lines, total_code_lines, total_space_lines, pattern, files_of_language
 
     files = os.listdir(path)
     for file in files:
@@ -45,12 +47,13 @@ def listDir(path):
                 if res:
                     line_of_file, line_of_code, line_of_space = countFileLines(file_path)
                     file_type = os.path.splitext(file)[1][1:]
-                    file_dict[file_type] += 1
+                    files_of_language[file_type] += 1
                     print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format(file_type, line_of_file, line_of_code,
                                                                                   line_of_space, file_path))
                     total_file_lines += line_of_file
                     total_code_lines += line_of_code
                     total_space_lines += line_of_space
+                    lines_of_language[file_type] += line_of_code
             except AttributeError as e:
                 print(e)
 
@@ -79,23 +82,29 @@ def main(input_path, output_path):
 
     f.write('\n\t{}\n'.format("RESULT"))
     f.write("\t{}\n".format('=' * 20))
-    f.write("\t{:^25}|{:^10}|{:^10}\n".format("Item", "Count", 'Ratio'))
-    f.write("\t{}\n".format('-' * 45))
-    f.write("\t{:<25}|{:^10}|{:^10}\n".format("Total line of files", total_file_lines, '100%'))
-    f.write("\t{:<25}|{:^10}|{:^10}\n".format("Total line of codes", total_code_lines,
-                                              "%.2f%%" % (total_code_lines / total_file_lines * 100)))
-    f.write("\t{:<25}|{:^10}|{:^10}\n".format("Total line of space", total_space_lines,
-                                              "%.2f%%" % (total_space_lines / total_file_lines * 100)))
+    f.write("\t{:^25}|{:^15}|{:^15}|{:^15}|{:^15}\n"
+            .format("Item", "File Count", 'File Ratio', 'Code Count', 'Code Ratio'))
+    f.write("\t{}\n".format('-' * 90))
+    f.write("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}\n"
+            .format("Total line of files", '----', '----', total_file_lines, '100.00%'))
+    f.write("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}\n"
+            .format("Total line of codes", '----', '----',
+                    total_code_lines, "%.2f%%" % (total_code_lines / total_file_lines * 100)))
+    f.write("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}\n"
+            .format("Total line of space", '----', '----',
+                    total_space_lines, "%.2f%%" % (total_space_lines / total_file_lines * 100)))
 
     total_files = 0
 
-    # py|java||c|cpp|js|pde|kt|dart
-    for _, count in file_dict.items():
+    # py|java|c|cpp|js|pde|kt|dart
+    for _, count in files_of_language.items():
         total_files += count
 
-    for tp, count in file_dict.items():
-        f.write(
-            "\t{:<25}|{:^10}|{:^10}\n".format("For '.%s' files" % (tp), count, '%.2f%%' % (count / total_files * 100)))
+    for tp, count in files_of_language.items():
+        code_line = lines_of_language[tp]
+        f.write("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}\n".format(
+            "For '.%s' files" % tp, count, '%.2f%%' % (count / total_files * 100),
+            code_line, '%.2f%%' % (code_line / total_code_lines * 100)))
 
     f.close()
 

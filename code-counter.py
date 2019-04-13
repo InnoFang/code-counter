@@ -120,7 +120,8 @@ def search(path, input_path, output_path=None):
             "For '.%s' files" % tp, count, '%.2f%%' % (count / total_files * 100),
             code_line, '%.2f%%' % (code_line / total_code_lines * 100)), file=f)
 
-    f.close()
+    if f:
+        f.close()
 
 
 def args_parser():
@@ -153,9 +154,5 @@ if __name__ == '__main__':
     time_start = time.time()
     search(path, input_path, output_path)
     time_end = time.time()
-
-    with open(output_path) as file:
-        for line in file:
-            print(line, end='')
 
     print('\n\tTotally cost {}s.'.format(time_end - time_start))

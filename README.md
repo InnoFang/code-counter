@@ -53,7 +53,7 @@ so ignore them is fair
 
 <h2 id="example">Example</h2>
 
-#### Specify a file or directory path directly
+### Specify a file or directory path directly
 
 
 ```shell
@@ -78,9 +78,9 @@ $ python code-counter.py -p F:/Github/playground/Python/line-counter
 
 ```
 
-#### Use a file with a list of files or directories path as input
+### Use a file with a list of files or directories path as input
 
-Firstly, create a file named `file.txt` or whatever you like,
+Firstly, create a file named `files.txt` or whatever you like in the current directory,
 which contain a list of files or directories path, just as follow:
 
 ```
@@ -91,19 +91,19 @@ F:\Github\code-counter\
 then use it as input:
 
 ```shell
-$ python code-counter.py -i F:/Github/playground/Python/line-counter
+$ python code-counter.py -i files.txt
 ```
 
 Use a path or a file as input is your free, but choose one of them is enough.
 If you choose both of them at the same time, the `path` will be cover the `file` 
 
-#### Also, you can specify a output path
+### Also, you can specify a output path
 
 Just like this
 
 ```shell
 $ python code-counter.py -p F:/Github/playground/Python/line-counter -o result.txt
-$ python code-counter.py -i F:/Github/playground/Python/line-counter -o output.txt
+$ python code-counter.py -i files.txt -o output.txt
 ```
 
 the output path is optional.

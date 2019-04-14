@@ -39,7 +39,7 @@ def formatOutput(file_path, f):
             line_of_file, line_of_code, line_of_space = countFileLines(file_path)
             file_type = os.path.splitext(file_path)[1][1:]
             files_of_language[file_type] += 1
-            print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format(file_type, line_of_file, line_of_code,
+            print('\t{:>10}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format(file_type, line_of_file, line_of_code,
                                                                           line_of_space, file_path), file=f)
             total_file_lines += line_of_file
             total_code_lines += line_of_code
@@ -72,7 +72,7 @@ def search(path, input_path, output_path=None):
 
     print('\n\t{}'.format("SEARCHING"), file=f)
     print("\t{}".format('=' * 20), file=f)
-    print('{:>13}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format("File Type", "Line of File", "Code of File",
+    print('\t{:>10}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format("File Type", "Line of File", "Code of File",
                                                                   "Space of File", "File Path"), file=f)
     print("\t{}".format('-' * 100), file=f)
 

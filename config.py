@@ -5,5 +5,5 @@ config = {
 
     # Ignore some directories or files which are not write by yourself
     # but generate by the projects, just add what you want to add.
-    'ignore': ['out', 'venv', '.git', '.idea', 'build', 'target'],
+    'ignore': ['out', 'venv', '.git', '.idea', 'build', 'target', 'node_modules'],
 }

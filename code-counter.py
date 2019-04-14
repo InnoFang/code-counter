@@ -7,7 +7,7 @@ from config import config
 
 total_file_lines = 0
 total_code_lines = 0
-total_space_lines = 0
+total_blank_lines = 0
 files_of_language = defaultdict(int)
 lines_of_language = {suffix: 0 for suffix in config['suffix']}
 
@@ -19,31 +19,31 @@ pattern = re.compile(regex)
 def countFileLines(filename):
     line_of_file = 0
     line_of_code = 0
-    line_of_space = 0
+    line_of_blank = 0
     with open(filename, 'rb') as handle:
         for l in handle:
             l_strip = l.strip()
             line_of_file += 1
             if not l_strip:
-                line_of_space += 1
+                line_of_blank += 1
             else:
                 line_of_code += 1
-    return line_of_file, line_of_code, line_of_space
+    return line_of_file, line_of_code, line_of_blank
 
 
 def formatOutput(file_path, f):
-    global total_file_lines, total_code_lines, total_space_lines
+    global total_file_lines, total_code_lines, total_blank_lines
     try:
         res = re.match(pattern, file_path)
         if res:
-            line_of_file, line_of_code, line_of_space = countFileLines(file_path)
+            line_of_file, line_of_code, line_of_blank = countFileLines(file_path)
             file_type = os.path.splitext(file_path)[1][1:]
             files_of_language[file_type] += 1
             print('\t{:>10}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format(file_type, line_of_file, line_of_code,
-                                                                          line_of_space, file_path), file=f)
+                                                                          line_of_blank, file_path), file=f)
             total_file_lines += line_of_file
             total_code_lines += line_of_code
-            total_space_lines += line_of_space
+            total_blank_lines += line_of_blank
             lines_of_language[file_type] += line_of_code
     except AttributeError as e:
         print(e)
@@ -66,14 +66,14 @@ def listDir(path, f):
 
 
 def search(path, input_path, output_path=None):
-    global total_file_lines, total_code_lines, total_space_lines
+    global total_file_lines, total_code_lines, total_blank_lines
 
     f = open(output_path, 'w') if output_path else None
 
     print('\n\t{}'.format("SEARCHING"), file=f)
     print("\t{}".format('=' * 20), file=f)
     print('\t{:>10}  |  {:>13}  |  {:>13}  |  {:>13}  |  {}'.format("File Type", "Line of File", "Code of File",
-                                                                  "Space of File", "File Path"), file=f)
+                                                                  "Blank of File", "File Path"), file=f)
     print("\t{}".format('-' * 100), file=f)
 
     if not path:
@@ -107,8 +107,8 @@ def search(path, input_path, output_path=None):
           .format("Total line of codes", '----', '----',
                   total_code_lines, "%.2f%%" % (total_code_lines / total_file_lines * 100)), file=f)
     print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}"
-          .format("Total line of space", '----', '----',
-                  total_space_lines, "%.2f%%" % (total_space_lines / total_file_lines * 100)), file=f)
+          .format("Total line of blank", '----', '----',
+                  total_blank_lines, "%.2f%%" % (total_blank_lines / total_file_lines * 100)), file=f)
 
     total_files = 0
 
@@ -138,12 +138,13 @@ def args_parser():
     args = parser.parse_args()
 
     if not args.path and not args.input:
-        print('\033[0;31;0m[ERROR] Please specify a input: specify <--path> or <--input>\033[0m')
+        print('\033[0;31;0m[ERROR] Please specify a input: specify [-p PATH] or [-i INPUT]\033[0m')
         print(parser.print_help())
         exit(0)
 
     if args.path and args.input:
-        print('\033[0;33;0m[WARN] Specify one input is sufficient, the <--path> will be cover <--input>\033[0m')
+        print('\033[0;33;0m[WARN] Specify one input is enough,'
+              ' the option `[-p PATH]` will be cover the option `[-i INPUT]`\033[0m')
 
     return args.path, args.input, args.output
 

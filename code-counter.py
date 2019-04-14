@@ -102,7 +102,7 @@ def main(p, i, o=None):
     print("\t{}".format('=' * 20), file=f)
     print('\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'
           .format("File Type", "Lines", "Code", "Blank", "Comment", "File Path"), file=f)
-    print("\t{}".format('-' * 100), file=f)
+    print("\t{}".format('-' * 90), file=f)
 
     if not p:
         with open(i) as file:
@@ -144,14 +144,14 @@ def main(p, i, o=None):
     for _, cnt in files_of_language.items():
         total_files += cnt
 
-    print("\t{:>20}  |  {:>11}  |  {:>11}  |  {:>11}  |  {:>11}"
-          .format("Item", "File Number", 'File Ratio', 'Code Number', 'Code Ratio'), file=f)
-    print("\t{}".format('-' * 90), file=f)
+    print("\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}"
+          .format("Type", "Files", 'Ratio', 'Codes', 'Ratio'), file=f)
+    print("\t{}".format('-' * 65), file=f)
 
     for tp, cnt in files_of_language.items():
         code_line = lines_of_language[tp]
-        print("\t{:>20}  |  {:>11}  |  {:>11}  |  {:>11}  |  {:>11}".format(
-            "For '.%s' files" % tp, cnt, '%.2f%%' % (cnt / total_files * 100),
+        print("\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}".format(
+            tp, cnt, '%.2f%%' % (cnt / total_files * 100),
             code_line, '%.2f%%' % (code_line / total_code_lines * 100)), file=f)
 
     if f:

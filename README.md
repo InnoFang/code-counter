@@ -105,14 +105,14 @@ $ python code-counter.py -p .
 
 Firstly, create a file named `list.txt` or whatever you want to named in the current directory, which contain various file path or directory path, just as follow:
 
-> **TIPS** If you don't want to create a file in the current directory, you can create it any where and use a file path of it as input.
-
 ```
 F:\Github\playground\Python
 F:\Github\playground\Java
 ```
 
-then use it as input:
+> **TIPS** If you don't want to create a file in the current directory, you can create it any where and use a file path of it as input.
+
+then use `list.txt` as input:
 
 ```shell
 $ python code-counter.py -i list.txt

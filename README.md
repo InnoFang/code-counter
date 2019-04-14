@@ -104,7 +104,7 @@ $ python code-counter.py -p .
 
 ```   
 
-### Use a file with a list of files or directories path as input
+### Use a file that contain a list of files or directories path as input
 
 Firstly, create a file named `files.txt` or whatever you like in the current directory,
 which contain a list of files or directories path, just as follow:

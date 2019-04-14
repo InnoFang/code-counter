@@ -43,11 +43,11 @@ config = {
 
     # Ignore some directories or files which are not write by yourself
     # but generate by the projects, just add what you want to add.
-    'ignore': ['out', 'venv', '.git', '.idea', 'build', 'target'],
+    'ignore': ['out', 'venv', '.git', '.idea', 'build', 'target', 'node_modules'],
 }
 ```
 
-**TIPS** `ignore` is important, the reason is that if you want to count how many code you have written 
+**NOTE** `ignore` is important, the reason is that if you want to count how many code you have written 
 and there are some code generate by the project automatically which is not belong to you, 
 so ignore them is fair
 
@@ -62,9 +62,9 @@ $ python code-counter.py -p code-counter.py
 
         SEARCHING
         ====================
-    File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
+         File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
         ----------------------------------------------------------------------------------------------------
-           py  |            159  |            130  |             29  |  code-counter.py
+                py  |            159  |            130  |             29  |  code-counter.py
 
         RESULT
         ====================
@@ -75,7 +75,7 @@ $ python code-counter.py -p code-counter.py
         Total line of space      |     ----      |     ----      |      29       |    18.24%
         For '.py' files          |       1       |    100.00%    |      130      |    100.00%
 
-        Totally cost 0.0029420852661132812s.
+        Totally cost 0.0010030269622802734s.
 
 ```
 
@@ -86,10 +86,10 @@ $ python code-counter.py -p .
 
         SEARCHING
         ====================
-    File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
+         File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
         ----------------------------------------------------------------------------------------------------
-           py  |            159  |            130  |             29  |  .\code-counter.py
-           py  |              9  |              8  |              1  |  .\config.py
+                py  |            159  |            130  |             29  |  .\code-counter.py
+                py  |              9  |              8  |              1  |  .\config.py
 
         RESULT
         ====================
@@ -100,39 +100,72 @@ $ python code-counter.py -p .
         Total line of space      |     ----      |     ----      |      30       |    17.86%
         For '.py' files          |       2       |    100.00%    |      138      |    100.00%
 
-        Totally cost 0.004011392593383789s.
+        Totally cost 0.0020160675048828125s.
 
-```   
+```
 
 ### Use a file that contain a list of files or directories path as input
 
-Firstly, create a file named `files.txt` or whatever you like in the current directory,
-which contain a list of files or directories path, just as follow:
+Firstly, create a file named `list.txt` or whatever you want to named in the current directory,which contain various file path or directories path, just as follow:
 
 ```
-F:\Android\
-F:\Github\code-counter\
-...
+F:\Github\playground\Python
+F:\Github\playground\Java
 ```
+
 then use it as input:
 
 ```shell
-$ python code-counter.py -i files.txt
+$ python code-counter.py -i list.txt
+
+        SEARCHING
+        ====================
+         File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
+        ----------------------------------------------------------------------------------------------------
+                py  |            126  |             95  |             31  |  F:\Github\playground\Python\basic\BasicDataType.py
+                py  |             21  |             18  |              3  |  F:\Github\playground\Python\basic\closure_test.py
+                py  |             15  |             11  |              4  |  F:\Github\playground\Python\basic\count_words_num.py
+                py  |             17  |             13  |              4  |  F:\Github\playground\Python\basic\CUDA_test.py
+               ...               ...               ...               ...     ...
+               ...               ...               ...               ...     ...
+               ...               ...               ...               ...     ...
+              java  |             43  |             34  |              9  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\jdbc\StudentJdbcTemplateTest.java
+              java  |             20  |             16  |              4  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\loosely_coupled\OutputHelperTest.java
+              java  |             22  |             17  |              5  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\post_processor\MessageTest.java
+              java  |             21  |             17  |              4  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\spring_auto\service\CustomerServiceTest.java
+
+        RESULT
+        ====================
+                  Item           |  File Count   |  File Ratio   |  Code Count   |  Code Ratio
+        ------------------------------------------------------------------------------------------
+        Total line of files      |     ----      |     ----      |     13460     |    100.00%
+        Total line of codes      |     ----      |     ----      |     10820     |    80.39%
+        Total line of space      |     ----      |     ----      |     2640      |    19.61%
+        For '.c' files           |       1       |     0.30%     |       0       |     0.00%
+        For '.java' files        |      162      |    49.39%     |     4337      |    40.08%
+        For '.js' files          |       6       |     1.83%     |      214      |     1.98%
+        For '.py' files          |      158      |    48.17%     |     6269      |    57.94%
+        For '.cpp' files         |       1       |     0.30%     |       0       |     0.00%
+
+        Totally cost 0.1353609561920166s.
+
 ```
 
-Use a path or a file as input is your free, but choose one of them is enough.
-If you choose both of them at the same time, the `path` will be cover the `file` 
+> **TIPS** Some output is ommited for dispaly
 
-### Also, you can specify a output path
+Use a path or a file as input is your free, but choose one of them is enough.
+If you choose both of them at the same time, the `[-p PATH]` will be cover the `[-i INPUT]`.
+
+### Also, you can specify an output path
 
 Just like this
 
 ```shell
 $ python code-counter.py -p code-counter -o result.txt
-$ python code-counter.py -i files.txt -o output.txt
+$ python code-counter.py -i list.txt -o output.txt
 ```
 
-the output path is optional.
+The output path is optional, if you have specify it, the output information would not display on the console.
 
 ## [License](./LICENSE)
 

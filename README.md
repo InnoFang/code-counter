@@ -55,28 +55,54 @@ so ignore them is fair
 
 ### Specify a file or directory path directly
 
+specify a file path
 
 ```shell
-$ python code-counter.py -p F:/Github/playground/Python/line-counter
+$ python code-counter.py -p code-counter.py
 
-	SEARCHING
-	====================
+        SEARCHING
+        ====================
     File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
-	----------------------------------------------------------------------------------------------------
-           py  |            134  |            110  |             24  |  F:/Github/playground/Python/line-counter\line-counter.py
+        ----------------------------------------------------------------------------------------------------
+           py  |            159  |            130  |             29  |  code-counter.py
 
-	RESULT
-	====================
-	          Item           |  File Count   |  File Ratio   |  Code Count   |  Code Ratio   
-	------------------------------------------------------------------------------------------
-	Total line of files      |     ----      |     ----      |      134      |    100.00%    
-	Total line of codes      |     ----      |     ----      |      110      |    82.09%     
-	Total line of space      |     ----      |     ----      |      24       |    17.91%     
-	For '.py' files          |       1       |    100.00%    |      110      |    100.00%    
+        RESULT
+        ====================
+                  Item           |  File Count   |  File Ratio   |  Code Count   |  Code Ratio
+        ------------------------------------------------------------------------------------------
+        Total line of files      |     ----      |     ----      |      159      |    100.00%
+        Total line of codes      |     ----      |     ----      |      130      |    81.76%
+        Total line of space      |     ----      |     ----      |      29       |    18.24%
+        For '.py' files          |       1       |    100.00%    |      130      |    100.00%
 
-	Totally cost 0.0005002021789550781s.
+        Totally cost 0.0029420852661132812s.
 
 ```
+
+specify a directory path
+
+```shell
+$ python code-counter.py -p .
+
+        SEARCHING
+        ====================
+    File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
+        ----------------------------------------------------------------------------------------------------
+           py  |            159  |            130  |             29  |  .\code-counter.py
+           py  |              9  |              8  |              1  |  .\config.py
+
+        RESULT
+        ====================
+                  Item           |  File Count   |  File Ratio   |  Code Count   |  Code Ratio
+        ------------------------------------------------------------------------------------------
+        Total line of files      |     ----      |     ----      |      168      |    100.00%
+        Total line of codes      |     ----      |     ----      |      138      |    82.14%
+        Total line of space      |     ----      |     ----      |      30       |    17.86%
+        For '.py' files          |       2       |    100.00%    |      138      |    100.00%
+
+        Totally cost 0.004011392593383789s.
+
+```   
 
 ### Use a file with a list of files or directories path as input
 
@@ -102,7 +128,7 @@ If you choose both of them at the same time, the `path` will be cover the `file`
 Just like this
 
 ```shell
-$ python code-counter.py -p F:/Github/playground/Python/line-counter -o result.txt
+$ python code-counter.py -p code-counter -o result.txt
 $ python code-counter.py -i files.txt -o output.txt
 ```
 

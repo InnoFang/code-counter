@@ -40,12 +40,19 @@ Please see [config.py](config.py)
 config = {
     # Which suffix code file do you want to count?
     # more than as follow, also html, css, clj, lisp, etc.
-    'suffix': ['py', 'java', 'c', 'cpp', 'js', 'pde', 'kt', 'dart'],
+    'suffix': ('py', 'java', 'c', 'cpp', 'js', 'pde', 'kt', 'dart'),
 
-    # Ignore some directories or files which are not write by yourself
+    # the comment symbol, which can be judged whether the current line is a comment.
+    # However, if the current lines are between the comment symbol
+    # and there is not any comment symbol at the beginning of it, it will be misjudged.
+    # If the following comment symbol miss any other you want to add, you can do it by yourself
+    'comment': ('#', '//', '/*', '/**', '*', ':', ';'),
+
+    # Ignore some directories or files which are not write by yourself,
     # but generate by the projects, just add what you want to add.
-    'ignore': ['out', 'venv', '.git', '.idea', 'build', 'target', 'node_modules'],
+    'ignore': ('out', 'venv', '.git', '.idea', 'build', 'target', 'node_modules'),
 }
+
 ```
 
 > **NOTE** `ignore` is important, the reason is that if you want to count how many code you have written and there are some code generate by the project automatically which is not belong to you, so ignore them is fair.
@@ -59,20 +66,22 @@ $ python code-counter.py -p code-counter.py
 
         SEARCHING
         ====================
-         File Type  |   Line of File  |   Code of File  |  Blank of File  |  File Path
-        ----------------------------------------------------------------------------------------------------
-                py  |            159  |            130  |             29  |  code-counter.py
+         File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
+        ------------------------------------------------------------------------------------------
+                py  |       192  |       149  |        30  |        13  |  code-counter.py
 
         RESULT
         ====================
-                  Item           |  File Count   |  File Ratio   |  Code Count   |  Code Ratio
-        ------------------------------------------------------------------------------------------
-        Total line of files      |     ----      |     ----      |      159      |    100.00%
-        Total line of codes      |     ----      |     ----      |      130      |    81.76%
-        Total line of blank      |     ----      |     ----      |      29       |    18.24%
-        For '.py' files          |       1       |    100.00%    |      130      |    100.00%
+        Total file lines    :     192 (100.00%)
+        Total code lines    :     149 ( 77.60%)
+        Total blank lines   :      30 ( 15.62%)
+        Total comment lines :      13 (  6.77%)
 
-        Totally cost 0.0010030269622802734s.
+              Type  |     Files  |     Ratio  |     Codes  |     Ratio
+        -----------------------------------------------------------------
+                py  |         1  |   100.00%  |       149  |   100.00%
+
+        Totally cost 0.00102996826171875s.
 
 ```
 
@@ -83,21 +92,23 @@ $ python code-counter.py -p .
 
         SEARCHING
         ====================
-         File Type  |   Line of File  |   Code of File  |  Blank of File  |  File Path
-        ----------------------------------------------------------------------------------------------------
-                py  |            159  |            130  |             29  |  .\code-counter.py
-                py  |              9  |              8  |              1  |  .\config.py
+         File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
+        ------------------------------------------------------------------------------------------
+                py  |       192  |       149  |        30  |        13  |  .\code-counter.py
+                py  |        15  |         5  |         2  |         8  |  .\config.py
 
         RESULT
         ====================
-                  Item           |  File Count   |  File Ratio   |  Code Count   |  Code Ratio
-        ------------------------------------------------------------------------------------------
-        Total line of files      |     ----      |     ----      |      168      |    100.00%
-        Total line of codes      |     ----      |     ----      |      138      |    82.14%
-        Total line of blank      |     ----      |     ----      |      30       |    17.86%
-        For '.py' files          |       2       |    100.00%    |      138      |    100.00%
+        Total file lines    :     207 (100.00%)
+        Total code lines    :     154 ( 74.40%)
+        Total blank lines   :      32 ( 15.46%)
+        Total comment lines :      21 ( 10.14%)
 
-        Totally cost 0.0020160675048828125s.
+              Type  |     Files  |     Ratio  |     Codes  |     Ratio
+        -----------------------------------------------------------------
+                py  |         2  |   100.00%  |       154  |   100.00%
+
+        Totally cost 0.003002166748046875s.
 
 ```
 
@@ -119,34 +130,34 @@ $ python code-counter.py -i list.txt
 
         SEARCHING
         ====================
-         File Type  |   Line of File  |   Code of File  |  Blank of File  |  File Path
-        ----------------------------------------------------------------------------------------------------
-                py  |            126  |             95  |             31  |  F:\Github\playground\Python\basic\BasicDataType.py
-                py  |             21  |             18  |              3  |  F:\Github\playground\Python\basic\closure_test.py
-                py  |             15  |             11  |              4  |  F:\Github\playground\Python\basic\count_words_num.py
-                py  |             17  |             13  |              4  |  F:\Github\playground\Python\basic\CUDA_test.py
-               ...               ...               ...               ...     ...
-               ...               ...               ...               ...     ...
-               ...               ...               ...               ...     ...
-              java  |             43  |             34  |              9  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\jdbc\StudentJdbcTemplateTest.java
-              java  |             20  |             16  |              4  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\loosely_coupled\OutputHelperTest.java
-              java  |             22  |             17  |              5  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\post_processor\MessageTest.java
-              java  |             21  |             17  |              4  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\spring_auto\service\CustomerServiceTest.java
+         File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
+        ------------------------------------------------------------------------------------------
+                py  |       126  |        73  |        31  |        22  |  F:\Github\playground\Python\basic\BasicDataType.py
+                py  |        21  |        17  |         3  |         1  |  F:\Github\playground\Python\basic\closure_test.py
+                py  |        15  |        10  |         4  |         1  |  F:\Github\playground\Python\basic\count_words_num.py
+                ...          ...          ...         ...           ...    ...
+                ...          ...          ...         ...           ...    ...
+                ...          ...          ...         ...           ...    ...
+              java  |        20  |        13  |         4  |         3  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\loosely_coupled\OutputHelperTest.java
+              java  |        22  |        14  |         5  |         3  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\post_processor\MessageTest.java
+              java  |        21  |        14  |         4  |         3  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\spring_auto\service\CustomerServiceTest.java
 
         RESULT
         ====================
-                  Item           |  File Count   |  File Ratio   |  Code Count   |  Code Ratio
-        ------------------------------------------------------------------------------------------
-        Total line of files      |     ----      |     ----      |     13460     |    100.00%
-        Total line of codes      |     ----      |     ----      |     10820     |    80.39%
-        Total line of blank      |     ----      |     ----      |     2640      |    19.61%
-        For '.c' files           |       1       |     0.30%     |       0       |     0.00%
-        For '.java' files        |      162      |    49.39%     |     4337      |    40.08%
-        For '.js' files          |       6       |     1.83%     |      214      |     1.98%
-        For '.py' files          |      158      |    48.17%     |     6269      |    57.94%
-        For '.cpp' files         |       1       |     0.30%     |       0       |     0.00%
+        Total file lines    :   13460 (100.00%)
+        Total code lines    :    9348 ( 69.45%)
+        Total blank lines   :    2640 ( 19.61%)
+        Total comment lines :    1472 ( 10.94%)
 
-        Totally cost 0.1353609561920166s.
+              Type  |     Files  |     Ratio  |     Codes  |     Ratio
+        -----------------------------------------------------------------
+                py  |       158  |    48.17%  |      5602  |    59.93%
+                js  |         6  |     1.83%  |       179  |     1.91%
+              java  |       162  |    49.39%  |      3567  |    38.16%
+               cpp  |         1  |     0.30%  |         0  |     0.00%
+                 c  |         1  |     0.30%  |         0  |     0.00%
+
+        Totally cost 0.14635539054870605s.
 
 ```
 

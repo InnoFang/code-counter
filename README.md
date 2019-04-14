@@ -59,7 +59,7 @@ $ python code-counter.py -p code-counter.py
 
         SEARCHING
         ====================
-         File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
+         File Type  |   Line of File  |   Code of File  |  Blank of File  |  File Path
         ----------------------------------------------------------------------------------------------------
                 py  |            159  |            130  |             29  |  code-counter.py
 
@@ -69,7 +69,7 @@ $ python code-counter.py -p code-counter.py
         ------------------------------------------------------------------------------------------
         Total line of files      |     ----      |     ----      |      159      |    100.00%
         Total line of codes      |     ----      |     ----      |      130      |    81.76%
-        Total line of space      |     ----      |     ----      |      29       |    18.24%
+        Total line of blank      |     ----      |     ----      |      29       |    18.24%
         For '.py' files          |       1       |    100.00%    |      130      |    100.00%
 
         Totally cost 0.0010030269622802734s.
@@ -83,7 +83,7 @@ $ python code-counter.py -p .
 
         SEARCHING
         ====================
-         File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
+         File Type  |   Line of File  |   Code of File  |  Blank of File  |  File Path
         ----------------------------------------------------------------------------------------------------
                 py  |            159  |            130  |             29  |  .\code-counter.py
                 py  |              9  |              8  |              1  |  .\config.py
@@ -94,7 +94,7 @@ $ python code-counter.py -p .
         ------------------------------------------------------------------------------------------
         Total line of files      |     ----      |     ----      |      168      |    100.00%
         Total line of codes      |     ----      |     ----      |      138      |    82.14%
-        Total line of space      |     ----      |     ----      |      30       |    17.86%
+        Total line of blank      |     ----      |     ----      |      30       |    17.86%
         For '.py' files          |       2       |    100.00%    |      138      |    100.00%
 
         Totally cost 0.0020160675048828125s.
@@ -119,7 +119,7 @@ $ python code-counter.py -i list.txt
 
         SEARCHING
         ====================
-         File Type  |   Line of File  |   Code of File  |  Space of File  |  File Path
+         File Type  |   Line of File  |   Code of File  |  Blank of File  |  File Path
         ----------------------------------------------------------------------------------------------------
                 py  |            126  |             95  |             31  |  F:\Github\playground\Python\basic\BasicDataType.py
                 py  |             21  |             18  |              3  |  F:\Github\playground\Python\basic\closure_test.py
@@ -139,7 +139,7 @@ $ python code-counter.py -i list.txt
         ------------------------------------------------------------------------------------------
         Total line of files      |     ----      |     ----      |     13460     |    100.00%
         Total line of codes      |     ----      |     ----      |     10820     |    80.39%
-        Total line of space      |     ----      |     ----      |     2640      |    19.61%
+        Total line of blank      |     ----      |     ----      |     2640      |    19.61%
         For '.c' files           |       1       |     0.30%     |       0       |     0.00%
         For '.java' files        |      162      |    49.39%     |     4337      |    40.08%
         For '.js' files          |       6       |     1.83%     |      214      |     1.98%

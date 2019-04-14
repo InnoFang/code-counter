@@ -32,8 +32,9 @@ optional arguments:
 
 ## Configuration
 
-If you want to ignore some directories or add the file type you want to count, you make some configuration,
-see [config.py](config.py)
+If you want to ignore some directories or add the file type you want to count, you can make some configuration.
+
+Please see [config.py](config.py)
 
 ```
 config = {
@@ -47,15 +48,11 @@ config = {
 }
 ```
 
-**NOTE** `ignore` is important, the reason is that if you want to count how many code you have written 
-and there are some code generate by the project automatically which is not belong to you, 
-so ignore them is fair
+> **NOTE** `ignore` is important, the reason is that if you want to count how many code you have written and there are some code generate by the project automatically which is not belong to you, so ignore them is fair.
 
 <h2 id="example">Example</h2>
 
-### Specify a file or directory path directly
-
-specify a file path
+### Specify a file path directly
 
 ```shell
 $ python code-counter.py -p code-counter.py
@@ -79,7 +76,7 @@ $ python code-counter.py -p code-counter.py
 
 ```
 
-specify a directory path
+### Specify a directory path directly
 
 ```shell
 $ python code-counter.py -p .
@@ -104,9 +101,11 @@ $ python code-counter.py -p .
 
 ```
 
-### Use a file that contain a list of files or directories path as input
+### Use a file that contain a list of file path or directory path as input
 
-Firstly, create a file named `list.txt` or whatever you want to named in the current directory,which contain various file path or directories path, just as follow:
+Firstly, create a file named `list.txt` or whatever you want to named in the current directory, which contain various file path or directory path, just as follow:
+
+> **TIPS** If you don't want to create a file in the current directory, you can create it any where and use a file path of it as input.
 
 ```
 F:\Github\playground\Python
@@ -153,12 +152,10 @@ $ python code-counter.py -i list.txt
 
 > **TIPS** Some output is ommited for dispaly
 
-Use a path or a file as input is your free, but choose one of them is enough.
-If you choose both of them at the same time, the `[-p PATH]` will be cover the `[-i INPUT]`.
+Use a path or a file input is your free, but choose one of them is enough.
+If you choose both of them at the same time, the option `[-p PATH]` will be cover the option `[-i INPUT]`.
 
 ### Also, you can specify an output path
-
-Just like this
 
 ```shell
 $ python code-counter.py -p code-counter -o result.txt

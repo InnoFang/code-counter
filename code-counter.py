@@ -15,7 +15,7 @@ files_of_language = defaultdict(int)
 lines_of_language = {suffix: 0 for suffix in config['suffix']}
 
 ignore = config['ignore']
-comment_symbol = tuple(config['comment'])
+comment_symbol = config['comment']
 regex = '.*\.({})$'.format('|'.join(config['suffix']))
 pattern = re.compile(regex)
 
@@ -126,30 +126,32 @@ def main(p, i, o=None):
 
     print('\n\t{}'.format("RESULT"), file=f)
     print("\t{}".format('=' * 20), file=f)
-    print("\t{:^25}|{:^15}|{:^15}|{:^15}|{:^15}"
-          .format("Item", "File Number", 'File Ratio', 'Line Number', 'Line Ratio'), file=f)
-    print("\t{}".format('-' * 90), file=f)
-    print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}"
-          .format("Total file lines", '----', '----', total_file_lines, '100.00%'), file=f)
-    print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}"
-          .format("Total code lines", '----', '----',
+    print("\t{:<20}:{:>8} ({:>7})"
+          .format("Total file lines", total_file_lines, '100.00%'), file=f)
+    print("\t{:<20}:{:>8} ({:>7})"
+          .format("Total code lines",
                   total_code_lines, "%.2f%%" % (total_code_lines / total_file_lines * 100)), file=f)
-    print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}"
-          .format("Total blank lines", '----', '----',
+    print("\t{:<20}:{:>8} ({:>7})"
+          .format("Total blank lines",
                   total_blank_lines, "%.2f%%" % (total_blank_lines / total_file_lines * 100)), file=f)
-    print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}"
-          .format("Total comment lines", '----', '----',
+    print("\t{:<20}:{:>8} ({:>7})"
+          .format("Total comment lines",
                   total_comment_lines, "%.2f%%" % (total_comment_lines / total_file_lines * 100)), file=f)
+    print(file=f)
 
     total_files = 0
 
-    for _, count in files_of_language.items():
-        total_files += count
+    for _, cnt in files_of_language.items():
+        total_files += cnt
 
-    for tp, count in files_of_language.items():
+    print("\t{:>20}  |  {:>11}  |  {:>11}  |  {:>11}  |  {:>11}"
+          .format("Item", "File Number", 'File Ratio', 'Code Number', 'Code Ratio'), file=f)
+    print("\t{}".format('-' * 90), file=f)
+
+    for tp, cnt in files_of_language.items():
         code_line = lines_of_language[tp]
-        print("\t{:<25}|{:^15}|{:^15}|{:^15}|{:^15}".format(
-            "For '.%s' files" % tp, count, '%.2f%%' % (count / total_files * 100),
+        print("\t{:>20}  |  {:>11}  |  {:>11}  |  {:>11}  |  {:>11}".format(
+            "For '.%s' files" % tp, cnt, '%.2f%%' % (cnt / total_files * 100),
             code_line, '%.2f%%' % (code_line / total_code_lines * 100)), file=f)
 
     if f:

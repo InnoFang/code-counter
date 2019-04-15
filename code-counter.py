@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#coding:utf8
 
 import os
 import re
@@ -31,7 +32,12 @@ def count(filename):
     comment_line = 0
     with open(filename, 'rb') as handle:
         for l in handle:
-            line = l.strip().decode("utf-8")
+            try:
+                line = l.strip().decode('utf8')
+            except UnicodeDecodeError:
+                # If the code line contain Chinese string, decode it as gbk
+                line = l.strip().decode('gbk')
+
             file_line += 1
             if not line:
                 blank_line += 1

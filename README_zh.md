@@ -2,7 +2,7 @@
 
 你想知道自己到底写过多少行代码吗？来吧，让我们来测一测。
 
-[English](README.md) | [中文](README_zh.md)
+[English](README.md)| 中文
 
 ## 如何运行
 

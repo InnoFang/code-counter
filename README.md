@@ -34,7 +34,7 @@ optional arguments:
 
 ## Configuration
 
-If you want to ignore some directories or add the file type you want to count, you can make some configuration.
+If you want to add the file type you want to count, add some comment symbols, or ignore some directories, you can make some configuration.
 
 Please see [config.py](config.py)
 

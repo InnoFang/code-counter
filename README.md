@@ -2,6 +2,8 @@
 
 Do you wander how many code you have been written? Come on, let's get count it.
 
+[English](README.md) | [中文](README_zh.md)
+
 ## How to run
 
 ```shell

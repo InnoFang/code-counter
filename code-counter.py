@@ -182,8 +182,18 @@ def visualize():
     import numpy as np
 
     global result
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(15, 6))
+, 1))
 
+    plt.subplot(122)
+    length = len(result['code'].values())
+    colors = cm.rainbow(np.arange(length) / length)
+    patches1, l_text1, p_text1 = plt.pie(list(result['code'].values()), labels=list(result['code'].keys()), autopct='%2.1f%%', radius=1,
+            wedgeprops=wedgeprops, colors=colors, pctdistance=0.85, labeldistance=1.1)
+    patches2, l_text2, p_text2 = plt.pie(list(result['file'].values()), labels=list(result['file'].keys()), autopct='%2.1f%%', radius=1-size,
+            wedgeprops=wedgeprops, colors=colors, pctdistance=0.8, labeldistance=0.4)
+    # font size include: ‘xx-small’,x-small’,'small’,'medium’,‘large’,‘x-large’,‘xx-large’ or number, e.g. '12'
+    proptease.set_size('x-large')
     size = 0.3
     wedgeprops = dict(width=0.3, edgecolor='w')
     proptease = fm.FontProperties()
@@ -200,17 +210,7 @@ def visualize():
     plt.setp(p_text, fontproperties=proptease)
     plt.axis('equal')
     plt.title("Total Statistics")
-    plt.legend(title="Index", loc='best')
-
-    plt.subplot(122)
-    length = len(result['code'].values())
-    colors = cm.rainbow(np.arange(length) / length)
-    patches1, l_text1, p_text1 = plt.pie(list(result['code'].values()), labels=list(result['code'].keys()), autopct='%2.1f%%', radius=1,
-            wedgeprops=wedgeprops, colors=colors, pctdistance=0.85, labeldistance=1.1)
-    patches2, l_text2, p_text2 = plt.pie(list(result['file'].values()), labels=list(result['file'].keys()), autopct='%2.1f%%', radius=1-size,
-            wedgeprops=wedgeprops, colors=colors, pctdistance=0.8, labeldistance=0.4)
-    # font size include: ‘xx-small’,x-small’,'small’,'medium’,‘large’,‘x-large’,‘xx-large’ or number, e.g. '12'
-    proptease.set_size('x-large')
+    plt.legend(title="Index", loc='best', bbox_to_anchor=(0
     plt.setp(l_text1, fontproperties=proptease)
     proptease.set_size('large')
     plt.setp(p_text1, fontproperties=proptease)
@@ -220,7 +220,7 @@ def visualize():
     plt.setp(l_text2, fontproperties=proptease)
     plt.axis('equal')
     plt.title("Inner Pie: Code Files, Outer Pie: Code Type")
-    plt.legend(list(result['code'].keys()), title="Abbreviation", loc='best')
+    plt.legend(list(result['code'].keys()), title="Abbreviation", loc='best', bbox_to_anchor=(1.05, 1))
     plt.show()
 
 

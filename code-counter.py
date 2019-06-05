@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#coding:utf8
+# coding:utf8
 
 import os
 import re
@@ -7,6 +7,8 @@ import time
 import argparse
 from collections import defaultdict
 from config import config
+from matplotlib import pyplot as plt
+from matplotlib import cm
 
 total_file_lines = 0
 total_code_lines = 0
@@ -19,6 +21,7 @@ ignore = config['ignore']
 comment_symbol = config['comment']
 regex = '.*\.({})$'.format('|'.join(config['suffix']))
 pattern = re.compile(regex)
+result = {'total': {}, 'code': {}, 'file': {}}
 
 
 def count(filename):
@@ -145,6 +148,10 @@ def main(p, i, o=None):
                   total_comment_lines, "%.2f%%" % (total_comment_lines / total_file_lines * 100)), file=f)
     print(file=f)
 
+    result['total']['code'] = total_code_lines
+    result['total']['blank'] = total_blank_lines
+    result['total']['comment'] = total_comment_lines
+
     total_files = 0
 
     for _, cnt in files_of_language.items():
@@ -159,9 +166,19 @@ def main(p, i, o=None):
         print("\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}".format(
             tp, cnt, '%.2f%%' % (cnt / total_files * 100),
             code_line, '%.2f%%' % (code_line / total_code_lines * 100)), file=f)
+        result['code'][str(tp)] = code_line
+        result['file'][str(tp)] = cnt
 
     if f:
         f.close()
+
+
+def visualize():
+    global result
+    plt.pie(list(result['total'].values()), labels=list(result['total'].keys()), autopct='%2.1f%%')
+    plt.axis('equal')
+    plt.legend()
+    plt.show()
 
 
 def args_parser():
@@ -173,6 +190,8 @@ def args_parser():
                         help="specify a file or directory path you want to search")
     parser.add_argument('-o', '--output', dest='output',
                         help="specify a output path if you want to store the result")
+    parser.add_argument('-v', '--visual', type=bool, dest='visual', default=False,
+                        help="choose to whether to visualize the result")
 
     args = parser.parse_args()
 
@@ -185,14 +204,17 @@ def args_parser():
         print('\033[0;33;0m[WARN] Specify one input is enough,'
               ' the option `[-p PATH]` will be cover the option `[-i INPUT]`\033[0m')
 
-    return args.path, args.input, args.output
+    return args.path, args.input, args.output, args.visual
 
 
 if __name__ == '__main__':
-    path, input_path, output_path = args_parser()
+    path, input_path, output_path, visual = args_parser()
 
     time_start = time.time()
     main(path, input_path, output_path)
     time_end = time.time()
 
     print('\n\tTotally cost {}s.'.format(time_end - time_start))
+
+    if visual:
+        visualize()

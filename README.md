@@ -17,7 +17,7 @@ Refer to [Usage](#usage) and [Example](#example) below for more usage
 <h2 id="usage">Usage</h2>
 
 ```shell 
-usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT]
+usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT] [-v VISUAL]
 
 Let's get count your code
 
@@ -29,7 +29,8 @@ optional arguments:
   -p PATH, --path PATH  specify a file or directory path you want to search
   -o OUTPUT, --output OUTPUT
                         specify a output path if you want to store the result
-
+  -v VISUAL, --visual VISUAL
+                        choose to whether to visualize the result
 ```
 
 ## Configuration
@@ -119,8 +120,9 @@ $ python code-counter.py -p .
 Firstly, create a file named `list.txt` or whatever you want to named in the current directory, which contain various file path or directory path, just as follow:
 
 ```
-F:\Github\playground\Python
-F:\Github\playground\Java
+F:\Github\playground\
+F:\IDEA\jokul
+...
 ```
 
 > **TIPS** If you don't want to create a file in the current directory, you can create it any where and use a file path of it as input.
@@ -130,36 +132,39 @@ then use `list.txt` as input:
 ```shell
 $ python code-counter.py -i list.txt
 
-        SEARCHING
-        ====================
-         File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
-        ------------------------------------------------------------------------------------------
-                py  |       126  |        73  |        31  |        22  |  F:\Github\playground\Python\basic\BasicDataType.py
-                py  |        21  |        17  |         3  |         1  |  F:\Github\playground\Python\basic\closure_test.py
-                py  |        15  |        10  |         4  |         1  |  F:\Github\playground\Python\basic\count_words_num.py
+	SEARCHING
+	====================
+	 File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
+	------------------------------------------------------------------------------------------
+	      java  |        47  |        31  |        12  |         4  |  F:\Github\playground\Android\ActivityCollector.java
+	      java  |        53  |        32  |         8  |        13  |  F:\Github\playground\Android\AppUtil.java
+	      java  |       192  |       141  |        29  |        22  |  F:\Github\playground\Android\CircularAnimUtil.java
                 ...          ...          ...         ...           ...    ...
                 ...          ...          ...         ...           ...    ...
                 ...          ...          ...         ...           ...    ...
-              java  |        20  |        13  |         4  |         3  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\loosely_coupled\OutputHelperTest.java
-              java  |        22  |        14  |         5  |         3  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\post_processor\MessageTest.java
-              java  |        21  |        14  |         4  |         3  |  F:\Github\playground\Java\SpringDemo\src\test\java\io\innofang\spring_auto\service\CustomerServiceTest.java
+	      java  |        37  |        28  |         6  |         3  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\controller\MovieControllerTest.java
+	      java  |       305  |       266  |        24  |        15  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\repositories\MovieRepositoryTest.java
+	      java  |        61  |        51  |         7  |         3  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\repositories\TypeRepositoryTest.java
 
-        RESULT
-        ====================
-        Total file lines    :   13460 (100.00%)
-        Total code lines    :    9348 ( 69.45%)
-        Total blank lines   :    2640 ( 19.61%)
-        Total comment lines :    1472 ( 10.94%)
+	RESULT
+	====================
+	Total file lines    :   31890 (100.00%)
+	Total code lines    :   21842 ( 68.49%)
+	Total blank lines   :    4518 ( 14.17%)
+	Total comment lines :    5530 ( 17.34%)
 
-              Type  |     Files  |     Ratio  |     Codes  |     Ratio
-        -----------------------------------------------------------------
-                py  |       158  |    48.17%  |      5602  |    59.93%
-                js  |         6  |     1.83%  |       179  |     1.91%
-              java  |       162  |    49.39%  |      3567  |    38.16%
-               cpp  |         1  |     0.30%  |         0  |     0.00%
-                 c  |         1  |     0.30%  |         0  |     0.00%
+	      Type  |     Files  |     Ratio  |     Codes  |     Ratio
+	-----------------------------------------------------------------
+	        js  |        21  |     3.61%  |      1664  |     7.62%
+	        py  |       158  |    27.19%  |      5602  |    25.65%
+	        kt  |        26  |     4.48%  |       696  |     3.19%
+	         c  |        28  |     4.82%  |      2533  |    11.60%
+	      java  |       211  |    36.32%  |      6235  |    28.55%
+	       cpp  |        75  |    12.91%  |      3094  |    14.17%
+	       pde  |        62  |    10.67%  |      2018  |     9.24%
 
-        Totally cost 0.14635539054870605s.
+
+        Totally cost 0.23161602020263672s.
 
 ```
 
@@ -176,6 +181,19 @@ $ python code-counter.py -i list.txt -o output.txt
 ```
 
 The output path is optional, if you have specify it, the output information would not display on the console.
+
+### Visualization of Statistical Results
+
+As we all know, data visualization can give us a more intuitive feeling, so we provide the visualization instruction `[-v --visual]`, whose default value is `false`, passing the `true` value will visualize the statistics. Add visual instruction based on the example of using file input as follows:
+
+```
+$ python code-counter.py -i list.txt -v true
+```
+
+The final statistical results have been roughly shown above, let's take a look at the more intuitive visualization results
+
+![](https://raw.githubusercontent.com/InnoFang/jotter/image-hosting/code-counter/Visualization%20of%20Statistical%20Results.png)
+
 
 ## [License](./LICENSE)
 

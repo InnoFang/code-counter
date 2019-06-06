@@ -181,13 +181,13 @@ $ python code-counter.py -i list.txt -o output.txt
 
 ### 统计结果可视化
 
-总所周知，数据可视化可以给人更直观的感受，所以我们提供了可视化指令，在使用文件输入的例子的基础上增加可视化指令 `[-v --visual]`，其默认值为 `false` ，传递 `true` 将会对统计结果可视化，如下所示：
+总所周知，数据可视化可以给我们更直观的感受，所以我们提供了可视化指令  `[-v --visual]`，其默认值为 `false` ，传递 `true` 值将会对统计结果可视化。在使用文件输入的例子的基础上增加可视化指令，如下所示：
 
 ```
 $ python code-counter.py -i list.txt -v true
 ```
 
-最终的查询结果在上面已经粗略展示了，现在来看看，更直观的可视化结果
+最终的统计结果在上面已经粗略展示了，现在来看看，更直观的可视化结果
 
 ![](https://raw.githubusercontent.com/InnoFang/jotter/image-hosting/code-counter/Visualization%20of%20Statistical%20Results.png)
 

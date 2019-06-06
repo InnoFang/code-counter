@@ -182,7 +182,7 @@ def visualize():
     import numpy as np
 
     global result
-    plt.figure(figsize=(15, 6))
+    plt.figure('Visualization of Statistical Results', figsize=(15, 6))
 
     size = 0.3
     wedgeprops = dict(width=0.3, edgecolor='w')

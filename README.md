@@ -175,6 +175,8 @@ If you choose both of them at the same time, the option `[-p PATH]` will be cove
 
 ### Also, you can specify an output path
 
+The output path is specified by `[-o--output]`, as follows:
+
 ```shell
 $ python code-counter.py -p code-counter.py -o result.txt
 $ python code-counter.py -i list.txt -o output.txt

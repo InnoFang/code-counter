@@ -233,7 +233,7 @@ def args_parser():
                         help="specify a file or directory path you want to search")
     parser.add_argument('-o', '--output', dest='output',
                         help="specify a output path if you want to store the result")
-    parser.add_argument('-v', '--visual', type=bool, dest='visual', default=False,
+    parser.add_argument('-v', '--visual', dest='visual', action='store_true',
                         help="choose to whether to visualize the result")
 
     args = parser.parse_args()

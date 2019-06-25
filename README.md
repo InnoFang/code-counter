@@ -17,7 +17,7 @@ Refer to [Usage](#usage) and [Example](#example) below for more usage
 <h2 id="usage">Usage</h2>
 
 ```shell 
-usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT] [-v VISUAL]
+usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT] [-v]
 
 Let's get count your code
 
@@ -29,8 +29,8 @@ optional arguments:
   -p PATH, --path PATH  specify a file or directory path you want to search
   -o OUTPUT, --output OUTPUT
                         specify a output path if you want to store the result
-  -v VISUAL, --visual VISUAL
-                        choose to whether to visualize the result
+  -v, --visual          choose to whether to visualize the result
+
 ```
 
 ## Configuration
@@ -186,10 +186,10 @@ The output path is optional, if you have specify it, the output information woul
 
 ### Visualization of Statistical Results
 
-As we all know, data visualization can give us a more intuitive feeling, so we provide the visualization instruction `[-v --visual]`, whose default value is `false`, passing the `true` value will visualize the statistics. Add visual instruction based on the example of using file input as follows:
+As we all know, data visualization can give us a more intuitive feeling, so we provide the visualization instruction `[-v --visual]` that used to visualize the statistics. Add visual instruction based on the example of using file input as follows:
 
 ```
-$ python code-counter.py -i list.txt -v true
+$ python code-counter.py -i list.txt -v
 ```
 
 The final statistical results have been roughly shown above, let's take a look at the more intuitive visualization results

@@ -17,7 +17,7 @@ $ python code-counter.py -p code-counter.py
 <h2 id="usage">用法</h2>
 
 ```shell 
-usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT] [-v VISUAL]
+usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT] [-v]
 
 Let's get count your code
 
@@ -29,8 +29,8 @@ optional arguments:
   -p PATH, --path PATH  specify a file or directory path you want to search
   -o OUTPUT, --output OUTPUT
                         specify a output path if you want to store the result
-  -v VISUAL, --visual VISUAL
-                        choose to whether to visualize the result
+  -v, --visual          choose to whether to visualize the result
+
 ```
 
 ## 配置
@@ -183,10 +183,10 @@ $ python code-counter.py -i list.txt -o output.txt
 
 ### 统计结果可视化
 
-总所周知，数据可视化可以给我们更直观的感受，所以我们提供了可视化指令  `[-v --visual]`，其默认值为 `false` ，传递 `true` 值将会对统计结果可视化。在使用文件输入的例子的基础上增加可视化指令，如下所示：
+总所周知，数据可视化可以给我们更直观的感受，所以我们提供了可视化指令  `[-v --visual]`，用于将统计结果可视化。在使用文件输入的例子的基础上增加可视化指令，如下所示：
 
 ```
-$ python code-counter.py -i list.txt -v true
+$ python code-counter.py -i list.txt -v
 ```
 
 最终的统计结果在上面已经粗略展示了，现在来看看，更直观的可视化结果

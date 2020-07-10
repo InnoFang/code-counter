@@ -194,7 +194,7 @@ $ python code-counter.py -i list.txt -v
 
 The final statistical results have been roughly shown above, let's take a look at the more intuitive visualization results
 
-![](https://raw.githubusercontent.com/InnoFang/jotter/image-hosting/code-counter/Visualization%20of%20Statistical%20Results.png)
+![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
 
 ## [License](./LICENSE)

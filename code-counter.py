@@ -5,8 +5,11 @@ import os
 import re
 import time
 import argparse
+import json
 from collections import defaultdict
-from config import config
+
+with open('./config.json', 'r') as f:
+    config = json.load(f)
 
 total_file_lines = 0
 total_code_lines = 0
@@ -15,8 +18,8 @@ total_comment_lines = 0
 files_of_language = defaultdict(int)
 lines_of_language = {suffix: 0 for suffix in config['suffix']}
 
-ignore = config['ignore']
-comment_symbol = config['comment']
+ignore = tuple(config['ignore'])
+comment_symbol = tuple(config['comment'])
 regex = '.*\.({})$'.format('|'.join(config['suffix']))
 pattern = re.compile(regex)
 result = {'total': {

@@ -21,9 +21,9 @@ class CodeCounter:
         self.pattern = re.compile(regex)
         self.result = {
             'total': {
-                'code': '',
-                'comment': '',
-                'blank': '',
+                'code': 0,
+                'comment': 0,
+                'blank': 0,
             }, 
             'code': {}, 
             'file': {}

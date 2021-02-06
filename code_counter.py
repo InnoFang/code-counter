@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# coding:utf8
 import os
 import re
 from collections import defaultdict
@@ -51,22 +53,20 @@ class CodeCounter:
                         self.__search(l_strip, output_file)
                     else:
                         print('{} is not a validate path.'.format(l))
-        elif os.path.isdir(input_path):
+        elif os.path.isdir(input_path) or os.path.isfile(input_path) :
             self.__search(input_path, output_file)
-        elif os.path.isfile(input_path):
-            if os.path.exists(input_path):
-                self.__search(input_path, output_file)
-            else:
-                print('{} is not a validate path.'.format(input_path))
-                exit(0)
         else:
             print('{} is not a validate path.'.format(input_path))
-            exit(0)
+            return
 
         print('\n\t{}'.format("RESULT"), file=output_file)
         print("\t{}".format('=' * 20), file=output_file)
         print("\t{:<20}:{:>8} ({:>7})"
             .format("Total file lines", self.total_file_lines, '100.00%'), file=output_file)
+
+        if self.total_file_lines == 0:
+            return
+
         print("\t{:<20}:{:>8} ({:>7})"
             .format("Total code lines",
                     self.total_code_lines, "%.2f%%" % (self.total_code_lines / self.total_file_lines * 100)), file=output_file)
@@ -103,7 +103,7 @@ class CodeCounter:
             output_file.close()
 
 
-    def __search(self, input_path, output_file):
+    def __search(self, input_path, output_file=None):
         """
         :param input_path: path
         :param output_file: file
@@ -133,7 +133,12 @@ class CodeCounter:
         try:
             res = re.match(self.pattern, file_path)
             if res:
-                file_lines, code_lines, blank_lines, comment_lines = self.__count_single(file_path)
+                single = self.count_single(file_path)
+                file_lines = single['file_lines']
+                code_lines = single['code_lines']
+                blank_lines = single['blank_lines']
+                comment_lines = single['comment_lines']
+
                 file_type = os.path.splitext(file_path)[1][1:]
                 self.files_of_language[file_type] += 1
                 print('\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'
@@ -147,16 +152,20 @@ class CodeCounter:
             print(e)
     
 
-    def __count_single(self, filename):
+    def count_single(self, file_path):
         """
-        :param filename: the file you want to count
-        :return: file line, code line, blank line, comment line
+        :param file_path: the file you want to count
+        :return: single { file_lines, code_lines, blank_lines, comment_lines }
         """
-        file_line = 0
-        code_line = 0
-        blank_line = 0
-        comment_line = 0
-        with open(filename, 'rb') as handle:
+        assert os.path.isfile(file_path), "Function: 'code_counter' need a file path, but {} is not.".format(file_path)
+
+        single = {
+            'file_lines' : 0,
+            'code_lines' : 0,
+            'blank_lines' : 0,
+            'comment_lines' : 0,
+        }
+        with open(file_path, 'rb') as handle:
             for l in handle:
                 try:
                     line = l.strip().decode('utf8')
@@ -164,14 +173,14 @@ class CodeCounter:
                     # If the code line contain Chinese string, decode it as gbk
                     line = l.strip().decode('gbk')
 
-                file_line += 1
+                single['file_lines'] += 1
                 if not line:
-                    blank_line += 1
+                    single['blank_lines'] += 1
                 elif line.startswith(self.comment_symbol):
-                    comment_line += 1
+                    single['comment_lines'] += 1
                 else:
-                    code_line += 1
-        return file_line, code_line, blank_line, comment_line
+                    single['code_lines'] += 1
+        return single
 
 
     def visualize(self):

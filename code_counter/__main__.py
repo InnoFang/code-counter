@@ -4,7 +4,7 @@
 import time
 import argparse
 from core.codecounter import CodeCounter
-from conf import conf
+from conf import config
 
 def args_parser():
     parser = argparse.ArgumentParser(prog="code-counter", description="Let's get count your code")
@@ -22,13 +22,11 @@ def args_parser():
 
     return parser.parse_args()
 
-
-if __name__ == '__main__':
-
+def main():
     args = args_parser()
     
-    config = conf.load()
-    code_counter = CodeCounter(config)
+    conf = config.load()
+    code_counter = CodeCounter(conf)
 
     time_start = time.time()
     code_counter.count(args.path, args.verbose, args.use_list, args.output_path)
@@ -38,4 +36,8 @@ if __name__ == '__main__':
 
     if args.graph:
         code_counter.visualize()
+
+if __name__ == '__main__':
+    main()
+    
 

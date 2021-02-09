@@ -1,0 +1,5 @@
+{
+    "suffix": ["py", "java", "c", "cpp", "js", "pde", "kt", "dart"],
+    "comment": ["#", "//", "/*", "/**", "*", ":", ";"],
+    "ignore": ["out", "venv", ".git", ".idea", "build", "target", "node_modules"]
+}

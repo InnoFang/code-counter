@@ -13,7 +13,7 @@ def args_parser():
     parser.add_argument('-l', '--list', dest='use_list', action='store_true',
                         help="the file contains a list of file path, "
                              "which can make you search more than one file or directory")
-    parser.add_argument('-v', '--visual', dest='visual', action='store_true',
+    parser.add_argument('-g', '--graph', dest='graph', action='store_true',
                         help="choose to whether to visualize the result")
     parser.add_argument('-o', '--output', dest='output_path',
                         help="specify a output path if you want to store the result")
@@ -36,6 +36,6 @@ if __name__ == '__main__':
 
     print('\n\tTotally cost {}s.'.format(time_end - time_start))
 
-    if args.visual:
+    if args.graph:
         code_counter.visualize()
 

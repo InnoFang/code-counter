@@ -93,7 +93,7 @@ class CodeCounter:
             total_files += cnt
 
         print("\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}"
-            .format("Type", "Files", 'Ratio', 'Codes', 'Ratio'), file=output_file)
+            .format("Type", "Files", 'Ratio', 'Lines', 'Ratio'), file=output_file)
         print("\t{}".format('-' * 65), file=output_file)
 
         for tp, cnt in self.files_of_language.items():

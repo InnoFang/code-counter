@@ -3,8 +3,8 @@
 
 import time
 import argparse
-from core.codecounter import CodeCounter
-from conf import config
+from code_counter.core.codecounter import CodeCounter
+from code_counter.conf import config
 
 def args_parser():
     parser = argparse.ArgumentParser(prog="code-counter", description="Let's get count your code")

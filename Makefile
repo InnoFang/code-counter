@@ -1,15 +1,16 @@
-VERSION=0.1.0
+setup:
+	python setup.py install
 
-all:
-	python setup.py bdist_wheel
 
 .PHONY:
+build:
+	python setup.py bdist_wheel
 
-install:
-	pip install dist/code_counter-${VERSION}-py3-none-any.whl
+install:build
+	pip install dist/*.whl
 
 uninstall:
-	echo y | pip uninstall dist/code_counter-${VERSION}-py3-none-any.whl
+	echo y | pip uninstall code-counter
 
 clean:
 	rm -rf build code_counter.* dist

@@ -1,0 +1,2 @@
+# Include the json file
+include code_counter/conf/config.json

@@ -2,116 +2,87 @@
 
 Do you wander how many code you have been written? Come on, let's get count it.
 
-English | [中文](README_zh.md)
+English | [中文](https://github.com/InnoFang/code-counter/blob/master/README_zh.md)
 
-## How to run
+## Installation
+
+Install by PyPI (It hasn't been uploaded to pypi yet):
 
 ```shell
-$ git clone https://github.com/innofang/code-counter.git
-$ cd code-counter/
-$ python code-counter.py -p code-counter.py
+pip install code-counter
 ```
 
-Refer to [Usage](#usage) and [Example](#example) below for more usage
+Also you can install it from the source code:
+
+```shell
+git clone https://github.com/innofang/code-counter.git
+cd code-counter/
+python setup.py install
+```
+
+## Quick Start
+
+Switch to any code directory (e.g. `code-counter`), and enter follow command:
+
+```shell
+$ codecount .
+
+        RESULT
+        ====================
+        Total file lines    :     344 (100.00%)
+        Total code lines    :     269 ( 78.20%)
+        Total blank lines   :      55 ( 15.99%)
+        Total comment lines :      20 (  5.81%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                py  |         7  |   100.00%  |       269  |   100.00%
+
+        Totally cost 0.010030031204223633s.
+
+```
+
+Refer to [Usage](#usage) and [Example](#example) below for more usage.
 
 <h2 id="usage">Usage</h2>
 
 ```shell 
-usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT] [-v]
+usage: code-counter [-h] [-l] [-v] [-g] [-o OUTPUT_PATH] path
 
 Let's get count your code
 
+positional arguments:
+  path                  specify a file or directory path you want to search
+
 optional arguments:
   -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        the file contains a list of file path, which can make
-                        you search more than one file or directory
-  -p PATH, --path PATH  specify a file or directory path you want to search
-  -o OUTPUT, --output OUTPUT
+  -l, --list            the file contains a list of file path, which can make you search more than one file or directory
+  -v, --verbose         show verbose infomation
+  -g, --graph           choose to whether to visualize the result
+  -o OUTPUT_PATH, --output OUTPUT_PATH
                         specify a output path if you want to store the result
-  -v, --visual          choose to whether to visualize the result
-
 ```
-
-## Configuration
-
-If you want to add the file type you want to count, add some comment symbols, or ignore some directories, you can make some configuration.
-
-Please see [config.py](config.py)
-
-```
-config = {
-    # Which suffix code file do you want to count?
-    # more than as follow, also html, css, clj, lisp, etc.
-    'suffix': ('py', 'java', 'c', 'cpp', 'js', 'pde', 'kt', 'dart'),
-
-    # the comment symbol, which can be judged whether the current line is a comment.
-    # However, if the current lines are between the comment symbol
-    # and there is not any comment symbol at the beginning of it, it will be misjudged.
-    # If the following comment symbol miss any other you want to add, you can do it by yourself
-    'comment': ('#', '//', '/*', '/**', '*', ':', ';'),
-
-    # Ignore some directories or files which are not write by yourself,
-    # but generate by the projects, just add what you want to add.
-    'ignore': ('out', 'venv', '.git', '.idea', 'build', 'target', 'node_modules'),
-}
-
-```
-
-> **NOTE** `ignore` is important, the reason is that if you want to count how many code you have written and there are some code generate by the project automatically which is not belong to you, so ignore them is fair.
 
 <h2 id="example">Example</h2>
 
-### Specify a file path directly
+### Specify a  path (file or directory) directly
 
 ```shell
-$ python code-counter.py -p code-counter.py
-
-        SEARCHING
-        ====================
-         File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
-        ------------------------------------------------------------------------------------------
-                py  |       192  |       149  |        30  |        13  |  code-counter.py
+$ codecount ./code-counter
 
         RESULT
         ====================
-        Total file lines    :     192 (100.00%)
-        Total code lines    :     149 ( 77.60%)
-        Total blank lines   :      30 ( 15.62%)
-        Total comment lines :      13 (  6.77%)
+        Total file lines    :     344 (100.00%)
+        Total code lines    :     269 ( 78.20%)
+        Total blank lines   :      55 ( 15.99%)
+        Total comment lines :      20 (  5.81%)
 
-              Type  |     Files  |     Ratio  |     Codes  |     Ratio
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
         -----------------------------------------------------------------
-                py  |         1  |   100.00%  |       149  |   100.00%
+                py  |         7  |   100.00%  |       269  |   100.00%
 
-        Totally cost 0.00102996826171875s.
+        Totally cost 0.00899815559387207s.
 
-```
-
-### Specify a directory path directly
-
-```shell
-$ python code-counter.py -p .
-
-        SEARCHING
-        ====================
-         File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
-        ------------------------------------------------------------------------------------------
-                py  |       192  |       149  |        30  |        13  |  .\code-counter.py
-                py  |        15  |         5  |         2  |         8  |  .\config.py
-
-        RESULT
-        ====================
-        Total file lines    :     207 (100.00%)
-        Total code lines    :     154 ( 74.40%)
-        Total blank lines   :      32 ( 15.46%)
-        Total comment lines :      21 ( 10.14%)
-
-              Type  |     Files  |     Ratio  |     Codes  |     Ratio
-        -----------------------------------------------------------------
-                py  |         2  |   100.00%  |       154  |   100.00%
-
-        Totally cost 0.003002166748046875s.
 
 ```
 
@@ -120,8 +91,8 @@ $ python code-counter.py -p .
 Firstly, create a file named `list.txt` or whatever you want to named in the current directory, which contain various file path or directory path, just as follow:
 
 ```
-F:\Github\playground\
-F:\IDEA\jokul
+F:/Github/miscode
+F:/IDEA/jokul
 ...
 ```
 
@@ -130,66 +101,85 @@ F:\IDEA\jokul
 then use `list.txt` as input:
 
 ```shell
-$ python code-counter.py -i list.txt
+$ codecount ./list.txt -l
 
-	SEARCHING
-	====================
-	 File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
-	------------------------------------------------------------------------------------------
-	      java  |        47  |        31  |        12  |         4  |  F:\Github\playground\Android\ActivityCollector.java
-	      java  |        53  |        32  |         8  |        13  |  F:\Github\playground\Android\AppUtil.java
-	      java  |       192  |       141  |        29  |        22  |  F:\Github\playground\Android\CircularAnimUtil.java
-                ...          ...          ...         ...           ...    ...
-                ...          ...          ...         ...           ...    ...
-                ...          ...          ...         ...           ...    ...
-	      java  |        37  |        28  |         6  |         3  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\controller\MovieControllerTest.java
-	      java  |       305  |       266  |        24  |        15  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\repositories\MovieRepositoryTest.java
-	      java  |        61  |        51  |         7  |         3  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\repositories\TypeRepositoryTest.java
+        RESULT
+        ====================
+        Total file lines    :   35137 (100.00%)
+        Total code lines    :   24235 ( 68.97%)
+        Total blank lines   :    5009 ( 14.26%)
+        Total comment lines :    5893 ( 16.77%)
 
-	RESULT
-	====================
-	Total file lines    :   31890 (100.00%)
-	Total code lines    :   21842 ( 68.49%)
-	Total blank lines   :    4518 ( 14.17%)
-	Total comment lines :    5530 ( 17.34%)
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+              java  |       236  |    36.48%  |      7074  |    29.19%
+                 c  |        28  |     4.33%  |      2533  |    10.45%
+                 h  |         8  |     1.24%  |       503  |     2.08%
+               cpp  |        75  |    11.59%  |      3094  |    12.77%
+                go  |        33  |     5.10%  |      1036  |     4.27%
+                js  |        21  |     3.25%  |      1664  |     6.87%
+                kt  |        26  |     4.02%  |       696  |     2.87%
+              lisp  |         1  |     0.15%  |        48  |     0.20%
+               pde  |        59  |     9.12%  |      1930  |     7.96%
+                py  |       160  |    24.73%  |      5657  |    23.34%
 
-	      Type  |     Files  |     Ratio  |     Codes  |     Ratio
-	-----------------------------------------------------------------
-	        js  |        21  |     3.61%  |      1664  |     7.62%
-	        py  |       158  |    27.19%  |      5602  |    25.65%
-	        kt  |        26  |     4.48%  |       696  |     3.19%
-	         c  |        28  |     4.82%  |      2533  |    11.60%
-	      java  |       211  |    36.32%  |      6235  |    28.55%
-	       cpp  |        75  |    12.91%  |      3094  |    14.17%
-	       pde  |        62  |    10.67%  |      2018  |     9.24%
-
-
-        Totally cost 0.23161602020263672s.
+        Totally cost 6.179003953933716s.
 
 ```
 
-> **TIPS** Some output is ommited for dispaly
+### Show verbose searching information
 
-Use a path or a file input is your free, but choose one of them is enough.
-If you choose both of them at the same time, the option `[-p PATH]` will be cover the option `[-i INPUT]`.
+Search information is not displayed by default. If you concern about it, you can use the `-v, --verbose` parameter to view it
 
-### Also, you can specify an output path
+```
+$ codecount ./code-counter -v
 
-The output path is specified by `[-o--output]`, as follows:
+        SEARCHING
+        ====================
+         File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
+        ------------------------------------------------------------------------------------------
+                py  |        12  |         8  |         2  |         2  |  ./code-counter/code_counter/conf/config.py
+                py  |         0  |         0  |         0  |         0  |  ./code-counter/code_counter/conf/__init__.py
+                py  |       240  |       187  |        37  |        16  |  ./code-counter/code_counter/core/codecounter.py
+                py  |         0  |         0  |         0  |         0  |  ./code-counter/code_counter/core/__init__.py
+                py  |         1  |         1  |         0  |         0  |  ./code-counter/code_counter/__init__.py
+                py  |        43  |        29  |        12  |         2  |  ./code-counter/code_counter/__main__.py
+                py  |        48  |        44  |         4  |         0  |  ./code-counter/setup.py
+
+        RESULT
+        ====================
+        Total file lines    :     344 (100.00%)
+        Total code lines    :     269 ( 78.20%)
+        Total blank lines   :      55 ( 15.99%)
+        Total comment lines :      20 (  5.81%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                py  |         7  |   100.00%  |       269  |   100.00%
+
+        Totally cost 0.00899958610534668s.
+
+```
+
+### Specify an output path
+
+The output path is specified by `[-o --output]`. If you have specified it, the output information would not display on the console, as follows:
 
 ```shell
-$ python code-counter.py -p code-counter.py -o result.txt
-$ python code-counter.py -i list.txt -o output.txt
-```
+$ codecount ./code-counter/ -v -o ./result.txt
 
-The output path is optional, if you have specify it, the output information would not display on the console.
-
-### Visualization of Statistical Results
-
-As we all know, data visualization can give us a more intuitive feeling, so we provide the visualization instruction `[-v --visual]` that used to visualize the statistics. Add visual instruction based on the example of using file input as follows:
+        Totally cost 0.012001991271972656s.
 
 ```
-$ python code-counter.py -i list.txt -v
+
+Verbose searching information and results have been written in `./result.txt`
+
+### Visualize statistical results
+
+As we all know, data visualization can give us a more intuitive feeling, so I provide the visualization instruction `[-g --graph]` that used to visualize the statistics. Add visual instruction based on the example of using file input as follows:
+
+```
+$ codecount list.txt -l -g
 ```
 
 The final statistical results have been roughly shown above, let's take a look at the more intuitive visualization results
@@ -197,20 +187,40 @@ The final statistical results have been roughly shown above, let's take a look a
 ![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
 
-## [License](./LICENSE)
+## Configuration
 
-    Code Counter: Count your code lines
-    Copyright (C) 2019  InnoFang
+ + `suffix`: what suffix code files that you want to count;
+ + `comment`: the comment symbol, which can be judged whether the current line is a comment;
+ + `ignore`: ignore some directories or files which are not written by yourself.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+> **NOTE**
+> 
+> + For `suffix`, for example, `Python` file's suffix is  `py`, `C++` file's suffix is `cpp`
+> + For `ignore`, if you want to count how many code you have written and there are some code generate by the project automatically which is not belong to > you, so ignore them is fair.
+> + For `comment`, if the current lines are between the comment symbol and there is not any comment symbol at the beginning of it, it will be misjudged;
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Default `config.json` is as follow:
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+```json
+{
+    "suffix": ["py", "java", "c", "h", "cpp", "hpp", "js", "pde", "kt", "dart", "go", "lisp", "cu", "cuh"],
+    "comment": ["#", "//", "/*", "*", ":", ";"],
+    "ignore": ["out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode"]
+}
+```
+
+## [License](https://github.com/InnoFang/code-counter/blob/master/LICENSE)
+
+        Copyright 2019 Inno Fang
+
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.

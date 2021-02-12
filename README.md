@@ -22,7 +22,7 @@ python setup.py install
 
 ## Quick Start
 
-Switch to any code directory (e.g. `code-counter`), and enter follow command:
+Switch to any code directory (e.g. `code-counter`), and enter the following command:
 
 ```shell
 $ codecount .
@@ -65,7 +65,7 @@ optional arguments:
 
 <h2 id="example">Example</h2>
 
-### Specify a  path (file or directory) directly
+### Specify a path (file or directory) directly
 
 ```shell
 $ codecount ./code-counter
@@ -86,19 +86,16 @@ $ codecount ./code-counter
 
 ```
 
-### Use a file that contain a list of file path or directory path as input
+### Multipath input (Use a file that contain a list of file or directory path as input)
 
-Firstly, create a file named `list.txt` or whatever you want to named in the current directory, which contain various file path or directory path, just as follow:
+Create a file, such as named `list.txt`, which contain various file path or directory path, just as follow:
 
 ```
 F:/Github/miscode
 F:/IDEA/jokul
-...
 ```
 
-> **TIPS** If you don't want to create a file in the current directory, you can create it any where and use a file path of it as input.
-
-then use `list.txt` as input:
+then use `[-l --list]` to specify `list.txt` contain a list of path:
 
 ```shell
 $ codecount ./list.txt -l
@@ -129,7 +126,7 @@ $ codecount ./list.txt -l
 
 ### Show verbose searching information
 
-Search information is not displayed by default. If you concern about it, you can use the `-v, --verbose` parameter to view it
+Searching information is not displayed by default. If you concern about it, you can use the `[-v --verbose]` parameter to view it
 
 ```
 $ codecount ./code-counter -v
@@ -166,7 +163,7 @@ $ codecount ./code-counter -v
 The output path is specified by `[-o --output]`. If you have specified it, the output information would not display on the console, as follows:
 
 ```shell
-$ codecount ./code-counter/ -v -o ./result.txt
+$ codecount ./code-counter -v -o ./result.txt
 
         Totally cost 0.012001991271972656s.
 
@@ -176,28 +173,28 @@ Verbose searching information and results have been written in `./result.txt`
 
 ### Visualize statistical results
 
-As we all know, data visualization can give us a more intuitive feeling, so I provide the visualization instruction `[-g --graph]` that used to visualize the statistics. Add visual instruction based on the example of using file input as follows:
+Data visualization can give us a more intuitive feeling, so I provide the visualization instruction `[-g --graph]` that used to visualize the statistics, just as follow:
 
 ```
 $ codecount list.txt -l -g
 ```
 
-The final statistical results have been roughly shown above, let's take a look at the more intuitive visualization results
+In addition to displaying text statistics, also more intuitive visualization results shown, just like below
 
 ![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
 
 ## Configuration
 
- + `suffix`: what suffix code files that you want to count;
- + `comment`: the comment symbol, which can be judged whether the current line is a comment;
- + `ignore`: ignore some directories or files which are not written by yourself.
+ + **`suffix`**: what suffix code files that you want to count;
+ + **`comment`**: the comment symbol, which can be judged whether the current line is a comment;
+ + **`ignore`**: ignore some directories or files which are not written by yourself.
 
 > **NOTE**
 > 
-> + For `suffix`, for example, `Python` file's suffix is  `py`, `C++` file's suffix is `cpp`
-> + For `ignore`, if you want to count how many code you have written and there are some code generate by the project automatically which is not belong to > you, so ignore them is fair.
-> + For `comment`, if the current lines are between the comment symbol and there is not any comment symbol at the beginning of it, it will be misjudged;
+> + For **`suffix`**, for example, `Python` file's suffix is  `py`, `C++` file's suffix is `cpp`
+> + For **`ignore`**, if you want to count how many code you have written and there are some code generate by the project automatically which is not belong to > you, so ignore them is fair.
+> + For **``comment``**, if the current lines are between the comment symbol and there is not any comment symbol at the beginning of it, it will be misjudged;
 
 Default `config.json` is as follow:
 

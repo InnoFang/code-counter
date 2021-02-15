@@ -1,6 +1,6 @@
 # Code Counter
 
-Do you wander how many code you have been written? Come on, let's get count it.
+A command-line interface (CLI) utility that can help you easily count code and display detailed results.
 
 English | [中文](https://github.com/InnoFang/code-counter/blob/master/README_zh.md)
 
@@ -126,7 +126,7 @@ $ codecount ./list.txt -l
 
 ### Show verbose searching information
 
-Searching information is not displayed by default. If you concern about it, you can use the `[-v --verbose]` parameter to view it
+Searching information is not displayed by default. If you concern about the searching information, you can use `[-v --verbose]` to view it:
 
 ```
 $ codecount ./code-counter -v
@@ -160,7 +160,7 @@ $ codecount ./code-counter -v
 
 ### Specify an output path
 
-The output path is specified by `[-o --output]`. If you have specified it, the output information would not display on the console, as follows:
+The output path is specified by `[-o --output]`, if you have specified it, the output information would not display on the console, as follows:
 
 ```shell
 $ codecount ./code-counter -v -o ./result.txt
@@ -179,22 +179,12 @@ Data visualization can give us a more intuitive feeling, so I provide the visual
 $ codecount list.txt -l -g
 ```
 
-In addition to displaying text statistics, also more intuitive visualization results shown, just like below
+In addition to the text statistics, the statistical chart as shown in the figure below will also be displayed
 
 ![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
 
 ## Configuration
-
- + **`suffix`**: what suffix code files that you want to count;
- + **`comment`**: the comment symbol, which can be judged whether the current line is a comment;
- + **`ignore`**: ignore some directories or files which are not written by yourself.
-
-> **NOTE**
-> 
-> + For **`suffix`**, for example, `Python` file's suffix is  `py`, `C++` file's suffix is `cpp`
-> + For **`ignore`**, if you want to count how many code you have written and there are some code generate by the project automatically which is not belong to > you, so ignore them is fair.
-> + For **``comment``**, if the current lines are between the comment symbol and there is not any comment symbol at the beginning of it, it will be misjudged;
 
 Default `config.json` is as follow:
 
@@ -205,6 +195,16 @@ Default `config.json` is as follow:
     "ignore": ["out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode"]
 }
 ```
+
+ + **`suffix`**: what suffix code files that you want to count;
+ + **`comment`**: the comment symbol, which can be judged whether the current line is a comment;
+ + **`ignore`**: ignore some directories or files that you don't want to count.
+
+> **NOTE**
+> 
+> + For **`suffix`**, for example, `Python` file's suffix is  `py`, `C++` file's suffix is `cpp`
+> + For **`ignore`**, if you want to count how much code you have written, but there are some code generated automatically by the project, ignoring the generated code will make the statistics more accurate
+> + For **`comment`**, if a comment is between two comment symbols and there is no other comment symbol at the beginning of the line, the content of the line may be misjudged, such as identifying the comment as code
 
 ## [License](https://github.com/InnoFang/code-counter/blob/master/LICENSE)
 

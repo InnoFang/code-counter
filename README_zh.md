@@ -1,210 +1,225 @@
 # Code Counter
 
-你想知道自己到底写过多少行代码吗？来吧，让我们来测一测。
+一个可以帮助你轻松地统计代码并显示详细结果的命令行界面（CLI）小工具。
 
-[English](README.md) | 中文
+[English](https://github.com/InnoFang/code-counter/blob/master/README.md) | 中文
 
-## 如何运行
+## 安装
+
+使用 PyPI 安装 ( 暂未上传 PyPI ) :
 
 ```shell
-$ git clone https://github.com/innofang/code-counter.git
-$ cd code-counter/
-$ python code-counter.py -p code-counter.py
+pip install code-counter
 ```
 
-更多使用方法请参考下方的 [用法](#usage) 和 [案例](#example)。 
+也可以使用源码进行安装
+
+```shell
+git clone https://github.com/innofang/code-counter.git
+cd code-counter/
+python setup.py install
+```
+
+## 快速开始
+
+切换到任意代码目录下 ( 比如 `code-counter` ) ，并键入如下命令
+
+```shell
+$ codecount .
+
+        RESULT
+        ====================
+        Total file lines    :     344 (100.00%)
+        Total code lines    :     269 ( 78.20%)
+        Total blank lines   :      55 ( 15.99%)
+        Total comment lines :      20 (  5.81%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                py  |         7  |   100.00%  |       269  |   100.00%
+
+        Totally cost 0.010030031204223633s.
+
+```
+
+更多使用方法请参考 [用法](#usage) 和 [案例](#example)。 
 
 <h2 id="usage">用法</h2>
 
+
 ```shell 
-usage: code-counter [-h] [-i INPUT] [-p PATH] [-o OUTPUT] [-v]
+usage: code-counter [-h] [-l] [-v] [-g] [-o OUTPUT_PATH] path
 
 Let's get count your code
 
+positional arguments:
+  path                  specify a file or directory path you want to search
+
 optional arguments:
   -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        the file contains a list of file path, which can make
-                        you search more than one file or directory
-  -p PATH, --path PATH  specify a file or directory path you want to search
-  -o OUTPUT, --output OUTPUT
+  -l, --list            the file contains a list of file path, which can make you search more than one file or directory
+  -v, --verbose         show verbose infomation
+  -g, --graph           choose to whether to visualize the result
+  -o OUTPUT_PATH, --output OUTPUT_PATH
                         specify a output path if you want to store the result
-  -v, --visual          choose to whether to visualize the result
-
 ```
-
-## 配置
-
-如果你想添加你想计数的文件类型、增加注释符号、或者忽略一些文件夹，你可以进行一些配置。
-
-请查看 [config.py](config.py)
-
-```
-config = {
-    # 哪些代码文件是你想统计的？请将文件后缀填写在下面
-    'suffix': ('py', 'java', 'c', 'cpp', 'js', 'pde', 'kt', 'dart'),
-
-    # 注释符号，可以用来判断当前行是否是一个注释，可自行补充
-    # 若当前行是在注释符号之间，且行首无注释符号，则当前行可能会被错判
-    'comment': ('#', '//', '/*', '/**', '*', ':', ';'),
-
-    # 忽略一些由项目生成的文件夹或者文件，可自行补充
-    'ignore': ('out', 'venv', '.git', '.idea', 'build', 'target', 'node_modules'),
-}
-
-```
-
-> 若你想统计某个项目自己写了多少行代码，那么利用 `ignore` 来忽略项目生成的代码文件会更客观点
 
 <h2 id="example">案例</h2>
 
-### 直接指定一个文件路径
+### 直接指定文件或目录路径
 
 ```shell
-$ python code-counter.py -p code-counter.py
+$ codecount ./code-counter
+
+        RESULT
+        ====================
+        Total file lines    :     344 (100.00%)
+        Total code lines    :     269 ( 78.20%)
+        Total blank lines   :      55 ( 15.99%)
+        Total comment lines :      20 (  5.81%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                py  |         7  |   100.00%  |       269  |   100.00%
+
+        Totally cost 0.00899815559387207s.
+
+
+```
+
+### 多路径输入（使用一个包含文件或目录路径列表的文件作为输入）
+
+创建一个文件，比如叫 `list.txt`，该文件将包含多个文件或目录路径，如下所示
+
+```
+F:/Github/miscode
+F:/IDEA/jokul
+```
+
+然后使用 `[-l --list]` 来指定 `list.txt` 是包含路径列表的文件：
+
+```shell
+$ codecount ./list.txt -l
+
+        RESULT
+        ====================
+        Total file lines    :   35137 (100.00%)
+        Total code lines    :   24235 ( 68.97%)
+        Total blank lines   :    5009 ( 14.26%)
+        Total comment lines :    5893 ( 16.77%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+              java  |       236  |    36.48%  |      7074  |    29.19%
+                 c  |        28  |     4.33%  |      2533  |    10.45%
+                 h  |         8  |     1.24%  |       503  |     2.08%
+               cpp  |        75  |    11.59%  |      3094  |    12.77%
+                go  |        33  |     5.10%  |      1036  |     4.27%
+                js  |        21  |     3.25%  |      1664  |     6.87%
+                kt  |        26  |     4.02%  |       696  |     2.87%
+              lisp  |         1  |     0.15%  |        48  |     0.20%
+               pde  |        59  |     9.12%  |      1930  |     7.96%
+                py  |       160  |    24.73%  |      5657  |    23.34%
+
+        Totally cost 6.179003953933716s.
+
+```
+
+### 展示详细搜索信息
+
+搜索信息默认是不显示的。如果你比较关注搜索信息，可以使用 `[-v --verbose]` 来查看它：
+
+
+```
+$ codecount ./code-counter -v
 
         SEARCHING
         ====================
          File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
         ------------------------------------------------------------------------------------------
-                py  |       192  |       149  |        30  |        13  |  code-counter.py
+                py  |        12  |         8  |         2  |         2  |  ./code-counter/code_counter/conf/config.py
+                py  |         0  |         0  |         0  |         0  |  ./code-counter/code_counter/conf/__init__.py
+                py  |       240  |       187  |        37  |        16  |  ./code-counter/code_counter/core/codecounter.py
+                py  |         0  |         0  |         0  |         0  |  ./code-counter/code_counter/core/__init__.py
+                py  |         1  |         1  |         0  |         0  |  ./code-counter/code_counter/__init__.py
+                py  |        43  |        29  |        12  |         2  |  ./code-counter/code_counter/__main__.py
+                py  |        48  |        44  |         4  |         0  |  ./code-counter/setup.py
 
         RESULT
         ====================
-        Total file lines    :     192 (100.00%)
-        Total code lines    :     149 ( 77.60%)
-        Total blank lines   :      30 ( 15.62%)
-        Total comment lines :      13 (  6.77%)
+        Total file lines    :     344 (100.00%)
+        Total code lines    :     269 ( 78.20%)
+        Total blank lines   :      55 ( 15.99%)
+        Total comment lines :      20 (  5.81%)
 
-              Type  |     Files  |     Ratio  |     Codes  |     Ratio
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
         -----------------------------------------------------------------
-                py  |         1  |   100.00%  |       149  |   100.00%
+                py  |         7  |   100.00%  |       269  |   100.00%
 
-        Totally cost 0.00102996826171875s.
+        Totally cost 0.00899958610534668s.
 
 ```
 
-### 直接指定一个目录路径
+
+### 指定输出路径
+
+通过 `[-o --output]` 来指定输出路径，如果制定了输出路径，那么输出信息将不会显示在控制台，如下所示：
 
 ```shell
-$ python code-counter.py -p .
+$ codecount ./code-counter -v -o ./result.txt
 
-        SEARCHING
-        ====================
-         File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
-        ------------------------------------------------------------------------------------------
-                py  |       192  |       149  |        30  |        13  |  .\code-counter.py
-                py  |        15  |         5  |         2  |         8  |  .\config.py
-
-        RESULT
-        ====================
-        Total file lines    :     207 (100.00%)
-        Total code lines    :     154 ( 74.40%)
-        Total blank lines   :      32 ( 15.46%)
-        Total comment lines :      21 ( 10.14%)
-
-              Type  |     Files  |     Ratio  |     Codes  |     Ratio
-        -----------------------------------------------------------------
-                py  |         2  |   100.00%  |       154  |   100.00%
-
-        Totally cost 0.003002166748046875s.
+        Totally cost 0.012001991271972656s.
 
 ```
 
-### 使用一个包含一系列文件路径和目录路径的文件作为输入
+详细的搜索信息和结果将写入到 `./result.txt` 中
+### 可视化统计结果
 
-首先，在当前目录创建一个名为 `list.txt` 或者任何你想命名的文件，该文件将包含多个文件路径或目录路径，如下所示
-
-```
-F:\Github\playground\
-F:\IDEA\jokul
-...
-```
-
-> **提示** 如果你不想在当前目录创建文件，那么你可以在任何地方创建并把文件路径作为输入
-
-然后使用 `list.txt` 作为输入：
-
-```shell
-$ python code-counter.py -i list.txt
-
-	SEARCHING
-	====================
-	 File Type  |     Lines  |      Code  |     Blank  |   Comment  |  File Path
-	------------------------------------------------------------------------------------------
-	      java  |        47  |        31  |        12  |         4  |  F:\Github\playground\Android\ActivityCollector.java
-	      java  |        53  |        32  |         8  |        13  |  F:\Github\playground\Android\AppUtil.java
-	      java  |       192  |       141  |        29  |        22  |  F:\Github\playground\Android\CircularAnimUtil.java
-                ...          ...          ...         ...           ...    ...
-                ...          ...          ...         ...           ...    ...
-                ...          ...          ...         ...           ...    ...
-	      java  |        37  |        28  |         6  |         3  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\controller\MovieControllerTest.java
-	      java  |       305  |       266  |        24  |        15  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\repositories\MovieRepositoryTest.java
-	      java  |        61  |        51  |         7  |         3  |  F:\IDEA\jokul\jokul-server\src\test\java\io\innofang\jokul\repositories\TypeRepositoryTest.java
-
-	RESULT
-	====================
-	Total file lines    :   31890 (100.00%)
-	Total code lines    :   21842 ( 68.49%)
-	Total blank lines   :    4518 ( 14.17%)
-	Total comment lines :    5530 ( 17.34%)
-
-	      Type  |     Files  |     Ratio  |     Codes  |     Ratio
-	-----------------------------------------------------------------
-	        js  |        21  |     3.61%  |      1664  |     7.62%
-	        py  |       158  |    27.19%  |      5602  |    25.65%
-	        kt  |        26  |     4.48%  |       696  |     3.19%
-	         c  |        28  |     4.82%  |      2533  |    11.60%
-	      java  |       211  |    36.32%  |      6235  |    28.55%
-	       cpp  |        75  |    12.91%  |      3094  |    14.17%
-	       pde  |        62  |    10.67%  |      2018  |     9.24%
-
-
-        Totally cost 0.23161602020263672s.
+数据可视化可以给我们更直观的感受，所以我提供了将统计结果可视化的指令 `[-g --graph]`。使用示例如下：
 
 ```
-
-> **提示** 为了展示省略了一些输出
-
-使用路径还是文件作为输入是你的自由，但是选择其中一个就足够了。如果你同时指定了两者，那么选项 `[-p PATH]` 将会覆盖选项  `[-i INPUT]`。
-
-### 此外，你也可以指定一个输出路径
-
-通过 `[-o --output]` 来指定输出路径，如下所示：
-
-```shell
-$ python code-counter.py -p code-counter.py -o result.txt
-$ python code-counter.py -i list.txt -o output.txt
+$ codecount list.txt -l -g
 ```
 
-输出路径是可选的，如果你指定了它的话，输出将直接到文件中而不会显示在控制台。
-
-### 统计结果可视化
-
-数据可视化可以给我们更直观的感受，所以我们提供了将统计结果可视化的指令  `[-v --visual]`。使用示例如下：
-
-```
-$ python code-counter.py -i list.txt -v
-```
-
-上面已经粗略的展示了最终的统计结果，现在来看看更直观的可视化结果
+除了显示文本统计数据之外，还会展示如下图的的统计图表
 
 ![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
-## [License](./LICENSE)
 
-    Code Counter: Count your code lines
-    Copyright (C) 2019  InnoFang
+## 配置
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+默认的配置文件 `config.json` 如下所示:
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+```json
+{
+    "suffix": ["py", "java", "c", "h", "cpp", "hpp", "js", "pde", "kt", "dart", "go", "lisp", "cu", "cuh"],
+    "comment": ["#", "//", "/*", "*", ":", ";"],
+    "ignore": ["out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode"]
+}
+```
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ + **`suffix`**: 你想统计的代码文件的后缀
+ + **`comment`**: 注释符号，用来判断当前行是否是注释
+ + **`ignore`**: 忽略一些你不想统计的目录或文件
+
+> **注意**
+> 
+> + 对于 **`suffix`**, 举例来说, `Python` 文件的后缀是  `py`, `C++` 文件的后缀是 `cpp`
+> + 对于 **`ignore`**, 如果你想统计你写了多少代码，但存在一些项目自动生成的代码，那么忽略掉这些生成代码会使统计结果更准确
+> + 对于 **`comment`**, 如果某一行注释位于两个注释符号之间，并且该行开头没有其它注释符号作为标记，那么这一行的内容可能会被误判，比如将该行注释识别为代码
+
+## [License](https://github.com/InnoFang/code-counter/blob/master/LICENSE)
+
+        Copyright 2019 Inno Fang
+
+        Licensed under the Apache License, Version 2.0 (the "License");
+        you may not use this file except in compliance with the License.
+        You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.

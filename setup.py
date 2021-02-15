@@ -2,7 +2,7 @@
 import os
 from setuptools import setup, find_packages
 
-short_desc = "A command-line interface(CLI) utilty taht helps you count your code lines."
+short_desc = "A command-line interface (CLI) utility that can help you easily count code and display detailed results."
 
 def read_readme(file_name):
     with open(os.path.join(os.path.dirname(__file__), file_name), encoding='utf-8') as f:

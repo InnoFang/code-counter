@@ -1,18 +1,18 @@
 # Code Counter
 
-A command-line interface (CLI) utility that can help you easily count code and display detailed results.
+一个可以帮助你轻松地统计代码并显示详细结果的命令行界面（CLI）小工具。
 
-English | [中文](https://github.com/InnoFang/code-counter/blob/master/README_CN.md)
+[English](https://github.com/InnoFang/code-counter/blob/master/README.md) | 中文
 
-## Installation
+## 安装
 
-Install by PyPI (It hasn't been uploaded to pypi yet):
+使用 PyPI 安装 ( 暂未上传 PyPI ) :
 
 ```shell
 pip install code-counter
 ```
 
-Also you can install it from the source code:
+也可以使用源码进行安装
 
 ```shell
 git clone https://github.com/innofang/code-counter.git
@@ -20,9 +20,9 @@ cd code-counter/
 python setup.py install
 ```
 
-## Quick Start
+## 快速开始
 
-Switch to any code directory (e.g. `code-counter`), and enter the following command:
+切换到任意代码目录下 ( 比如 `code-counter` ) ，并键入如下命令
 
 ```shell
 $ codecount .
@@ -42,9 +42,10 @@ $ codecount .
 
 ```
 
-Refer to [Usage](#usage) and [Example](#example) below for more usage.
+更多使用方法请参考 [用法](#usage) 和 [案例](#example)。 
 
-<h2 id="usage">Usage</h2>
+<h2 id="usage">用法</h2>
+
 
 ```shell 
 usage: code-counter [-h] [-l] [-v] [-g] [-o OUTPUT_PATH] path
@@ -63,9 +64,9 @@ optional arguments:
                         specify a output path if you want to store the result
 ```
 
-<h2 id="example">Example</h2>
+<h2 id="example">案例</h2>
 
-### Specify a path (file or directory) directly
+### 直接指定文件或目录路径
 
 ```shell
 $ codecount ./code-counter
@@ -86,16 +87,16 @@ $ codecount ./code-counter
 
 ```
 
-### Multipath input (Use a file that contain a list of file or directory path as input)
+### 多路径输入（使用一个包含文件或目录路径列表的文件作为输入）
 
-Create a file, such as named `list.txt`, which contain various file path or directory path, just as follow:
+创建一个文件，比如叫 `list.txt`，该文件将包含多个文件或目录路径，如下所示
 
 ```
 F:/Github/miscode
 F:/IDEA/jokul
 ```
 
-then use `[-l --list]` to specify `list.txt` contain a list of path:
+然后使用 `[-l --list]` 来指定 `list.txt` 是包含路径列表的文件：
 
 ```shell
 $ codecount ./list.txt -l
@@ -124,9 +125,10 @@ $ codecount ./list.txt -l
 
 ```
 
-### Show verbose searching information
+### 展示详细搜索信息
 
-Searching information is not displayed by default. If you concern about the searching information, you can use `[-v --verbose]` to view it:
+搜索信息默认是不显示的。如果你比较关注搜索信息，可以使用 `[-v --verbose]` 来查看它：
+
 
 ```
 $ codecount ./code-counter -v
@@ -158,9 +160,10 @@ $ codecount ./code-counter -v
 
 ```
 
-### Specify an output path
 
-The output path is specified by `[-o --output]`, if you have specified it, the output information would not display on the console, as follows:
+### 指定输出路径
+
+通过 `[-o --output]` 来指定输出路径，如果制定了输出路径，那么输出信息将不会显示在控制台，如下所示：
 
 ```shell
 $ codecount ./code-counter -v -o ./result.txt
@@ -169,24 +172,23 @@ $ codecount ./code-counter -v -o ./result.txt
 
 ```
 
-Verbose searching information and results have been written in `./result.txt`
+详细的搜索信息和结果将写入到 `./result.txt` 中
+### 可视化统计结果
 
-### Visualize statistical results
-
-Data visualization can give us a more intuitive feeling, so I provide the visualization instruction `[-g --graph]` that used to visualize the statistics, just as follow:
+数据可视化可以给我们更直观的感受，所以我提供了将统计结果可视化的指令 `[-g --graph]`。使用示例如下：
 
 ```
 $ codecount list.txt -l -g
 ```
 
-In addition to the text statistics, the statistical chart as shown in the figure below will also be displayed
+除了显示文本统计数据之外，还会展示如下图的的统计图表
 
 ![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
 
-## Configuration
+## 配置
 
-Default `config.json` is as follow:
+默认的配置文件 `config.json` 如下所示:
 
 ```json
 {
@@ -196,15 +198,15 @@ Default `config.json` is as follow:
 }
 ```
 
- + **`suffix`**: what suffix code files that you want to count;
- + **`comment`**: the comment symbol, which can be judged whether the current line is a comment;
- + **`ignore`**: ignore some directories or files that you don't want to count.
+ + **`suffix`**: 你想统计的代码文件的后缀
+ + **`comment`**: 注释符号，用来判断当前行是否是注释
+ + **`ignore`**: 忽略一些你不想统计的目录或文件
 
-> **NOTE**
+> **注意**
 > 
-> + For **`suffix`**, for example, `Python` file's suffix is  `py`, `C++` file's suffix is `cpp`
-> + For **`ignore`**, if you want to count how much code you have written, but there are some code generated automatically by the project, ignoring the generated code will make the statistics more accurate
-> + For **`comment`**, if a comment is between two comment symbols and there is no other comment symbol at the beginning of the line, the content of the line may be misjudged, such as identifying the comment as code
+> + 对于 **`suffix`**, 举例来说, `Python` 文件的后缀是  `py`, `C++` 文件的后缀是 `cpp`
+> + 对于 **`ignore`**, 如果你想统计你写了多少代码，但存在一些项目自动生成的代码，那么忽略掉这些生成代码会使统计结果更准确
+> + 对于 **`comment`**, 如果某一行注释位于两个注释符号之间，并且该行开头没有其它注释符号作为标记，那么这一行的内容可能会被误判，比如将该行注释识别为代码
 
 ## [License](https://github.com/InnoFang/code-counter/blob/master/LICENSE)
 

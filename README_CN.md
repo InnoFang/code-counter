@@ -1,18 +1,18 @@
 # Code Counter
 
-A command-line interface (CLI) utility that can help you easily count code and display detailed results.
+一个可以帮助你轻松地统计代码并显示详细结果的命令行界面（CLI）小工具。
 
-English | [中文](https://github.com/InnoFang/code-counter/blob/master/README_CN.md)
+[English](https://github.com/InnoFang/code-counter/blob/master/README.md) | 中文
 
-## Installation
+## 安装
 
-Install by PyPI (It hasn't been uploaded to pypi yet):
+使用 PyPI 安装 ( 暂未上传 PyPI ) :
 
 ```shell
 pip install code-counter
 ```
 
-Also you can install it from the source code:
+也可以使用源码进行安装
 
 ```shell
 git clone https://github.com/innofang/code-counter.git
@@ -20,9 +20,9 @@ cd code-counter/
 python setup.py install
 ```
 
-## Quick Start
+## 快速开始
 
-Switch to any code directory (e.g. `code-counter`), and enter the following command:
+切换到任意代码目录下 ( 比如 `code-counter` ) ，并键入如下命令
 
 ```shell
 $ codecount .
@@ -42,9 +42,10 @@ $ codecount .
 
 ```
 
-Refer to [Usage](#usage) and [Example](#example) below for more usage.
+更多使用方法请参考 [用法](#usage) 和 [案例](#example)。 
 
-<h2 id="usage">Usage</h2>
+<h2 id="usage">用法</h2>
+
 
 ```shell 
 $ codecount -h
@@ -85,9 +86,9 @@ optional arguments:
 
 ```
 
-<h2 id="example">Example</h2>
+<h2 id="example">案例</h2>
 
-### Specify a path (file or directory) directly
+### 直接指定文件或目录路径
 
 ```shell
 $ codecount ./code-counter
@@ -108,16 +109,16 @@ $ codecount ./code-counter
 
 ```
 
-### Multipath input (Use a file that contain a list of file or directory path as input)
+### 多路径输入（使用一个包含文件或目录路径列表的文件作为输入）
 
-Create a file, such as named `list.txt`, which contain various file path or directory path, just as follow:
+创建一个文件，比如叫 `list.txt`，该文件将包含多个文件或目录路径，如下所示
 
 ```
 F:/Github/miscode
 F:/IDEA/jokul
 ```
 
-then use `[-l --list]` to specify `list.txt` contain a list of path:
+然后使用 `[-l --list]` 来指定 `list.txt` 是包含路径列表的文件：
 
 ```shell
 $ codecount ./list.txt -l
@@ -146,9 +147,10 @@ $ codecount ./list.txt -l
 
 ```
 
-### Show verbose searching information
+### 展示详细搜索信息
 
-Searching information is not displayed by default. If you concern about the searching information, you can use `[-v --verbose]` to view it:
+搜索信息默认是不显示的。如果你比较关注搜索信息，可以使用 `[-v --verbose]` 来查看它：
+
 
 ```
 $ codecount ./code-counter -v
@@ -180,9 +182,10 @@ $ codecount ./code-counter -v
 
 ```
 
-### Specify an output path
 
-The output path is specified by `[-o --output]`, if you have specified it, the output information would not display on the console, as follows:
+### 指定输出路径
+
+通过 `[-o --output]` 来指定输出路径，如果制定了输出路径，那么输出信息将不会显示在控制台，如下所示：
 
 ```shell
 $ codecount ./code-counter -v -o ./result.txt
@@ -191,24 +194,23 @@ $ codecount ./code-counter -v -o ./result.txt
 
 ```
 
-Verbose searching information and results have been written in `./result.txt`
+详细的搜索信息和结果将写入到 `./result.txt` 中
+### 可视化统计结果
 
-### Visualize statistical results
-
-Data visualization can give us a more intuitive feeling, so I provide the visualization instruction `[-g --graph]` that used to visualize the statistics, just as follow:
+数据可视化可以给我们更直观的感受，所以我提供了将统计结果可视化的指令 `[-g --graph]`。使用示例如下：
 
 ```
 $ codecount list.txt -l -g
 ```
 
-In addition to the text statistics, the statistical chart as shown in the figure below will also be displayed
+除了显示文本统计数据之外，还会展示如下图的的统计图表
 
 ![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
 
-## Configuration
+## 配置
 
-Default `config.json` is as follow:
+默认的配置文件 `config.json` 如下所示:
 
 ```json
 {
@@ -268,19 +270,19 @@ Default `config.json` is as follow:
 }
 ```
 
- + **`suffix`**: what code files do you want to count;
- + **`comment`**: the comment symbol, which can be judged whether the current line is a comment;
- + **`ignore`**: ignore some directories or files that you don't want to count.
+ + **`suffix`**: 你想统计的代码文件的后缀
+ + **`comment`**: 注释符号，用来判断当前行是否是注释
+ + **`ignore`**: 忽略一些你不想统计的目录或文件
 
-> **NOTE**
+> **注意**
 > 
-> + For **`suffix`**, for example, `Python` file's suffix is  `py`, `C++` file's suffix is `cpp`
-> + For **`ignore`**, if you want to count how much code you have written, but there are some code generated automatically by the project, ignoring the generated code will make the statistics more accurate
-> + For **`comment`**, if a comment is between two comment symbols and there is no other comment symbol at the beginning of the line, the content of the line may be misjudged, such as identifying the comment as code
+> + 对于 **`suffix`**, 举例来说, `Python` 文件的后缀是  `py`, `C++` 文件的后缀是 `cpp`
+> + 对于 **`ignore`**, 如果你想统计你写了多少代码，但存在一些项目自动生成的代码，那么忽略掉这些生成代码会使统计结果更准确
+> + 对于 **`comment`**, 如果某一行注释位于两个注释符号之间，并且该行开头没有其它注释符号作为标记，那么这一行的内容可能会被误判，比如将该行注释识别为代码
 
-### Specify `suffix`
+### 指定 `suffix`
 
-The default suffix already contains common code suffixes, but if you know exactly what type of code you want to count, you can specify suffixes directly, which can ignore files that don't need to be counted and speed up the counting. [--suffix]` receive a parameter list (split by `,`).
+默认的 `suffix` 已经包含了常见的代码后缀，但是如果你明确的知道要计数的代码类型有哪些，那么可以直接指定后缀，这样可以忽略不需要计数的文件并加快计数。 `[--suffix]` 接受一个参数列表（使用 `,` 分割参数）。
 
 ```shell
 $ codecount ./jokul --suffix="html,css,java,js"
@@ -302,11 +304,11 @@ $ codecount ./jokul --suffix="html,css,java,js"
         Totally cost 0.0800015926361084s.
 ```
 
-But this way of setting parameters is one-time. If you want to set parameters and save them, you can use `[--suffix-save]`.
+这种设置参数的方式是一次性的，如果你想设置参数并保存，可以使用 `[--suffix-save]`
 
-#### Specify `suffix` and override
+#### 指定 `suffix` 并覆盖
 
-Use instruction `[--suffix-save]` and receive a parameter list (split by `,`).
+使用指令 `[--suffix-save]` 并接受参数列表（使用 `,` 分割参数）。
 
 ```shell
 $ codecount ./jokul --suffix-save="html,css,java,js"
@@ -330,9 +332,9 @@ $ codecount ./jokul --suffix-save="html,css,java,js"
 
 ```
 
-#### Add `suffix` parameters
+#### 添加 `suffix` 参数
 
-If you don't want to override the default config, but just want to add some new suffix for config, you can use `[--suffix-add]`. This way will still modify the `config.json`, so need you to confirm to perform.
+如果不想覆盖默认配置，只是想为 `suffix` 追加一些新的值，可以使用指令 `[--suffix-add]`. 这种方式仍然会修改 `config.json`，所以需要你确认一下。
 
 ```shell
 $ codecount ./jokul --suffix-add="html,css,java,js"
@@ -355,9 +357,9 @@ $ codecount ./jokul --suffix-add="html,css,java,js"
         Totally cost 0.06599712371826172s.
 ```
 
-### Specify `comment`
+### 指定 `comment`
 
-If you know the type of code to be counted, and know what the comment symbols of the language are, you can use `[--comment]` to set.
+如果知道要统计的代码类型且知道语言的注释符号有哪些，可以使用 `[--comment]` 来设置。
 
 ```shell
 $ codecount ./code-counter --comment='#,"""'
@@ -376,19 +378,20 @@ $ codecount ./code-counter --comment='#,"""'
         Totally cost 0.023006200790405273s.
 ```
 
-This way also is one-time.
+这种设置方式也是一次性的
 
-#### Specify `comment` and override
+#### 指定 `comment` 并覆盖
 
-In the default config, `comment` already contains common comment symbols, so you don't need to modify it. If you need to override the default value of 'comment' indeed, you can use `[--comment-save]` to override it.
+在默认配置中，`comment` 已经包含了常见的注释符号，因此没有修改的必要。但是如果确实需要覆盖掉 `comment` 的默认值，可以使用 `[--comment-save]` 来修改。
 
-#### Add `comment` parameters
+#### 添加 `comment` 参数
 
-If you want to add some new comment symbols, you can use `[--comment-add]`.
+可以使用 `[--comment-add]` 来添加新的注释符号。
 
-### Specify `ignore`
+### 指定 `ignore`
 
-Ignoring unnecessary folders can speed up the count, use `[--ignore]` to set.
+忽略不必要的的文件夹可以加快计数，使用 `[--ignore]` 来设置。
+
 
 ```shell
 $ codecount ./code-counter/ --ignore="__pycache__"
@@ -407,27 +410,25 @@ $ codecount ./code-counter/ --ignore="__pycache__"
         Totally cost 0.15700435638427734s.
 ```
 
-This way also is one-time.
+#### 指定 `ignore` 并覆盖
 
-#### Specify `ignore` and override
+可以使用 `[--ignore-save]` 来覆盖默认的 `ignore` 参数。
 
-If the default `ignore` is not what you want, you can use `[--ignore-save]` to modify it.
+#### 添加 `ignore` 参数
 
-#### Add `ignore` parameters
+如果默认的 `ignore` 缺少所需的参数，并且不想重写默认值，可以使用 `[--ignore-add]` 来添加一些新值。
 
-If the default `ignore` is missing the value you need, and you don't want to override the default value,  you can use `[--ignore-add]` to add some new value for `ignore`.
+### 显示参数配置
 
-### Show config
-
-Use placeholder `CONFIG` to show the content of `config.json`.
+使用占位符 `CONFIG` 来显示 `config.json` 的内容
 
 ```shell
 $ codecount CONFIG
 ```
 
-### The better way to modify the config
+### 更佳的修改配置的方式
 
-Sometimes we don't want to search and count when we modify `config.json`, so we can use the placeholder `CONFIG` to indicate that we only modify the config without searching and counting. Using the placeholder 'config' to set the parameter will display the updated value after modifying the parameter.
+有时候修改配置时并不需要进行搜索和计数，所以可以使用占位符 `CONFIG` 来表示只修改配置，而不进行搜索和技术。使用占位符 `CONFIG` 来设置参数，会在修改完参数后显示更新后的值。
 
 ```shell
 $ codecount CONFIG --suffix-save="java,js,html,py" --comment-save="//,#,/**" --ignore-add="__pycache__"
@@ -461,9 +462,9 @@ $ codecount CONFIG --suffix-save="java,js,html,py" --comment-save="//,#,/**" --i
 }
 ```
 
-### Restore default config
+### 恢复默认配置
 
-Use `[--restore]` to restore the default config.
+使用 `[--restore]` 来恢复默认配置
 
 ```shell
 $ codecount CONFIG --restore

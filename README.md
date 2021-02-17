@@ -47,20 +47,42 @@ Refer to [Usage](#usage) and [Example](#example) below for more usage.
 <h2 id="usage">Usage</h2>
 
 ```shell 
-usage: code-counter [-h] [-l] [-v] [-g] [-o OUTPUT_PATH] path
+$ codecount -h
+usage: code-counter [-h] [-V] [-l] [-v] [-g] [-o OUTPUT] [--suffix SUFFIX] [--suffix-save SUFFIX_SAVE] [--suffix-add SUFFIX_ADD] [--comment COMMENT]
+                    [--comment-save COMMENT_SAVE] [--comment-add COMMENT_ADD] [--ignore IGNORE] [--ignore-save IGNORE_SAVE] [--ignore-add IGNORE_ADD]
+                    [--restore]
+                    [path, CONFIG]
 
-Let's get count your code
+A command-line interface (CLI) utility that can help you easily count code and display detailed results.
 
 positional arguments:
-  path                  specify a file or directory path you want to search
+  [path, CONFIG]        specify a file or directory path you want to count or use CONFIG placeholder to configure
 
 optional arguments:
   -h, --help            show this help message and exit
+  -V, --version         show program's version number and exit
   -l, --list            the file contains a list of file path, which can make you search more than one file or directory
   -v, --verbose         show verbose infomation
   -g, --graph           choose to whether to visualize the result
-  -o OUTPUT_PATH, --output OUTPUT_PATH
+  -o OUTPUT, --output OUTPUT
                         specify a output path if you want to store the result
+  --suffix SUFFIX       what code files do you want to count, this parameter is disposable
+  --suffix-save SUFFIX_SAVE
+                        override 'suffix' in config and count codes according to this value
+  --suffix-add SUFFIX_ADD
+                        append new value for 'suffix' in config and count codes according to this value
+  --comment COMMENT     the comment symbol, which can be judged whether the current line is a comment, this parameter is disposable
+  --comment-save COMMENT_SAVE
+                        override 'comment' in config and count comment lines according to this value
+  --comment-add COMMENT_ADD
+                        append new value for 'comment' in config and count comment lines according to this value
+  --ignore IGNORE       ignore some directories or files that you don't want to count, this parameter is disposable
+  --ignore-save IGNORE_SAVE
+                        override 'ignore' in config and ignore some files or directory according to this value
+  --ignore-add IGNORE_ADD
+                        append new value for 'ignore' in config and ignore some files or directory according to this value
+  --restore             restore default config
+
 ```
 
 <h2 id="example">Example</h2>
@@ -190,13 +212,63 @@ Default `config.json` is as follow:
 
 ```json
 {
-    "suffix": ["py", "java", "c", "h", "cpp", "hpp", "js", "pde", "kt", "dart", "go", "lisp", "cu", "cuh"],
-    "comment": ["#", "//", "/*", "*", ":", ";"],
-    "ignore": ["out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode"]
+    "suffix": [
+        "c",
+        "cc",
+        "clj",
+        "cpp",
+        "cs",
+        "cu",
+        "cuh",
+        "dart",
+        "go",
+        "h",
+        "hpp",
+        "java",
+        "jl",
+        "js",
+        "kt",
+        "lisp",
+        "lua",
+        "pde",
+        "m",
+        "php",
+        "py",
+        "R",
+        "rb",
+        "rs",
+        "rust",
+        "sh",
+        "scala",
+        "swift",
+        "ts",
+        "vb"
+    ],
+    "comment": [
+        "#",
+        "//",
+        "/*",
+        "*",
+        "*/",
+        ":",
+        ";",
+        "\"\"\"\""
+    ],
+    "ignore": [
+        "out",
+        "venv",
+        ".git",
+        ".idea",
+        "build",
+        "target",
+        "node_modules",
+        ".vscode",
+        "dist"
+    ]
 }
 ```
 
- + **`suffix`**: what suffix code files that you want to count;
+ + **`suffix`**: what code files do you want to count;
  + **`comment`**: the comment symbol, which can be judged whether the current line is a comment;
  + **`ignore`**: ignore some directories or files that you don't want to count.
 
@@ -205,6 +277,253 @@ Default `config.json` is as follow:
 > + For **`suffix`**, for example, `Python` file's suffix is  `py`, `C++` file's suffix is `cpp`
 > + For **`ignore`**, if you want to count how much code you have written, but there are some code generated automatically by the project, ignoring the generated code will make the statistics more accurate
 > + For **`comment`**, if a comment is between two comment symbols and there is no other comment symbol at the beginning of the line, the content of the line may be misjudged, such as identifying the comment as code
+
+### Specify `suffix`
+
+The default suffix already contains common code suffixes, but if you know exactly what type of code you want to count, you can specify suffixes directly, which can ignore files that don't need to be counted and speed up the counting. [--suffix]` receive a parameter list (split by `,`).
+
+```shell
+$ codecount ./jokul --suffix="html,css,java,js"
+
+        RESULT
+        ====================
+        Total file lines    :    3977 (100.00%)
+        Total code lines    :    3061 ( 76.97%)
+        Total blank lines   :     493 ( 12.40%)
+        Total comment lines :     423 ( 10.64%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                js  |        15  |    28.30%  |      1485  |    48.51%
+              html  |         1  |     1.89%  |        38  |     1.24%
+               css  |         9  |    16.98%  |       338  |    11.04%
+              java  |        28  |    52.83%  |      1200  |    39.20%
+
+        Totally cost 0.0800015926361084s.
+```
+
+But this way of setting parameters is one-time. If you want to set parameters and save them, you can use `[--suffix-save]`.
+
+#### Specify `suffix` and override
+
+Use instruction `[--suffix-save]` and receive a parameter list (split by `,`).
+
+```shell
+$ codecount ./jokul --suffix-save="html,css,java,js"
+'suffix' will be replaced with ['html', 'css', 'java', 'js'] (y/n)y
+
+        RESULT
+        ====================
+        Total file lines    :    3977 (100.00%)
+        Total code lines    :    3061 ( 76.97%)
+        Total blank lines   :     493 ( 12.40%)
+        Total comment lines :     423 ( 10.64%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                js  |        15  |    28.30%  |      1485  |    48.51%
+              html  |         1  |     1.89%  |        38  |     1.24%
+               css  |         9  |    16.98%  |       338  |    11.04%
+              java  |        28  |    52.83%  |      1200  |    39.20%
+
+        Totally cost 0.07199478149414062s.
+
+```
+
+#### Add `suffix` parameters
+
+If you don't want to override the default config, but just want to add some new suffix for config, you can use `[--suffix-add]`. This way will still modify the `config.json`, so need you to confirm to perform.
+
+```shell
+$ codecount ./jokul --suffix-add="html,css,java,js"
+'suffix' will be appended with ['html', 'css', 'java', 'js'] (y/n)y
+
+        RESULT
+        ====================
+        Total file lines    :    3977 (100.00%)
+        Total code lines    :    3061 ( 76.97%)
+        Total blank lines   :     493 ( 12.40%)
+        Total comment lines :     423 ( 10.64%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                js  |        15  |    28.30%  |      1485  |    48.51%
+              html  |         1  |     1.89%  |        38  |     1.24%
+               css  |         9  |    16.98%  |       338  |    11.04%
+              java  |        28  |    52.83%  |      1200  |    39.20%
+
+        Totally cost 0.06599712371826172s.
+```
+
+### Specify `comment`
+
+If you know the type of code to be counted, and know what the comment symbols of the language are, you can use `[--comment]` to set.
+
+```shell
+$ codecount ./code-counter --comment='#,"""'
+
+        RESULT
+        ====================
+        Total file lines    :     449 (100.00%)
+        Total code lines    :     353 ( 78.62%)
+        Total blank lines   :      76 ( 16.93%)
+        Total comment lines :      20 (  4.45%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                py  |         7  |   100.00%  |       353  |   100.00%
+
+        Totally cost 0.023006200790405273s.
+```
+
+This way also is one-time.
+
+#### Specify `comment` and override
+
+In the default config, `comment` already contains common comment symbols, so you don't need to modify it. If you need to override the default value of 'comment' indeed, you can use `[--comment-save]` to override it.
+
+#### Add `comment` parameters
+
+If you want to add some new comment symbols, you can use `[--comment-add]`.
+
+### Specify `ignore`
+
+Ignoring unnecessary folders can speed up the count, use `[--ignore]` to set.
+
+```shell
+$ codecount ./code-counter/ --ignore="__pycache__"
+
+        RESULT
+        ====================
+        Total file lines    :     449 (100.00%)
+        Total code lines    :     349 ( 77.73%)
+        Total blank lines   :      76 ( 16.93%)
+        Total comment lines :      24 (  5.35%)
+
+              Type  |     Files  |     Ratio  |     Lines  |     Ratio
+        -----------------------------------------------------------------
+                py  |         7  |   100.00%  |       349  |   100.00%
+
+        Totally cost 0.15700435638427734s.
+```
+
+This way also is one-time.
+
+#### Specify `ignore` and override
+
+If the default `ignore` is not what you want, you can use `[--ignore-save]` to modify it.
+
+#### Add `ignore` parameters
+
+If the default `ignore` is missing the value you need, and you don't want to override the default value,  you can use `[--ignore-add]` to add some new value for `ignore`.
+
+### Show config
+
+Use placeholder `CONFIG` to show the content of `config.json`.
+
+```shell
+$ codecount CONFIG
+```
+
+### The better way to modify the config
+
+Sometimes we don't want to search and count when we modify `config.json`, so we can use the placeholder `CONFIG` to indicate that we only modify the config without searching and counting. Using the placeholder 'config' to set the parameter will display the updated value after modifying the parameter.
+
+```shell
+$ codecount CONFIG --suffix-save="java,js,html,py" --comment-save="//,#,/**" --ignore-add="__pycache__"
+'ignore' will be appended with ['__pycache__'] (y/n)y
+'suffix' will be replaced with ['java', 'js', 'html', 'py'] (y/n)y
+'comment' will be replaced with ['//', '#', '/**'] (y/n)y
+{
+    "suffix": [ 
+        "java", 
+        "js",
+        "html",
+        "py"
+    ],
+    "comment": [
+        "//",
+        "#",
+        "/**"
+    ],
+    "ignore": [
+        "out",
+        "venv",
+        ".git",
+        ".idea",
+        "build",
+        "target",
+        "node_modules",
+        ".vscode",
+        "dist",
+        "__pycache__"
+    ]
+}
+```
+
+### Restore default config
+
+Use `[--restore]` to restore the default config.
+
+```shell
+$ codecount CONFIG --restore
+Default configuration will be restored (y/n)?y
+{
+    "suffix": [
+        "c",   
+        "cc",  
+        "clj", 
+        "cpp", 
+        "cs",  
+        "cu",  
+        "cuh", 
+        "dart",
+        "go",  
+        "h",   
+        "hpp", 
+        "java",
+        "jl",  
+        "js",  
+        "kt",  
+        "lisp",
+        "lua", 
+        "pde",
+        "m",
+        "php",
+        "py",
+        "R",
+        "rb",
+        "rs",
+        "rust",
+        "sh",
+        "scala",
+        "swift",
+        "ts",
+        "vb"
+    ],
+    "comment": [
+        "#",
+        "//",
+        "/*",
+        "*",
+        "*/",
+        ":",
+        ";",
+        "\"\"\"\""
+    ],
+    "ignore": [
+        "out",
+        "venv",
+        ".git",
+        ".idea",
+        "build",
+        "target",
+        "node_modules",
+        ".vscode",
+        "dist"
+    ]
+}
+```
 
 ## [License](https://github.com/InnoFang/code-counter/blob/master/LICENSE)
 

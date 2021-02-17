@@ -4,8 +4,8 @@
 import sys
 import time
 import argparse
-from core.codecounter import CodeCounter
-from conf.config import Config
+from code_counter.core.codecounter import CodeCounter
+from code_counter.conf.config import Config
 from code_counter import __version__
 
 def args_parser():
@@ -14,7 +14,7 @@ def args_parser():
 
     parser.add_argument('-V', '--version', action='version', version='%(prog)s {}'.format(__version__))
 
-    parser.add_argument('path', metavar='[path, CONFIG]',
+    parser.add_argument('param', metavar='[path, CONFIG]',
                         help="specify a file or directory path you want to count or use CONFIG placeholder to configure")
     parser.add_argument('-l', '--list', dest='use_list', action='store_true',
                         help="the file contains a list of file path, which can make you search more than one file or directory")
@@ -30,27 +30,27 @@ def args_parser():
 
     # suffix = parser.add_mutually_exclusive_group()
     parser.add_argument('--suffix', dest='suffix', type=config_args_type,
-                        help="")
+                        help="what code files do you want to count, this parameter is disposable")
     parser.add_argument('--suffix-save', dest='suffix_save', type=config_args_type,
-                        help="")
+                        help="override 'suffix' in config and count codes according to this value")
     parser.add_argument('--suffix-add', dest='suffix_add', type=config_args_type,
-                        help="")
+                        help="append new value for 'suffix' in config and count codes according to this value")
 
     # comment = parser.add_mutually_exclusive_group()
     parser.add_argument('--comment', dest='comment', type=config_args_type,
-                        help="")
+                        help="the comment symbol, which can be judged whether the current line is a comment, this parameter is disposable")
     parser.add_argument('--comment-save', dest='comment_save', type=config_args_type,
-                        help="")
+                        help="override 'comment' in config and count comment lines according to this value")
     parser.add_argument('--comment-add', dest='comment_add', type=config_args_type,
-                        help="")
+                        help="append new value for 'comment' in config and count comment lines according to this value")
 
     # ignore = parser.add_mutually_exclusive_group()
     parser.add_argument('--ignore', dest='ignore', type=config_args_type,
-                        help="")
+                        help="ignore some directories or files that you don't want to count, this parameter is disposable")
     parser.add_argument('--ignore-save', dest='ignore_save', type=config_args_type,
-                        help="")
+                        help="override 'ignore' in config and ignore some files or directory according to this value")
     parser.add_argument('--ignore-add', dest='ignore_add', type=config_args_type,
-                        help="")
+                        help="append new value for 'ignore' in config and ignore some files or directory according to this value")
 
     parser.add_argument('--restore', dest='restore', action='store_true',
                         help="restore default config")
@@ -62,14 +62,14 @@ def main():
     
     config = Config(args)
 
-    if args.path == 'CONFIG':
+    if args.param == 'CONFIG':
         config.show()
         sys.exit(0)
     
     code_counter = CodeCounter(config)
 
     time_start = time.time()
-    code_counter.count(args.path, args.verbose, args.use_list, args.output_path)
+    code_counter.count(args.param, args.verbose, args.use_list, args.output_path)
     time_end = time.time()
 
     print('\n\tTotally cost {}s.'.format(time_end - time_start))

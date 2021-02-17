@@ -55,14 +55,6 @@ class Config:
 
 		self.__update()
 		
-	def __restore(self):
-		self.suffix = ["py", "java", "c", "h", "cpp", "hpp", "js", "pde", "kt", "dart", "go", "lisp", "cu", "cuh"]
-		self.comment = ["#", "//", "/*", "*", ":", ";"]
-		self.ignore = ["out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode"]
-
-		if self.__confirm('Default configuration will be restored (y/n)?'):
-			self.__update()
-
 	def __load(self):
 		filename = pkg_resources.resource_filename(__name__, 'config.json')
 		with open(filename, 'r') as config:
@@ -71,6 +63,15 @@ class Config:
 	
 	def __update(self):
 		filename = pkg_resources.resource_filename(__name__, 'config.json')
-		with open(filename,'w') as config:
+		with open(filename, 'w') as config:
 			json.dump(self.__dict__, config, indent=4)
 	
+	def __restore(self):
+		self.suffix = ["c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h",
+			           "hpp", "java", "jl", "js", "kt", "lisp", "lua", "pde", "m", "php",
+					   "py", "R", "rb", "rs", "rust", "sh", "scala", "swift", "ts", "vb"]
+		self.comment = ["#", "//", "/*", "*", "*/", ":", ";", '""""']
+		self.ignore = ["out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode", "dist"]
+
+		if self.__confirm('Default configuration will be restored (y/n)?'):
+			self.__update()

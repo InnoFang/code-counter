@@ -1,5 +1,27 @@
 {
-    "suffix": ["py", "java", "c", "h", "cpp", "hpp", "js", "pde", "kt", "dart", "go", "lisp", "cu", "cuh"],
-    "comment": ["#", "//", "/*", "*", ":", ";"],
-    "ignore": ["out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode"]
+    "suffix": [
+        "py",
+        "java",
+        "cpp",
+        "js",
+        "cu"
+    ],
+    "comment": [
+        "#",
+        "//",
+        "/*",
+        "*",
+        ":",
+        ";"
+    ],
+    "ignore": [
+        "out",
+        "venv",
+        ".git",
+        ".idea",
+        "build",
+        "target",
+        "node_modules",
+        ".vscode"
+    ]
 }

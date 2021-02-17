@@ -12,12 +12,12 @@ class CodeCounter:
         self.total_blank_lines = 0
         self.total_comment_lines = 0
         self.files_of_language = defaultdict(int)
-        self.lines_of_language = {suffix: 0 for suffix in config['suffix']}
+        self.lines_of_language = {suffix: 0 for suffix in config.suffix}
 
-        self.ignore = tuple(config['ignore'])
-        self.comment_symbol = tuple(config['comment'])
+        self.ignore = tuple(config.ignore)
+        self.comment_symbol = tuple(config.comment)
         
-        regex = '.*\.({})$'.format('|'.join(config['suffix']))
+        regex = '.*\.({})$'.format('|'.join(config.suffix))
         self.pattern = re.compile(regex)
         self.result = {
             'total': {

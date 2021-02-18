@@ -6,7 +6,7 @@
 
 ## 安装
 
-使用 PyPI 安装 ( 暂未上传 PyPI ) :
+使用 PyPI 安装:
 
 ```shell
 pip install code-counter

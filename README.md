@@ -6,7 +6,7 @@ English | [中文](https://github.com/InnoFang/code-counter/blob/master/README_C
 
 ## Installation
 
-Install by PyPI (It hasn't been uploaded to pypi yet):
+Install by PyPI:
 
 ```shell
 pip install code-counter

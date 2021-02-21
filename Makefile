@@ -3,11 +3,17 @@ setup:
 
 
 .PHONY:
-build:
-	python setup.py bdist_wheel
+check:
+	python setup.py check
+
+build:check
+	python setup.py sdist bdist_wheel
 
 install:build
 	pip install dist/*.whl
+
+upload:build
+	twine upload dist/*
 
 uninstall:
 	echo y | pip uninstall code-counter

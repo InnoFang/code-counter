@@ -3,6 +3,7 @@
 
 import sys
 import argparse
+from code_counter import __version__
 
 
 def config_args_type(args):
@@ -14,34 +15,31 @@ class CodeCounterArgsParser:
         parser = argparse.ArgumentParser(prog="code-counter",
                                          description="A command-line interface (CLI) utility that can help you easily count code and display detailed results.",
                                          usage="""cocnt <command> [<args>]
-The most commonly used cocnt commands are:
+These are common Code-Counter commands used in various situations:
     search     Search code in the given path(s)
-    config     Configure cocnt
+    config     Configure Code-Counter
 """)
         parser.add_argument('--version', action='version',
                             version='%(prog)s {}'.format(__version__))
-        parser.add_argument("command", help="Subcommand to run")
+        parser.add_argument("command", help="Subcommand to run, `search` or `config`")
         args = parser.parse_args(sys.argv[1:2])
         if not hasattr(self, args.command):
-            print("Unrecongniized command")
+            print("Unrecognized command")
             parser.print_help()
-            exit(1)
-        self.args = {
-            "search": {},
-            "config": {}
-        }
-        self.args[args.command] = getattr(self, args.command)()
+        self.args = {args.command: getattr(self, args.command)()}
 
     def search(self):
         parser = argparse.ArgumentParser(
             description="Search code in the given path(s)")
+        parser.add_argument('path',
+                            help="specify a file or directory path you want to count or use CONFIG placeholder to configure")
         parser.add_argument('-v', '--verbose', dest="verbose", action='store_true',
                             help="show verbose infomation")
         parser.add_argument('-g', '--graph', dest='graph', action='store_true',
                             help="choose to whether to visualize the result")
         parser.add_argument('-o', '--output', dest='output_path',
                             help="specify a output path if you want to store the result")
-        parser.add_argument('--suffix', dest='suffix', type=self.config_args_type,
+        parser.add_argument('--suffix', dest='suffix', type=config_args_type,
                             help="what code files do you want to count, this parameter is disposable")
         parser.add_argument('--comment', dest='comment', type=config_args_type,
                             help="the comment symbol, which can be judged whether the current line is a comment, this parameter is disposable")

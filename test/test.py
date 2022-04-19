@@ -3,9 +3,10 @@
 
 import sys
 import os
-import argparse
 import unittest
 from code_counter.core.argspaser import CodeCounterArgsParser
+from code_counter.conf.config import Config
+from code_counter.__main__ import main
 
 bin_path = os.path.dirname(os.path.join(os.pardir, '..'))
 lib_path = os.path.abspath(os.path.join(bin_path, 'code_counter'))
@@ -85,3 +86,10 @@ class CodeCounterTest(unittest.TestCase):
         self.assertEqual(config_args.ignore_reset, ['target'], "ignore_reset flag and values parsed error.")
         self.assertTrue(config_args.restore, '--restore flag parsed error.')
 
+    def test_search_case1(self):
+        options = ['python', app_path,
+                   'search',
+                   '..',
+                   '-v']
+        sys.argv[1:] = options[2:]
+        main()

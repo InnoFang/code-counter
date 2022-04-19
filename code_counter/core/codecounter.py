@@ -4,6 +4,7 @@ import os
 import re
 from collections import defaultdict
 
+
 class CodeCounter:
 
     def __init__(self, config):
@@ -12,53 +13,63 @@ class CodeCounter:
         self.total_blank_lines = 0
         self.total_comment_lines = 0
         self.files_of_language = defaultdict(int)
-        self.lines_of_language = {suffix: 0 for suffix in config.suffix}
+        self.config = config
 
-        self.ignore = tuple(config.ignore)
-        self.comment_symbol = tuple(config.comment)
-        
-        regex = '.*\.({})$'.format('|'.join(config.suffix))
-        self.pattern = re.compile(regex)
+        self.search_args = None
+        self.comment_symbol = ()
+        self.ignore = ()
+        self.lines_of_language = {}
+        self.pattern = None
+
         self.result = {
             'total': {
                 'code': 0,
                 'comment': 0,
                 'blank': 0,
-            }, 
-            'code': {}, 
+            },
+            'code': {},
             'file': {}
         }
 
-        self.verbose = False
+    def setSearchArgs(self, args):
+        self.search_args = args
 
+        suffix = args.suffix if args.suffix else self.config.suffix
+        self.comment_symbol = tuple(args.comment if args.comment else self.config.comment)
+        self.ignore = tuple(args.ignore if args.ignore else self.config.ignore)
 
-    def count(self, input_path, verbose=False, use_list=False, output_path=None):
-        """
-        :param input_path: path
-        :param use_list: whether the path is the file that contains a list of file
-        :param output_path: output file path
-        :return:
-        """
-        self.verbose = verbose
+        self.lines_of_language = {suffix: 0 for suffix in suffix}
+
+        regex = '.*\.({})$'.format('|'.join(suffix))
+        self.pattern = re.compile(regex)
+
+    def search(self):
+        if not self.search_args:
+            raise Exception('search_args is None, please invoke setSearchArgs first.')
+
+        input_path = self.search_args.path
+        output_path = self.search_args.output_path
 
         output_file = open(output_path, 'w') if output_path else None
 
-        if self.verbose:
+        if self.search_args.verbose:
             print('\n\t{}'.format("SEARCHING"), file=output_file)
             print("\t{}".format('=' * 20), file=output_file)
             print('\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'
-                .format("File Type", "Lines", "Code", "Blank", "Comment", "File Path"), file=output_file)
+                  .format("File Type", "Lines", "Code", "Blank", "Comment", "File Path"), file=output_file)
             print("\t{}".format('-' * 90), file=output_file)
 
-        if use_list:
-            with open(input_path) as file:
-                for l in file.readlines():
-                    l_strip = l.strip()
-                    if os.path.exists(l_strip):
-                        self.__search(l_strip, output_file)
-                    else:
-                        print('{} is not a validate path.'.format(l))
-        elif os.path.isdir(input_path) or os.path.isfile(input_path) :
+        # # `use_list` argument is deprecated!!!
+        # if use_list:
+        #     with open(input_path) as file:
+        #         for l in file.readlines():
+        #             l_strip = l.strip()
+        #             if os.path.exists(l_strip):
+        #                 self.__search(l_strip, output_file)
+        #             else:
+        #                 print('{} is not a validate path.'.format(l))
+
+        if os.path.isdir(input_path) or os.path.isfile(input_path):
             self.__search(input_path, output_file)
         else:
             print('{} is not a validate path.'.format(input_path))
@@ -67,20 +78,23 @@ class CodeCounter:
         print('\n\t{}'.format("RESULT"), file=output_file)
         print("\t{}".format('=' * 20), file=output_file)
         print("\t{:<20}:{:>8} ({:>7})"
-            .format("Total file lines", self.total_file_lines, '100.00%'), file=output_file)
+              .format("Total file lines", self.total_file_lines, '100.00%'), file=output_file)
 
         if self.total_file_lines == 0:
             return
 
         print("\t{:<20}:{:>8} ({:>7})"
-            .format("Total code lines",
-                    self.total_code_lines, "%.2f%%" % (self.total_code_lines / self.total_file_lines * 100)), file=output_file)
+              .format("Total code lines",
+                      self.total_code_lines, "%.2f%%" % (self.total_code_lines / self.total_file_lines * 100)),
+              file=output_file)
         print("\t{:<20}:{:>8} ({:>7})"
-            .format("Total blank lines",
-                    self.total_blank_lines, "%.2f%%" % (self.total_blank_lines / self.total_file_lines * 100)), file=output_file)
+              .format("Total blank lines",
+                      self.total_blank_lines, "%.2f%%" % (self.total_blank_lines / self.total_file_lines * 100)),
+              file=output_file)
         print("\t{:<20}:{:>8} ({:>7})"
-            .format("Total comment lines",
-                    self.total_comment_lines, "%.2f%%" % (self.total_comment_lines / self.total_file_lines * 100)), file=output_file)
+              .format("Total comment lines",
+                      self.total_comment_lines, "%.2f%%" % (self.total_comment_lines / self.total_file_lines * 100)),
+              file=output_file)
         print(file=output_file)
 
         self.result['total']['code'] = self.total_code_lines
@@ -93,7 +107,7 @@ class CodeCounter:
             total_files += cnt
 
         print("\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}"
-            .format("Type", "Files", 'Ratio', 'Lines', 'Ratio'), file=output_file)
+              .format("Type", "Files", 'Ratio', 'Lines', 'Ratio'), file=output_file)
         print("\t{}".format('-' * 65), file=output_file)
 
         for tp, cnt in self.files_of_language.items():
@@ -106,7 +120,6 @@ class CodeCounter:
 
         if output_file:
             output_file.close()
-
 
     def __search(self, input_path, output_file=None):
         """
@@ -128,7 +141,6 @@ class CodeCounter:
         elif os.path.isfile(input_path):
             self.__format_output(input_path, output_file)
 
-
     def __format_output(self, file_path, output_file):
         """
         :param file_path: file path
@@ -147,9 +159,10 @@ class CodeCounter:
                 file_type = os.path.splitext(file_path)[1][1:]
                 self.files_of_language[file_type] += 1
 
-                if self.verbose:
+                if self.search_args.verbose:
                     print('\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'
-                        .format(file_type, file_lines, code_lines, blank_lines, comment_lines, file_path), file=output_file)
+                          .format(file_type, file_lines, code_lines, blank_lines, comment_lines, file_path),
+                          file=output_file)
 
                 self.total_file_lines += file_lines
                 self.total_code_lines += code_lines
@@ -158,7 +171,6 @@ class CodeCounter:
                 self.lines_of_language[file_type] += code_lines
         except AttributeError as e:
             print(e)
-    
 
     def count_single(self, file_path):
         """
@@ -168,10 +180,10 @@ class CodeCounter:
         assert os.path.isfile(file_path), "Function: 'code_counter' need a file path, but {} is not.".format(file_path)
 
         single = {
-            'file_lines' : 0,
-            'code_lines' : 0,
-            'blank_lines' : 0,
-            'comment_lines' : 0,
+            'file_lines': 0,
+            'code_lines': 0,
+            'blank_lines': 0,
+            'comment_lines': 0,
         }
         with open(file_path, 'rb') as handle:
             for l in handle:
@@ -189,7 +201,6 @@ class CodeCounter:
                 else:
                     single['code_lines'] += 1
         return single
-
 
     def visualize(self):
         from matplotlib import pyplot as plt
@@ -209,7 +220,7 @@ class CodeCounter:
         explode = np.array([0., 0., 0.])
         explode[total_keys.index('code')] = 0.05
         patches, l_text, p_text = plt.pie(total_values, labels=total_keys, autopct='%2.1f%%',
-                explode=explode, startangle=90)
+                                          explode=explode, startangle=90)
         proptease.set_size('x-large')
         plt.setp(l_text, fontproperties=proptease)
         plt.setp(p_text, fontproperties=proptease)
@@ -220,10 +231,13 @@ class CodeCounter:
         plt.subplot(122)
         length = len(self.result['code'].values())
         colors = cm.rainbow(np.arange(length) / length)
-        patches1, l_text1, p_text1 = plt.pie(list(self.result['code'].values()), labels=list(self.result['code'].keys()), autopct='%2.1f%%', radius=1,
-                wedgeprops=wedgeprops, colors=colors, pctdistance=0.85, labeldistance=1.1)
-        patches2, l_text2, p_text2 = plt.pie(list(self.result['file'].values()), labels=list(self.result['file'].keys()), autopct='%2.1f%%', radius=1-size,
-                wedgeprops=wedgeprops, colors=colors, pctdistance=0.8, labeldistance=0.4)
+        patches1, l_text1, p_text1 = plt.pie(list(self.result['code'].values()),
+                                             labels=list(self.result['code'].keys()), autopct='%2.1f%%', radius=1,
+                                             wedgeprops=wedgeprops, colors=colors, pctdistance=0.85, labeldistance=1.1)
+        patches2, l_text2, p_text2 = plt.pie(list(self.result['file'].values()),
+                                             labels=list(self.result['file'].keys()), autopct='%2.1f%%',
+                                             radius=1 - size,
+                                             wedgeprops=wedgeprops, colors=colors, pctdistance=0.8, labeldistance=0.4)
         # font size include: ‘xx-small’,x-small’,'small’,'medium’,‘large’,‘x-large’,‘xx-large’ or number, e.g. '12'
         proptease.set_size('x-large')
         plt.setp(l_text1, fontproperties=proptease)
@@ -237,4 +251,3 @@ class CodeCounter:
         plt.title("Inner Pie: Code Files, Outer Pie: Code Type")
         plt.legend(list(self.result['code'].keys()), title="Abbreviation", loc='best', bbox_to_anchor=(1.05, 1))
         plt.show()
-

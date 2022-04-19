@@ -41,7 +41,7 @@ setup(name='code-counter',
     ],
       entry_points={
           'console_scripts': [
-              'codecount = code_counter.__main__:main'
+              'cocnt = code_counter.__main__:main'
           ]
       },
       keywords='code count line file counter',

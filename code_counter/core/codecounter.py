@@ -47,7 +47,7 @@ class CodeCounter:
         if not self.search_args:
             raise Exception('search_args is None, please invoke setSearchArgs first.')
 
-        input_path = self.search_args.path
+        input_path = self.search_args.input_path
         output_path = self.search_args.output_path
 
         output_file = open(output_path, 'w') if output_path else None
@@ -69,11 +69,15 @@ class CodeCounter:
         #             else:
         #                 print('{} is not a validate path.'.format(l))
 
-        if os.path.isdir(input_path) or os.path.isfile(input_path):
-            self.__search(input_path, output_file)
-        else:
+        if not input_path:
             print('{} is not a validate path.'.format(input_path))
             return
+
+        for path in input_path:
+            if os.path.exists(path):
+                self.__search(path, output_file)
+            else:
+                print('{} is not a validate path.'.format(path))
 
         print('\n\t{}'.format("RESULT"), file=output_file)
         print("\t{}".format('=' * 20), file=output_file)

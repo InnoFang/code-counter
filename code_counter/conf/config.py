@@ -22,7 +22,7 @@ class Config:
                 self.__append_config(args.suffix_add, args.comment_add, args.ignore_add)
             if any([args.suffix_reset, args.comment_reset, args.ignore_reset]):
                 self.__reset_config(args.suffix_reset, args.comment_reset, args.ignore_reset)
-        if args.list:
+        if args.show_list:
             self.show()
 
     def show(self):

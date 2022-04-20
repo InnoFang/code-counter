@@ -62,7 +62,7 @@ class CodeCounterTest(unittest.TestCase):
         self.assertTrue('config' not in parser.args, '"config" is in the "args"')
         self.assertTrue('search' in parser.args, '"search" is not in the "args"')
         search_args = parser.args['search']
-        self.assertEqual(search_args.path, '../code_counter/', "search path parsed error.")
+        self.assertEqual(search_args.input_path, ['../code_counter/'], "search path parsed error.")
         self.assertTrue(search_args.verbose, '-v,--verbose flag parsed error.')
         self.assertTrue(search_args.graph, '-g,--graph flag parsed error.')
         self.assertEqual(search_args.output_path, 'output.txt', "output path parsed error.")

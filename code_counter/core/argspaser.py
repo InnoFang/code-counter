@@ -26,6 +26,7 @@ These are common Code-Counter commands used in various situations:
         if not hasattr(self, args.command):
             print("Unrecognized command")
             parser.print_help()
+            exit(1)
         self.args = {args.command: getattr(self, args.command)()}
 
     def search(self):

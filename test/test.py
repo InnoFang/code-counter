@@ -4,16 +4,25 @@
 import sys
 import os
 import unittest
+from unittest.mock import patch
 from code_counter.core.argspaser import CodeCounterArgsParser
 from code_counter.conf.config import Config
 from code_counter.__main__ import main
 
+test_path = os.path.abspath('.')
 bin_path = os.path.dirname(os.path.join(os.pardir, '..'))
 lib_path = os.path.abspath(os.path.join(bin_path, 'code_counter'))
 app_path = os.path.join(lib_path, '__main__.py')
 
 
 class CodeCounterTest(unittest.TestCase):
+    def setUp(self):
+        self.default_suffix = ["c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h",
+                               "hpp", "java", "jl", "js", "kt", "lisp", "lua", "pde", "m", "php",
+                               "py", "R", "rb", "rs", "rust", "sh", "scala", "swift", "ts", "vb"]
+        self.default_comment = ["#", "//", "/*", "*", "*/", ":", ";", '""""']
+        self.default_ignore = ["out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode", "dist"]
+
     def test_print_help(self):
         options = ('python', app_path, '--help')
         sys.argv[1:] = options[2:]
@@ -86,10 +95,257 @@ class CodeCounterTest(unittest.TestCase):
         self.assertEqual(config_args.ignore_reset, ['target'], "ignore_reset flag and values parsed error.")
         self.assertTrue(config_args.restore, '--restore flag parsed error.')
 
+    @patch('builtins.input')
+    def test_Config_restore(self, mock_input):
+        mock_input.side_effect = ['y']
+
+        options = ['python', app_path,
+                   'config',
+                   '--restore']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        config = Config()
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        self.assertEqual(config.suffix, self.default_suffix, "the suffix doesn't equal")
+        self.assertEqual(config.comment, self.default_comment, "the comment doesn't equal")
+        self.assertEqual(config.ignore, self.default_ignore, "the ignore doesn't equal")
+
+    @patch('builtins.input')
+    def test_Config_reset1(self, mock_input):
+        mock_input.side_effect = ['y', 'y', 'y', 'y', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-reset=java,cpp,go,js,py',
+                   '--comment-reset=//,#,/**',
+                   '--ignore-reset=target,build,node_modules,__pycache__']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        suffix = ['java', 'cpp', 'go', 'js', 'py']
+        comment = ['//', '#', '/**']
+        ignore = ['target', 'build', 'node_modules', '__pycache__']
+
+        self.assertEqual(config.suffix, suffix)
+        self.assertEqual(config.comment, comment)
+        self.assertEqual(config.ignore, ignore)
+
+        config.restore()
+
+    @patch('builtins.input')
+    def test_Config_reset2(self, mock_input):
+        mock_input.side_effect = ['y', 'n', 'y', 'y', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-reset=java,cpp,go,js,py',
+                   '--comment-reset=//,#,/**',
+                   '--ignore-reset=target,build,node_modules,__pycache__']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        suffix = ['java', 'cpp', 'go', 'js', 'py']
+        comment = ['//', '#', '/**']
+        ignore = ['target', 'build', 'node_modules', '__pycache__']
+
+        self.assertEqual(config.suffix, self.default_suffix)
+        self.assertEqual(config.comment, comment)
+        self.assertEqual(config.ignore, ignore)
+
+        config.restore()
+
+    @patch('builtins.input')
+    def test_Config_reset3(self, mock_input):
+        mock_input.side_effect = ['y', 'y', 'n', 'y', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-reset=java,cpp,go,js,py',
+                   '--comment-reset=//,#,/**',
+                   '--ignore-reset=target,build,node_modules,__pycache__']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        suffix = ['java', 'cpp', 'go', 'js', 'py']
+        comment = ['//', '#', '/**']
+        ignore = ['target', 'build', 'node_modules', '__pycache__']
+
+        self.assertEqual(config.suffix, suffix)
+        self.assertEqual(config.comment, self.default_comment)
+        self.assertEqual(config.ignore, ignore)
+
+        config.restore()
+
+    @patch('builtins.input')
+    def test_Config_reset4(self, mock_input):
+        mock_input.side_effect = ['y', 'y', 'y', 'n', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-reset=java,cpp,go,js,py',
+                   '--comment-reset=//,#,/**',
+                   '--ignore-reset=target,build,node_modules,__pycache__']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        suffix = ['java', 'cpp', 'go', 'js', 'py']
+        comment = ['//', '#', '/**']
+        ignore = ['target', 'build', 'node_modules', '__pycache__']
+
+        self.assertEqual(config.suffix, suffix)
+        self.assertEqual(config.comment, comment)
+        self.assertEqual(config.ignore, self.default_ignore)
+
+        config.restore()
+
+    @patch('builtins.input')
+    def test_Config_add1(self, mock_input):
+        mock_input.side_effect = ['y', 'y', 'y', 'y', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-add=TEST_SUFFIX',
+                   '--comment-add=TEST_COMMENT',
+                   '--ignore-add=TEST_IGNORE']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        suffix = 'TEST_SUFFIX'
+        comment = 'TEST_COMMENT'
+        ignore = 'TEST_IGNORE'
+
+        self.assertTrue(suffix in config.suffix)
+        self.assertTrue(comment in config.comment)
+        self.assertTrue(ignore in config.ignore)
+
+        config.restore()
+
+    @patch('builtins.input')
+    def test_Config_add2(self, mock_input):
+        mock_input.side_effect = ['y', 'n', 'y', 'y', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-add=TEST_SUFFIX',
+                   '--comment-add=TEST_COMMENT',
+                   '--ignore-add=TEST_IGNORE']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        suffix = 'TEST_SUFFIX'
+        comment = 'TEST_COMMENT'
+        ignore = 'TEST_IGNORE'
+
+        self.assertTrue(suffix not in config.suffix)
+        self.assertTrue(comment in config.comment)
+        self.assertTrue(ignore in config.ignore)
+
+        config.restore()
+
+    @patch('builtins.input')
+    def test_Config_add3(self, mock_input):
+        mock_input.side_effect = ['y', 'y', 'n', 'y', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-add=TEST_SUFFIX',
+                   '--comment-add=TEST_COMMENT',
+                   '--ignore-add=TEST_IGNORE']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        suffix = 'TEST_SUFFIX'
+        comment = 'not TEST_COMMENT'
+        ignore = 'TEST_IGNORE'
+
+        self.assertTrue(suffix in config.suffix)
+        self.assertTrue(comment not in config.comment)
+        self.assertTrue(ignore in config.ignore)
+
+        config.restore()
+
+    @patch('builtins.input')
+    def test_Config_add4(self, mock_input):
+        mock_input.side_effect = ['y', 'y', 'y', 'n', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-add=TEST_SUFFIX',
+                   '--comment-add=TEST_COMMENT',
+                   '--ignore-add=TEST_IGNORE']
+        sys.argv[1:] = options[2:]
+        parser = CodeCounterArgsParser()
+        args = parser.args
+        self.assertTrue('config' in args)
+        config.invoke(args['config'])
+
+        suffix = 'TEST_SUFFIX'
+        comment = 'TEST_COMMENT'
+        ignore = 'TEST_IGNORE'
+
+        self.assertTrue(suffix in config.suffix)
+        self.assertTrue(comment in config.comment)
+        self.assertTrue(ignore not in config.ignore)
+
+        config.restore()
+
     def test_search_case1(self):
         options = ['python', app_path,
                    'search',
                    '..',
-                   '-v']
+                   '-v',
+                   '-o=output.txt']
         sys.argv[1:] = options[2:]
         main()
+
+        output_path = os.path.join(test_path, 'output.txt')
+        self.assertTrue(os.path.exists(output_path))
+        os.remove(output_path)

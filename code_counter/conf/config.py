@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coding:utf8
+
 import json
-import sys
 import pkg_resources
 
 
@@ -16,7 +16,7 @@ class Config:
 
     def invoke(self, args):
         if args.restore:
-            self.__restore()
+            self.restore()
         else:
             if any([args.suffix_add, args.comment_add, args.ignore_add]):
                 self.__append_config(args.suffix_add, args.comment_add, args.ignore_add)
@@ -69,7 +69,7 @@ class Config:
         with open(filename, 'w') as config:
             json.dump(self.__dict__, config, indent=4)
 
-    def __restore(self):
+    def restore(self):
         self.suffix = ["c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h",
                        "hpp", "java", "jl", "js", "kt", "lisp", "lua", "pde", "m", "php",
                        "py", "R", "rb", "rs", "rust", "sh", "scala", "swift", "ts", "vb"]

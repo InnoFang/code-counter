@@ -16,9 +16,6 @@ def main():
         config.invoke(args['config'])
         return
 
-    if 'search' not in parser.args:
-        raise Exception('wrong subcommand, only `config` and `search` are supported!')
-
     code_counter = CodeCounter(config)
 
     search_args = args['search']

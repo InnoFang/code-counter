@@ -12,9 +12,11 @@ def split_args(args):
 
 class CodeCounterArgsParser:
     def __init__(self):
-        parser = argparse.ArgumentParser(prog="code-counter",
-                                         description="A command-line interface (CLI) utility that can help you easily count code and display detailed results.",
-                                         usage="""cocnt <command> [<args>]
+        parser = argparse.ArgumentParser(
+            prog="code-counter",
+            description="A command-line interface (CLI) utility "
+                        "that can help you easily count code and display detailed results.",
+            usage="""cocnt <command> [<args>]
 These are common Code-Counter commands used in various situations:
     search     Search code in the given path(s)
     config     Configure Code-Counter
@@ -31,9 +33,11 @@ These are common Code-Counter commands used in various situations:
 
     def search(self):
         parser = argparse.ArgumentParser(
-            description="Search code in the given path(s)")
+            description="Search code in the given path(s)",
+            usage="cocnt search input_path [-h] [-v] [-g] "
+                  "[-o OUTPUT_PATH] [--suffix SUFFIX] [--comment COMMENT] [--ignore IGNORE]")
         parser.add_argument('input_path', type=split_args,
-                            help="specify a file or directory path you want to count or use CONFIG placeholder to configure")
+                            help="counting the code lines according the given path(s)")
         parser.add_argument('-v', '--verbose', dest="verbose", action='store_true',
                             help="show verbose infomation")
         parser.add_argument('-g', '--graph', dest='graph', action='store_true',
@@ -43,14 +47,21 @@ These are common Code-Counter commands used in various situations:
         parser.add_argument('--suffix', dest='suffix', type=split_args,
                             help="what code files do you want to count, this parameter is disposable")
         parser.add_argument('--comment', dest='comment', type=split_args,
-                            help="the comment symbol, which can be judged whether the current line is a comment, this parameter is disposable")
+                            help="the comment symbol, which can be judged whether the current line is a comment, "
+                                 "this parameter is disposable")
         parser.add_argument('--ignore', dest='ignore', type=split_args,
-                            help="ignore some directories or files that you don't want to count, this parameter is disposable")
+                            help="ignore some directories or files that you don't want to count, "
+                                 "this parameter is disposable")
         return parser.parse_args(sys.argv[2:])
 
     def config(self):
-        parser = argparse.ArgumentParser(prog="code-counter",
-                                         description="A command-line interface (CLI) utility that can help you easily count code and display detailed results.")
+        parser = argparse.ArgumentParser(
+            prog="code-counter",
+            description="configure code-counter",
+            usage="cocnt config [-h] [--list] [--suffix-reset SUFFIX_RESET] "
+                  "[--suffix-add SUFFIX_ADD] [--comment-reset COMMENT_RESET] "
+                  "[--comment-add COMMENT_ADD] [--ignore-reset IGNORE_RESET] "
+                  "[--ignore-add IGNORE_ADD] [--restore] ")
         parser.add_argument('--list', dest='show_list', action='store_true',
                             help="list all variables set in config file, along with their values")
         parser.add_argument('--suffix-reset', dest='suffix_reset', type=split_args,
@@ -61,12 +72,15 @@ These are common Code-Counter commands used in various situations:
         parser.add_argument('--comment-reset', dest='comment_reset', type=split_args,
                             help="override 'comment' in config and count comment lines according to this value")
         parser.add_argument('--comment-add', dest='comment_add', type=split_args,
-                            help="append new value for 'comment' in config and count comment lines according to this value")
+                            help="append new value for 'comment' in config "
+                                 "and count comment lines according to this value")
 
         parser.add_argument('--ignore-reset', dest='ignore_reset', type=split_args,
-                            help="override 'ignore' in config and ignore some files or directory according to this value")
+                            help="override 'ignore' in config "
+                                 "and ignore some files or directory according to this value")
         parser.add_argument('--ignore-add', dest='ignore_add', type=split_args,
-                            help="append new value for 'ignore' in config and ignore some files or directory according to this value")
+                            help="append new value for 'ignore' in config "
+                                 "and ignore some files or directory according to this value")
 
         parser.add_argument('--restore', dest='restore', action='store_true',
                             help="restore default config")

@@ -9,16 +9,15 @@ from code_counter.conf.config import Config
 
 def main():
     parser = CodeCounterArgsParser()
-    args = parser.args
 
     config = Config()
-    if 'config' in parser.args:
-        config.invoke(args['config'])
+    if parser.has_config_args():
+        config.invoke(parser.config())
         return
 
     code_counter = CodeCounter(config)
 
-    search_args = args['search']
+    search_args = parser.search()
     code_counter.setSearchArgs(search_args)
 
     time_start = time.time()

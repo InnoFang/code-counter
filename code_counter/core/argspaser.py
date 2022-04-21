@@ -11,6 +11,9 @@ def split_args(args):
 
 
 class CodeCounterArgsParser:
+    __SEARCH__ = 'search'
+    __CONFIG__ = 'config'
+
     def __init__(self):
         parser = argparse.ArgumentParser(
             prog="code-counter",
@@ -29,9 +32,30 @@ These are common Code-Counter commands used in various situations:
             print("Unrecognized command")
             parser.print_help()
             exit(1)
-        self.args = {args.command: getattr(self, args.command)()}
+        self.__args = {args.command:argparse.Namespace()}
+        getattr(self, args.command)()
+
+    def has_search_args(self):
+        return self.__SEARCH__ in self.__args
+
+    def has_config_args(self):
+        return self.__CONFIG__ in self.__args
 
     def search(self):
+        if not self.has_search_args():
+            return None
+        if self.__args[self.__SEARCH__] == argparse.Namespace():
+            self.__args[self.__SEARCH__] = self.__search()
+        return self.__args[self.__SEARCH__]
+
+    def config(self):
+        if not self.has_config_args():
+            return None
+        if self.__args[self.__CONFIG__] == argparse.Namespace():
+            self.__args[self.__CONFIG__] = self.__config()
+        return self.__args[self.__CONFIG__]
+
+    def __search(self):
         parser = argparse.ArgumentParser(
             description="Search code in the given path(s)",
             usage="cocnt search input_path [-h] [-v] [-g] "
@@ -54,7 +78,7 @@ These are common Code-Counter commands used in various situations:
                                  "this parameter is disposable")
         return parser.parse_args(sys.argv[2:])
 
-    def config(self):
+    def __config(self):
         parser = argparse.ArgumentParser(
             prog="code-counter",
             description="configure code-counter",

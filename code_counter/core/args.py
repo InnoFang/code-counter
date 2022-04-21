@@ -10,7 +10,7 @@ def split_args(args):
     return list(args.split(','))
 
 
-class CodeCounterArgsParser:
+class CodeCounterArgs:
     __SEARCH__ = 'search'
     __CONFIG__ = 'config'
 
@@ -32,7 +32,7 @@ These are common Code-Counter commands used in various situations:
             print("Unrecognized command")
             parser.print_help()
             exit(1)
-        self.__args = {args.command:argparse.Namespace()}
+        self.__args = {args.command: argparse.Namespace()}
         getattr(self, args.command)()
 
     def has_search_args(self):

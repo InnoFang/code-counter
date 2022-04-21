@@ -2,23 +2,22 @@
 # coding:utf8
 
 import time
-from code_counter.core.codecounter import CodeCounter
-from code_counter.core.argspaser import CodeCounterArgsParser
+from code_counter.core.counter import CodeCounter
+from code_counter.core.args import CodeCounterArgs
 from code_counter.conf.config import Config
 
 
 def main():
-    parser = CodeCounterArgsParser()
-    args = parser.args
+    args = CodeCounterArgs()
 
     config = Config()
-    if 'config' in parser.args:
-        config.invoke(args['config'])
+    if args.has_config_args():
+        config.invoke(args.config())
         return
 
     code_counter = CodeCounter(config)
 
-    search_args = args['search']
+    search_args = args.search()
     code_counter.setSearchArgs(search_args)
 
     time_start = time.time()

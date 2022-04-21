@@ -5,7 +5,7 @@ import sys
 import os
 import unittest
 from unittest.mock import patch
-from code_counter.core.argspaser import CodeCounterArgsParser
+from code_counter.core.args import CodeCounterArgs
 from code_counter.conf.config import Config
 from code_counter.__main__ import main
 
@@ -27,7 +27,7 @@ class CodeCounterTest(unittest.TestCase):
         options = ('python', app_path, '--help')
         sys.argv[1:] = options[2:]
         try:
-            CodeCounterArgsParser()
+            CodeCounterArgs()
         except SystemExit:
             pass
 
@@ -35,7 +35,7 @@ class CodeCounterTest(unittest.TestCase):
         options = ('python', app_path, 'search', '--help')
         sys.argv[1:] = options[2:]
         try:
-            CodeCounterArgsParser()
+            CodeCounterArgs()
         except SystemExit:
             pass
 
@@ -43,7 +43,7 @@ class CodeCounterTest(unittest.TestCase):
         options = ('python', app_path, 'config', '--help')
         sys.argv[1:] = options[2:]
         try:
-            CodeCounterArgsParser()
+            CodeCounterArgs()
         except SystemExit:
             pass
 
@@ -58,11 +58,11 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment=//,#,/*',
                    '--ignore=.vscode,.idea']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        self.assertTrue('config' not in parser.args, '"config" is in the "args"')
-        self.assertTrue('search' in parser.args, '"search" is not in the "args"')
-        search_args = parser.args['search']
-        self.assertEqual(search_args.path, '../code_counter/', "search path parsed error.")
+        args = CodeCounterArgs()
+        self.assertFalse(args.has_config_args(), '"config" is in the "args"')
+        self.assertTrue(args.has_search_args(), '"search" is not in the "args"')
+        search_args = args.search()
+        self.assertEqual(search_args.input_path, ['../code_counter/'], "search path parsed error.")
         self.assertTrue(search_args.verbose, '-v,--verbose flag parsed error.')
         self.assertTrue(search_args.graph, '-g,--graph flag parsed error.')
         self.assertEqual(search_args.output_path, 'output.txt', "output path parsed error.")
@@ -82,10 +82,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--ignore-reset=target',
                    '--restore']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        self.assertTrue('config' in parser.args, '"config" is not in the "args"')
-        self.assertTrue('search' not in parser.args, '"search" is in the "args"')
-        config_args = parser.args['config']
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args(), '"config" is not in the "args"')
+        self.assertFalse(args.has_search_args(), '"search" is in the "args"')
+        config_args = args.config()
         self.assertTrue(config_args.show_list, '--list flag parsed error.')
         self.assertEqual(config_args.suffix_add, ['lisp'], "suffix_add flag and values parsed error.")
         self.assertEqual(config_args.suffix_reset, ['clj'], "suffix_reset flag and values parsed error.")
@@ -103,11 +103,12 @@ class CodeCounterTest(unittest.TestCase):
                    'config',
                    '--restore']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+
         config = Config()
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+        config.invoke(args.config())
 
         self.assertEqual(config.suffix, self.default_suffix, "the suffix doesn't equal")
         self.assertEqual(config.comment, self.default_comment, "the comment doesn't equal")
@@ -126,10 +127,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment-reset=//,#,/**',
                    '--ignore-reset=target,build,node_modules,__pycache__']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
 
         suffix = ['java', 'cpp', 'go', 'js', 'py']
         comment = ['//', '#', '/**']
@@ -154,10 +155,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment-reset=//,#,/**',
                    '--ignore-reset=target,build,node_modules,__pycache__']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
 
         suffix = ['java', 'cpp', 'go', 'js', 'py']
         comment = ['//', '#', '/**']
@@ -182,10 +183,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment-reset=//,#,/**',
                    '--ignore-reset=target,build,node_modules,__pycache__']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
 
         suffix = ['java', 'cpp', 'go', 'js', 'py']
         comment = ['//', '#', '/**']
@@ -210,10 +211,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment-reset=//,#,/**',
                    '--ignore-reset=target,build,node_modules,__pycache__']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
 
         suffix = ['java', 'cpp', 'go', 'js', 'py']
         comment = ['//', '#', '/**']
@@ -238,10 +239,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment-add=TEST_COMMENT',
                    '--ignore-add=TEST_IGNORE']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
 
         suffix = 'TEST_SUFFIX'
         comment = 'TEST_COMMENT'
@@ -266,10 +267,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment-add=TEST_COMMENT',
                    '--ignore-add=TEST_IGNORE']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
 
         suffix = 'TEST_SUFFIX'
         comment = 'TEST_COMMENT'
@@ -294,10 +295,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment-add=TEST_COMMENT',
                    '--ignore-add=TEST_IGNORE']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
 
         suffix = 'TEST_SUFFIX'
         comment = 'not TEST_COMMENT'
@@ -322,10 +323,10 @@ class CodeCounterTest(unittest.TestCase):
                    '--comment-add=TEST_COMMENT',
                    '--ignore-add=TEST_IGNORE']
         sys.argv[1:] = options[2:]
-        parser = CodeCounterArgsParser()
-        args = parser.args
-        self.assertTrue('config' in args)
-        config.invoke(args['config'])
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
 
         suffix = 'TEST_SUFFIX'
         comment = 'TEST_COMMENT'

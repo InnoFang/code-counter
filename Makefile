@@ -1,8 +1,10 @@
+.PHONY:
+test:
+	python -m unittest discover -s tests -p "test_*.py"
+
 setup:
 	python setup.py install
 
-
-.PHONY:
 check:
 	python setup.py check
 

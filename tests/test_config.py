@@ -297,3 +297,31 @@ class CodeCounterConfigTest(unittest.TestCase):
         self.assertTrue(ignore not in config.ignore)
 
         config.restore()
+
+    @patch('builtins.input')
+    def test_Config_del(self, mock_input):
+        mock_input.side_effect = ['y', 'y', 'y', 'y', 'y']
+
+        config = Config()
+        config.restore()
+
+        options = ['python', app_path,
+                   'config',
+                   '--suffix-del=py',
+                   '--comment-del=#',
+                   '--ignore-del=venv']
+        sys.argv[1:] = options[2:]
+
+        args = CodeCounterArgs()
+        self.assertTrue(args.has_config_args())
+        config.invoke(args.config())
+
+        suffix = 'py'
+        comment = '#'
+        ignore = 'venv'
+
+        self.assertFalse(suffix in config.suffix)
+        self.assertFalse(comment in config.comment)
+        self.assertFalse(ignore in config.ignore)
+
+        config.restore()

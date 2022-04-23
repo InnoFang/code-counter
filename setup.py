@@ -14,7 +14,7 @@ setup(name='code-counter',
       version=__import__('code_counter').__version__,
       author="Inno Fang",
       author_email="innofang@yeah.net",
-      url='https://github.com/innofang/code-counter',  # homepage
+      url='https://github.com/InnoFang/code-counter',  # homepage
       project_urls={
           'Documentation': 'https://github.com/InnoFang/code-counter/blob/master/README.md',
           'Source': 'https://github.com/InnoFang/code-counter',
@@ -29,7 +29,7 @@ setup(name='code-counter',
       install_requires=["matplotlib", "numpy"],
       python_requires='>=3.6',
       classifiers=[
-          'Development Status :: 4 - Beta',
+          "Development Status :: 5 - Production/Stable",
           'Intended Audience :: Developers',
           'License :: OSI Approved :: Apache Software License',
           'Environment :: Console',

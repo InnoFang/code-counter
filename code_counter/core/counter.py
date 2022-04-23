@@ -59,16 +59,6 @@ class CodeCounter:
                   .format("File Type", "Lines", "Code", "Blank", "Comment", "File Path"), file=output_file)
             print("\t{}".format('-' * 90), file=output_file)
 
-        # # `use_list` argument is deprecated!!!
-        # if use_list:
-        #     with open(input_path) as file:
-        #         for l in file.readlines():
-        #             l_strip = l.strip()
-        #             if os.path.exists(l_strip):
-        #                 self.__search(l_strip, output_file)
-        #             else:
-        #                 print('{} is not a validate path.'.format(l))
-
         if not input_path:
             print('{} is not a validate path.'.format(input_path))
             return

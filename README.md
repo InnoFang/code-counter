@@ -24,8 +24,6 @@ python setup.py install
 
 Open the terminal and directly search the path you want to count.
 
-比如使用 `cocnt search` 来统计 `code-counter` 的代码行数。（`cocnt` 即 `codecounter` 的缩写）
-
 For example, use `cocnt search` to count the number of code lines of `code counter`. (`cocnt` is the abbreviation of `code count`)
 
 ```shell

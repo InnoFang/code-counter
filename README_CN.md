@@ -2,7 +2,7 @@
 
 一个可以帮助你轻松进行代码行数统计的命令行小工具。
 
-[English](https://github.com/InnoFang/code-counter/blob/master/README.md) | 中文
+[English](./README.md) | 中文
 
 ## 安装
 

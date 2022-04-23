@@ -2,7 +2,7 @@
 
 A command-line interface (CLI) utility that can help you easily count code lines and display detailed results.
 
-English | [中文](https://github.com/InnoFang/code-counter/blob/master/README_CN.md)
+English | [中文](./README_CN.md)
 
 ## Installation
 

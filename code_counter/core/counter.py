@@ -117,8 +117,8 @@ class CodeCounter:
 
     def __search(self, input_path, output_file=None):
         """
-        :param input_path: path
-        :param output_file: file
+        :param input_path: input file path
+        :param output_file: output file path
         :return:
         """
         if os.path.isdir(input_path):
@@ -135,16 +135,16 @@ class CodeCounter:
         elif os.path.isfile(input_path):
             self.__format_output(input_path, output_file)
 
-    def __format_output(self, file_path, output_file):
+    def __format_output(self, file_path, output_file=None):
         """
-        :param file_path: file path
-        :param output_file: file
+        :param file_path: input file path
+        :param output_file: output file path
         :return:
         """
         try:
             res = re.match(self.pattern, file_path)
             if res:
-                single = self.count_single(file_path)
+                single = self.count_single(file_path, output_file)
                 file_lines = single['file_lines']
                 code_lines = single['code_lines']
                 blank_lines = single['blank_lines']
@@ -166,9 +166,10 @@ class CodeCounter:
         except AttributeError as e:
             print(e)
 
-    def count_single(self, file_path):
+    def count_single(self, file_path, output_file=None):
         """
         :param file_path: the file you want to count
+        :param output_file: output file path
         :return: single { file_lines, code_lines, blank_lines, comment_lines }
         """
         assert os.path.isfile(file_path), "Function: 'code_counter' need a file path, but {} is not.".format(file_path)
@@ -179,13 +180,23 @@ class CodeCounter:
             'blank_lines': 0,
             'comment_lines': 0,
         }
+
         with open(file_path, 'rb') as handle:
-            for l in handle:
+            for line_number, raw_line in enumerate(handle):
                 try:
-                    line = l.strip().decode('utf8')
+                    line = raw_line.strip().decode('utf8')
                 except UnicodeDecodeError:
-                    # If the code line contain Chinese string, decode it as gbk
-                    line = l.strip().decode('gbk')
+                    try:
+                        # If the code line contain Chinese string, decode it as gbk
+                        line = raw_line.strip().decode('gbk')
+                    except UnicodeDecodeError:
+                        if self.search_args.verbose:
+                            print('\n\t{:>10}  |  decode line occurs a problem, non-count it, at File "{}", line {}:'
+                                  .format('WARN', file_path, line_number),
+                                  file=output_file)
+                            print('\t{:>10}  |      {}\n'
+                                  .format(' ', raw_line))
+                        continue
 
                 single['file_lines'] += 1
                 if not line:

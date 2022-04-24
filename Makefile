@@ -8,17 +8,19 @@ setup:
 check:
 	python setup.py check
 
-build:check
+build: check
 	python setup.py sdist bdist_wheel
 
-install:build
-	pip install dist/*.whl
-
-upload:build
+upload: build
 	twine upload dist/*
+
+install: build
+	pip install dist/*.whl
 
 uninstall:
 	echo y | pip uninstall code-counter
+
+reinstall: uninstall install
 
 clean:
 	rm -rf build code_counter.* dist

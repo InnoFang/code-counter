@@ -15,7 +15,7 @@ def main():
         config.invoke(args.config())
         return
 
-    code_counter = CodeCounter(config)
+    code_counter = CodeCounter()
 
     search_args = args.search()
     code_counter.setSearchArgs(search_args)

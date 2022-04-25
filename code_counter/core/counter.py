@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
-# coding:utf8
+# -*- coding: utf-8  -*-
+
 import os
-import re
 from collections import defaultdict
+from code_counter.conf.config import Config
+from code_counter.core.countable.iterator import CountableFileIterator
 
 
 class CodeCounter:
 
-    def __init__(self, config):
+    def __init__(self):
+        self.config = Config()
+
         self.total_file_lines = 0
         self.total_code_lines = 0
         self.total_blank_lines = 0
         self.total_comment_lines = 0
         self.files_of_language = defaultdict(int)
-        self.config = config
 
         self.search_args = None
-        self.comment_symbol = ()
-        self.ignore = ()
         self.lines_of_language = {}
-        self.pattern = None
 
         self.result = {
             'total': {
@@ -33,42 +33,59 @@ class CodeCounter:
 
     def setSearchArgs(self, args):
         self.search_args = args
+        if args.suffix:
+            self.config.suffix = set(args.suffix)
+        if args.comment:
+            self.config.comment = set(args.comment)
+        if args.ignore:
+            self.config.ignore = set(args.ignore)
 
-        suffix = args.suffix if args.suffix else self.config.suffix
-        self.comment_symbol = tuple(args.comment if args.comment else self.config.comment)
-        self.ignore = tuple(args.ignore if args.ignore else self.config.ignore)
-
-        self.lines_of_language = {suffix: 0 for suffix in suffix}
-
-        regex = '.*\.({})$'.format('|'.join(suffix))
-        self.pattern = re.compile(regex)
+        self.lines_of_language = {suffix: 0 for suffix in self.config.suffix}
 
     def search(self):
-        if not self.search_args:
-            raise Exception('search_args is None, please invoke setSearchArgs first.')
+        if self.search_args is None:
+            raise Exception('search_args is None, please invoke the `setSearchArgs` function first.')
 
         input_path = self.search_args.input_path
-        output_path = self.search_args.output_path
-
-        output_file = open(output_path, 'w') if output_path else None
-
-        if self.search_args.verbose:
-            print('\n\t{}'.format("SEARCHING"), file=output_file)
-            print("\t{}".format('=' * 20), file=output_file)
-            print('\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'
-                  .format("File Type", "Lines", "Code", "Blank", "Comment", "File Path"), file=output_file)
-            print("\t{}".format('-' * 90), file=output_file)
-
         if not input_path:
             print('{} is not a validate path.'.format(input_path))
             return
 
+        output_path = self.search_args.output_path
+        output_file = open(output_path, 'w') if output_path else None
+
+        if self.search_args.verbose:
+            self.print_searching_verbose_info(output_file)
+
         for path in input_path:
             if os.path.exists(path):
-                self.__search(path, output_file)
+                for cf in CountableFileIterator(path):
+                    cf.count()
+                    if self.search_args.verbose:
+                        print(cf, file=output_file)
+                    self.files_of_language[cf.file_type] += 1
+                    self.total_file_lines += cf.file_lines
+                    self.total_code_lines += cf.code_lines
+                    self.total_blank_lines += cf.blank_lines
+                    self.total_comment_lines += cf.comment_lines
+                    self.lines_of_language[cf.file_type] += cf.code_lines
             else:
                 print('{} is not a validate path.'.format(path))
+                exit(1)
 
+        self.print_result_info(output_file)
+
+        if output_file:
+            output_file.close()
+
+    def print_searching_verbose_info(self, output_file=None):
+        print('\n\t{}'.format("SEARCHING"), file=output_file)
+        print("\t{}".format('=' * 20), file=output_file)
+        print('\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'
+              .format("File Type", "Lines", "Code", "Blank", "Comment", "File Path"), file=output_file)
+        print("\t{}".format('-' * 90), file=output_file)
+
+    def print_result_info(self, output_file=None):
         print('\n\t{}'.format("RESULT"), file=output_file)
         print("\t{}".format('=' * 20), file=output_file)
         print("\t{:<20}:{:>8} ({:>7})"
@@ -106,106 +123,11 @@ class CodeCounter:
 
         for tp, cnt in self.files_of_language.items():
             code_line = self.lines_of_language[tp]
+            self.result['code'][tp] = code_line
+            self.result['file'][tp] = cnt
             print("\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}".format(
                 tp, cnt, '%.2f%%' % (cnt / total_files * 100),
                 code_line, '%.2f%%' % (code_line / self.total_code_lines * 100)), file=output_file)
-            self.result['code'][tp] = code_line
-            self.result['file'][tp] = cnt
-
-        if output_file:
-            output_file.close()
-
-    def __search(self, input_path, output_file=None):
-        """
-        :param input_path: input file path
-        :param output_file: output file path
-        :return:
-        """
-        if os.path.isdir(input_path):
-            files = os.listdir(input_path)
-            for file in files:
-                file_path = os.path.join(input_path, file)
-                if os.path.isdir(file_path):
-                    if os.path.split(file_path)[-1] in self.ignore:
-                        continue
-                    self.__search(file_path, output_file)
-                elif os.path:
-                    file_path = os.path.join(input_path, file)
-                    self.__format_output(file_path, output_file)
-        elif os.path.isfile(input_path):
-            self.__format_output(input_path, output_file)
-
-    def __format_output(self, file_path, output_file=None):
-        """
-        :param file_path: input file path
-        :param output_file: output file path
-        :return:
-        """
-        try:
-            res = re.match(self.pattern, file_path)
-            if res:
-                single = self.count_single(file_path, output_file)
-                file_lines = single['file_lines']
-                code_lines = single['code_lines']
-                blank_lines = single['blank_lines']
-                comment_lines = single['comment_lines']
-
-                file_type = os.path.splitext(file_path)[1][1:]
-                self.files_of_language[file_type] += 1
-
-                if self.search_args.verbose:
-                    print('\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'
-                          .format(file_type, file_lines, code_lines, blank_lines, comment_lines, file_path),
-                          file=output_file)
-
-                self.total_file_lines += file_lines
-                self.total_code_lines += code_lines
-                self.total_blank_lines += blank_lines
-                self.total_comment_lines += comment_lines
-                self.lines_of_language[file_type] += code_lines
-        except AttributeError as e:
-            print(e)
-
-    def count_single(self, file_path, output_file=None):
-        """
-        :param file_path: the file you want to count
-        :param output_file: output file path
-        :return: single { file_lines, code_lines, blank_lines, comment_lines }
-        """
-        assert os.path.isfile(file_path), "Function: 'code_counter' need a file path, but {} is not.".format(file_path)
-
-        single = {
-            'file_lines': 0,
-            'code_lines': 0,
-            'blank_lines': 0,
-            'comment_lines': 0,
-        }
-
-        with open(file_path, 'rb') as handle:
-            for line_number, raw_line in enumerate(handle):
-                try:
-                    line = raw_line.strip().decode('utf8')
-                except UnicodeDecodeError:
-                    try:
-                        # If the code line contain Chinese string, decode it as gbk
-                        line = raw_line.strip().decode('gbk')
-                    except UnicodeDecodeError:
-                        if self.search_args.verbose:
-                            print('\n\t{:>10}  |  decode line occurs a problem, non-count it, at File "{}", line {}:'
-                                  .format('WARN', file_path, line_number),
-                                  file=output_file)
-                            print('\t{:>10}  |      {}\n'
-                                  .format(' ', raw_line))
-                        continue
-
-                single['file_lines'] += 1
-                if not line:
-                    single['blank_lines'] += 1
-                elif line.startswith(self.comment_symbol):
-                    single['comment_lines'] += 1
-                else:
-                    single['code_lines'] += 1
-        return single
 
     def visualize(self):
         from matplotlib import pyplot as plt

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# coding:utf8
+# -*- coding: utf-8  -*-
 
 import json
 import pkg_resources
@@ -25,9 +25,9 @@ class Config(metaclass=SingletonMeta):
     def __init__(self):
         conf = self.__load()
 
-        self.suffix: set = set(conf['suffix'])
-        self.comment: set = set(conf['comment'])
-        self.ignore: set = set(conf['ignore'])
+        self.suffix = set(conf['suffix'])
+        self.comment = set(conf['comment'])
+        self.ignore = set(conf['ignore'])
 
     def invoke(self, args):
         if args.restore:

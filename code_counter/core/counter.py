@@ -1,23 +1,24 @@
 #!/usr/bin/env python3
-# coding:utf8
+# -*- coding: utf-8  -*-
+
 import os
 import re
 from collections import defaultdict
+from code_counter.conf.config import Config
 
 
 class CodeCounter:
 
-    def __init__(self, config):
+    def __init__(self):
+        self.config = Config()
+
         self.total_file_lines = 0
         self.total_code_lines = 0
         self.total_blank_lines = 0
         self.total_comment_lines = 0
         self.files_of_language = defaultdict(int)
-        self.config = config
 
         self.search_args = None
-        self.comment_symbol = ()
-        self.ignore = ()
         self.lines_of_language = {}
         self.pattern = None
 
@@ -33,14 +34,16 @@ class CodeCounter:
 
     def setSearchArgs(self, args):
         self.search_args = args
+        if args.suffix:
+            self.config.suffix = set(args.suffix)
+        if args.comment:
+            self.config.comment = set(args.comment)
+        if args.ignore:
+            self.config.ignore = set(args.ignore)
 
-        suffix = args.suffix if args.suffix else self.config.suffix
-        self.comment_symbol = tuple(args.comment if args.comment else self.config.comment)
-        self.ignore = tuple(args.ignore if args.ignore else self.config.ignore)
+        self.lines_of_language = {suffix: 0 for suffix in self.config.suffix}
 
-        self.lines_of_language = {suffix: 0 for suffix in suffix}
-
-        regex = '.*\.({})$'.format('|'.join(suffix))
+        regex = r'.*\.({})$'.format('|'.join(self.config.suffix))
         self.pattern = re.compile(regex)
 
     def search(self):
@@ -126,7 +129,7 @@ class CodeCounter:
             for file in files:
                 file_path = os.path.join(input_path, file)
                 if os.path.isdir(file_path):
-                    if os.path.split(file_path)[-1] in self.ignore:
+                    if os.path.split(file_path)[-1] in self.config.ignore:
                         continue
                     self.__search(file_path, output_file)
                 elif os.path:
@@ -201,7 +204,7 @@ class CodeCounter:
                 single['file_lines'] += 1
                 if not line:
                     single['blank_lines'] += 1
-                elif line.startswith(self.comment_symbol):
+                elif line.startswith(tuple(self.config.comment)):
                     single['comment_lines'] += 1
                 else:
                     single['code_lines'] += 1

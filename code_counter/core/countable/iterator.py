@@ -31,7 +31,8 @@ class CountableFileIterator(Iterator):
                     file_path = os.path.join(input_path, file)
                     self._file_queue.append(CountableFile(file_path))
         elif os.path.isfile(input_path):
-            if (suffix := os.path.splitext(input_path)[1]) and len(suffix) > 0 and suffix[1:] in self._suffix:
+            suffix = os.path.splitext(input_path)[1]
+            if len(suffix) > 0 and suffix[1:] in self._suffix:
                 self._file_queue.append(CountableFile(input_path))
 
     def __iter__(self):

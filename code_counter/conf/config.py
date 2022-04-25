@@ -12,14 +12,22 @@ class SetEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-class Config:
+class SingletonMeta(type):
+    _instance = {}
 
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instance:
+            cls._instance[cls] = super(SingletonMeta, cls).__call__(*args, **kwargs)
+        return cls._instance[cls]
+
+
+class Config(metaclass=SingletonMeta):
     def __init__(self):
         conf = self.__load()
 
-        self.suffix = set(conf['suffix'])
-        self.comment = set(conf['comment'])
-        self.ignore = set(conf['ignore'])
+        self.suffix: set = set(conf['suffix'])
+        self.comment: set = set(conf['comment'])
+        self.ignore: set = set(conf['ignore'])
 
     def invoke(self, args):
         if args.restore:

@@ -8,17 +8,23 @@ from code_counter.conf.config import Config
 
 
 def main():
-    args = CodeCounterArgs()
+    cocnt_args = CodeCounterArgs()
 
     config = Config()
-    if args.has_config_args():
-        config.invoke(args.config())
+    if cocnt_args.has_config_args():
+        config.invoke(cocnt_args.config())
         return
 
     code_counter = CodeCounter()
 
-    search_args = args.search()
-    code_counter.setSearchArgs(search_args)
+    if cocnt_args.has_search_args():
+        args = cocnt_args.search()
+    elif cocnt_args.has_remote_args():
+        args = cocnt_args.remote()
+    else:
+        raise Exception('wrong command')
+
+    code_counter.setArgs(args)
 
     time_start = time.time()
     code_counter.search()
@@ -26,7 +32,7 @@ def main():
 
     print('\n\tTotally cost {} s.'.format(time_end - time_start))
 
-    if search_args.graph:
+    if args.graph:
         code_counter.visualize()
 
 

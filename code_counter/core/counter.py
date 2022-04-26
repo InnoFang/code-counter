@@ -4,7 +4,7 @@
 import os
 from collections import defaultdict
 from code_counter.conf.config import Config
-from code_counter.core.countable.iterator import CountableFileIterator
+from code_counter.core.countable.iterator import CountableIterator, RemoteCountableIterator
 
 
 class CodeCounter:
@@ -18,7 +18,7 @@ class CodeCounter:
         self.total_comment_lines = 0
         self.files_of_language = defaultdict(int)
 
-        self.search_args = None
+        self.args = None
         self.lines_of_language = {}
 
         self.result = {
@@ -31,8 +31,8 @@ class CodeCounter:
             'file': {}
         }
 
-    def setSearchArgs(self, args):
-        self.search_args = args
+    def setArgs(self, args):
+        self.args = args
         if args.suffix:
             self.config.suffix = set(args.suffix)
         if args.comment:
@@ -43,35 +43,47 @@ class CodeCounter:
         self.lines_of_language = {suffix: 0 for suffix in self.config.suffix}
 
     def search(self):
-        if self.search_args is None:
-            raise Exception('search_args is None, please invoke the `setSearchArgs` function first.')
+        if self.args is None:
+            raise Exception('search_args is None, please invoke the `setArgs` function first.')
 
-        input_path = self.search_args.input_path
+        input_path = self.args.input_path
         if not input_path:
             print('{} is not a validate path.'.format(input_path))
             return
 
-        output_path = self.search_args.output_path
+        output_path = self.args.output_path
         output_file = open(output_path, 'w') if output_path else None
 
-        if self.search_args.verbose:
+        if self.args.verbose:
             self.print_searching_verbose_info(output_file)
 
-        for path in input_path:
-            if os.path.exists(path):
-                for cf in CountableFileIterator().iter(path):
-                    cf.count()
-                    if self.search_args.verbose:
-                        print(cf, file=output_file)
-                    self.files_of_language[cf.file_type] += 1
-                    self.total_file_lines += cf.file_lines
-                    self.total_code_lines += cf.code_lines
-                    self.total_blank_lines += cf.blank_lines
-                    self.total_comment_lines += cf.comment_lines
-                    self.lines_of_language[cf.file_type] += cf.code_lines
-            else:
-                print('{} is not a validate path.'.format(path))
-                exit(1)
+        if isinstance(input_path, list):
+            for path in input_path:
+                if os.path.exists(path):
+                    for cf in CountableIterator().iter(path):
+                        cf.count()
+                        if self.args.verbose:
+                            print(cf, file=output_file)
+                        self.files_of_language[cf.file_type] += 1
+                        self.total_file_lines += cf.file_lines
+                        self.total_code_lines += cf.code_lines
+                        self.total_blank_lines += cf.blank_lines
+                        self.total_comment_lines += cf.comment_lines
+                        self.lines_of_language[cf.file_type] += cf.code_lines
+                else:
+                    print('{} is not a validate path.'.format(path))
+                    exit(1)
+        else:
+            for cf in RemoteCountableIterator().iter(input_path):
+                cf.count()
+                if self.args.verbose:
+                    print(cf, file=output_file)
+                self.files_of_language[cf.file_type] += 1
+                self.total_file_lines += cf.file_lines
+                self.total_code_lines += cf.code_lines
+                self.total_blank_lines += cf.blank_lines
+                self.total_comment_lines += cf.comment_lines
+                self.lines_of_language[cf.file_type] += cf.code_lines
 
         self.print_result_info(output_file)
 

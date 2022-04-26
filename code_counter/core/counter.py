@@ -59,7 +59,7 @@ class CodeCounter:
 
         for path in input_path:
             if os.path.exists(path):
-                for cf in CountableFileIterator(path):
+                for cf in CountableFileIterator().iter(path):
                     cf.count()
                     if self.search_args.verbose:
                         print(cf, file=output_file)
@@ -175,6 +175,6 @@ class CodeCounter:
         proptease.set_size('small')
         plt.setp(l_text2, fontproperties=proptease)
         plt.axis('equal')
-        plt.title("Inner Pie: Code Files, Outer Pie: Code Type")
+        plt.title("Inner Pie: Code Files, Outer Pie: Code Lines")
         plt.legend(list(self.result['code'].keys()), title="Abbreviation", loc='best', bbox_to_anchor=(1.05, 1))
         plt.show()

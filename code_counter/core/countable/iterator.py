@@ -2,7 +2,7 @@
 # -*- coding: utf-8  -*-
 
 import os
-import requests
+from code_counter.tools import request
 from code_counter.core.countable.file import CountableFile, RemoteCountableFile
 from code_counter.conf.config import Config
 from abc import abstractmethod
@@ -41,7 +41,7 @@ class CountableIterator(Iterator):
 
 class RemoteCountableIterator(Iterator):
     def iter(self, url):
-        content = requests.get(url, verify=False).json()
+        content = request.fetch(url, to_json=True)
         if 'message' in content and "Not Found" in content['message']:
             print("Not found, please check it and retry:")
             print("\t", url)

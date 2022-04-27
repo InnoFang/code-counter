@@ -2,7 +2,7 @@
 # -*- coding: utf-8  -*-
 
 import os
-import requests
+from code_counter.tools import request
 from code_counter.conf.config import Config
 
 
@@ -87,4 +87,7 @@ class RemoteCountableFile(CountableFile):
         super().__init__(url_path, path)
 
     def file_content(self):
-        return requests.get(self._url_path).text.split('\n')
+        # speed up counting for the Github repo
+        if 'githubusercontent.com' in self._url_path:
+            self._url_path = self._url_path.replace('githubusercontent.com', 'fastgit.org')
+        return request.fetch(self._url_path).split('\n')

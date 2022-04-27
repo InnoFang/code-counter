@@ -2,6 +2,8 @@
 # -*- coding: utf-8  -*-
 
 import os
+import asyncio
+from collections import deque
 from collections import defaultdict
 from code_counter.conf.config import Config
 from code_counter.core.countable.iterator import CountableIterator, RemoteCountableIterator
@@ -55,49 +57,46 @@ class CodeCounter:
         output_file = open(output_path, 'w') if output_path else None
 
         if self.args.verbose:
-            self.print_searching_verbose_info(output_file)
+            self.__print_searching_verbose_title(output_file)
 
-        if isinstance(input_path, list):
-            for path in input_path:
-                if os.path.exists(path):
-                    for cf in CountableIterator().iter(path):
-                        cf.count()
-                        if self.args.verbose:
-                            print(cf, file=output_file)
-                        self.files_of_language[cf.file_type] += 1
-                        self.total_file_lines += cf.file_lines
-                        self.total_code_lines += cf.code_lines
-                        self.total_blank_lines += cf.blank_lines
-                        self.total_comment_lines += cf.comment_lines
-                        self.lines_of_language[cf.file_type] += cf.code_lines
-                else:
-                    print('{} is not a validate path.'.format(path))
-                    exit(1)
-        else:
-            for cf in RemoteCountableIterator().iter(input_path):
-                cf.count()
-                if self.args.verbose:
-                    print(cf, file=output_file)
-                self.files_of_language[cf.file_type] += 1
-                self.total_file_lines += cf.file_lines
-                self.total_code_lines += cf.code_lines
-                self.total_blank_lines += cf.blank_lines
-                self.total_comment_lines += cf.comment_lines
-                self.lines_of_language[cf.file_type] += cf.code_lines
+        asyncio.run(self.__search(input_path, output_file))
 
-        self.print_result_info(output_file)
+        self.__print_result_info(output_file)
 
         if output_file:
             output_file.close()
 
-    def print_searching_verbose_info(self, output_file=None):
+    async def __search(self, input_path, output_file):
+        tasks = []
+        if isinstance(input_path, list):
+            for path in input_path:
+                if os.path.exists(path):
+                    for cf in CountableIterator().iter(path):
+                        tasks.append(asyncio.create_task(self.__resolve_counting_file(cf, output_file)))
+        else:
+            for cf in RemoteCountableIterator().iter(input_path):
+                tasks.append(asyncio.create_task(self.__resolve_counting_file(cf, output_file)))
+        await asyncio.gather(*tasks)
+
+    async def __resolve_counting_file(self, cf, output_file=None):
+        await cf.count()
+        if self.args.verbose:
+            print(cf, file=output_file)
+        self.files_of_language[cf.file_type] += 1
+        self.total_file_lines += cf.file_lines
+        self.total_code_lines += cf.code_lines
+        self.total_blank_lines += cf.blank_lines
+        self.total_comment_lines += cf.comment_lines
+        self.lines_of_language[cf.file_type] += cf.code_lines
+
+    def __print_searching_verbose_title(self, output_file=None):
         print('\n\t{}'.format("SEARCHING"), file=output_file)
         print("\t{}".format('=' * 20), file=output_file)
         print('\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'
               .format("File Type", "Lines", "Code", "Blank", "Comment", "File Path"), file=output_file)
         print("\t{}".format('-' * 90), file=output_file)
 
-    def print_result_info(self, output_file=None):
+    def __print_result_info(self, output_file=None):
         print('\n\t{}'.format("RESULT"), file=output_file)
         print("\t{}".format('=' * 20), file=output_file)
         print("\t{:<20}:{:>8} ({:>7})"

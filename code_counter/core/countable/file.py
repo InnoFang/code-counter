@@ -38,7 +38,7 @@ class CountableFile:
                         'WARN', self._path))
                 return ''
 
-    def count(self):
+    async def count(self):
         single = {
             'file_lines': 0,
             'code_lines': 0,

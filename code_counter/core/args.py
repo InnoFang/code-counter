@@ -10,13 +10,15 @@ from code_counter import __version__
 def split_args(args):
     return list(args.split(','))
 
+
 def local_path_parse(paths):
     ret = list(paths.split(','))
     for path in ret:
         if not os.path.exists(path):
-            print("Path `{}` doesn't exist, please check it and retry.")
+            print("Path `{}` doesn't exist, please check it and retry.".format(path))
             exit(1)
     return ret
+
 
 def remote_repo_parse(repo):
     # check HTTPS link first

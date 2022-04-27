@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coding:utf8
-
+import os.path
 import re
 import sys
 import argparse
@@ -10,6 +10,13 @@ from code_counter import __version__
 def split_args(args):
     return list(args.split(','))
 
+def local_path_parse(paths):
+    ret = list(paths.split(','))
+    for path in ret:
+        if not os.path.exists(path):
+            print("Path `{}` doesn't exist, please check it and retry.")
+            exit(1)
+    return ret
 
 def remote_repo_parse(repo):
     # check HTTPS link first
@@ -95,7 +102,7 @@ These are common Code-Counter commands used in various situations:
             description="Search and count code lines for the given path(s)",
             usage="cocnt search input_path [-h] [-v] [-g] "
                   "[-o OUTPUT_PATH] [--suffix SUFFIX] [--comment COMMENT] [--ignore IGNORE]")
-        parser.add_argument('input_path', metavar="paths", type=split_args,
+        parser.add_argument('input_path', metavar="paths", type=local_path_parse,
                             help="counting the code lines according to the given path(s)")
         parser.add_argument('-v', '--verbose', dest="verbose", action='store_true',
                             help="show verbose information")

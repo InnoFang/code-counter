@@ -42,10 +42,6 @@ class CountableIterator(Iterator):
 class RemoteCountableIterator(Iterator):
     def iter(self, url):
         content = request.fetch(url, to_json=True)
-        if 'message' in content and "Not Found" in content['message']:
-            print("Not found, please check it and retry:")
-            print("\t", url)
-            exit(1)
 
         for file_json in content:
             file_name = file_json['name']

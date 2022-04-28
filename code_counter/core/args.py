@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# coding:utf8
-import os.path
+# -*- coding: utf-8  -*-
+
 import re
 import sys
 import argparse
@@ -46,7 +46,7 @@ class CodeCounterArgs:
             usage="""cocnt <command> [<args>]
 These are common Code-Counter commands used in various situations:
     search     Search and count code lines for the given path(s)
-    remote     Search and count the remote repository with a given Github or Gitee HTTP link 
+    remote     Search and count the remote repository
     config     Configure Code-Counter
 """)
         parser.add_argument('--version', action='version',
@@ -68,6 +68,16 @@ These are common Code-Counter commands used in various situations:
 
     def has_config_args(self):
         return self.__CONFIG__ in self.__args
+
+    def is_github_repo(self):
+        if not self.has_remote_args():
+            return False
+        return self.__args[self.__REMOTE__].input_path.startswith('https://api.github.com/repos/')
+
+    def is_gitee_repo(self):
+        if not self.has_remote_args():
+            return False
+        return self.__args[self.__REMOTE__].input_path.startswith('https://gitee.com/api/v5/repos/')
 
     def search(self):
         if not self.has_search_args():

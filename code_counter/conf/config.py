@@ -125,7 +125,7 @@ class Config(metaclass=SingletonMeta):
             self.__update()
         else:
             print('\nNo access token set!')
-            print('======================\n')
+        print('======================\n')
 
     def request_gitee_access_token(self):
         if not self.access_tokens.gitee:
@@ -143,7 +143,7 @@ class Config(metaclass=SingletonMeta):
             self.__update()
         else:
             print('\nNo access token set!')
-            print('======================\n')
+        print('======================\n')
 
     def restore(self):
         self.suffix = {"c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h", "hpp", "java", "jl", "js", "kt",

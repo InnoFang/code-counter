@@ -3,7 +3,6 @@
 
 import os
 import asyncio
-from collections import deque
 from collections import defaultdict
 from code_counter.conf.config import Config
 from code_counter.core.countable.iterator import CountableIterator, RemoteCountableIterator

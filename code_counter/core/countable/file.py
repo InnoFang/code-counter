@@ -50,10 +50,6 @@ class CountableFile:
             try:
                 line = raw_line.strip()
             except UnicodeDecodeError:
-                # try:
-                #     # If the code line contain Chinese string, decode it as gbk
-                #     line = raw_line.strip().decode('gbk')
-                # except UnicodeDecodeError:
                 self._format_output.append(
                     '\n\t{:>10}  |  decode line occurs a problem, non-count it, at File "{}", line {}:'.format(
                         'WARN', self._path, line_number))

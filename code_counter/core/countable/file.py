@@ -2,12 +2,18 @@
 # -*- coding: utf-8  -*-
 
 import os
+from code_counter.tools import request
 from code_counter.conf.config import Config
 
 
 class CountableFile:
-    def __init__(self, url_path: str):
+    def __init__(self, url_path, path=''):
+        """
+        :param url_path: use to search
+        :param path: default value is equal to url_path, use to display
+        """
         self._url_path = url_path
+        self._path = path if path else url_path
         self._format_output = []
         self._comment_symbol = tuple(Config().comment)
 
@@ -17,11 +23,22 @@ class CountableFile:
         self.blank_lines = 0
         self.comment_lines = 0
 
-    def __file_content(self):
-        with open(self._url_path, 'rb') as content:
-            return content.readlines()
+    def file_content(self):
+        try:
+            with open(self._url_path, encoding="utf-8") as content:
+                return content.readlines()
+        except UnicodeDecodeError:
+            # If the code line contain Chinese string, decode it as gbk
+            try:
+                with open(self._url_path, encoding="gbk") as content:
+                    return content.readlines()
+            except UnicodeDecodeError:
+                self._format_output.append(
+                    '\n\t{:>10}  |  decode file occurs a problem, non-count it, at File "{}"\n'.format(
+                        'WARN', self._path))
+                return ''
 
-    def count(self):
+    async def count(self):
         single = {
             'file_lines': 0,
             'code_lines': 0,
@@ -29,18 +46,14 @@ class CountableFile:
             'comment_lines': 0,
         }
 
-        for line_number, raw_line in enumerate(self.__file_content()):
+        for line_number, raw_line in enumerate(self.file_content()):
             try:
-                line = raw_line.strip().decode('utf8')
+                line = raw_line.strip()
             except UnicodeDecodeError:
-                try:
-                    # If the code line contain Chinese string, decode it as gbk
-                    line = raw_line.strip().decode('gbk')
-                except UnicodeDecodeError:
-                    self._format_output.append(
-                        '\n\t{:>10}  |  decode line occurs a problem, non-count it, at File "{}", line {}:'.format(
-                            'WARN', self._url_path, line_number))
-                    self._format_output.append('\t{:>10}  |      {}\n'.format(' ', raw_line))
+                self._format_output.append(
+                    '\n\t{:>10}  |  decode line occurs a problem, non-count it, at File "{}", line {}:'.format(
+                        'WARN', self._path, line_number))
+                self._format_output.append('\t{:>10}  |      {}\n'.format(' ', raw_line))
                 continue
 
             single['file_lines'] += 1
@@ -61,5 +74,13 @@ class CountableFile:
             '\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}  |  {}'.format(self.file_type, self.file_lines,
                                                                          self.code_lines, self.blank_lines,
                                                                          self.comment_lines,
-                                                                         self._url_path))
+                                                                         self._path))
         return '\n'.join(self._format_output)
+
+
+class RemoteCountableFile(CountableFile):
+    def __init__(self, url_path, path=''):
+        super().__init__(url_path, path)
+
+    def file_content(self):
+        return request.fetch(self._url_path).split('\n')

@@ -5,10 +5,12 @@ import json
 import pkg_resources
 
 
-class SetEncoder(json.JSONEncoder):
+class ConfigEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, set):
             return list(obj)
+        elif isinstance(obj, Config.AccessTokens):
+            return obj.__dict__
         return json.JSONEncoder.default(self, obj)
 
 
@@ -22,12 +24,20 @@ class SingletonMeta(type):
 
 
 class Config(metaclass=SingletonMeta):
+    class AccessTokens:
+        def __init__(self, github='', gitee=''):
+            self.github = github
+            self.gitee = gitee
+
     def __init__(self):
         conf = self.__load()
 
         self.suffix = set(conf['suffix'])
         self.comment = set(conf['comment'])
         self.ignore = set(conf['ignore'])
+
+        self.access_tokens = self.AccessTokens(github=conf['access_tokens']['github'],
+                                               gitee=conf['access_tokens']['gitee'])
 
     def invoke(self, args):
         if args.restore:
@@ -43,7 +53,7 @@ class Config(metaclass=SingletonMeta):
             self.show()
 
     def show(self):
-        print(json.dumps(self.__dict__, indent=4, cls=SetEncoder))
+        print(json.dumps(self.__dict__, indent=4, cls=ConfigEncoder))
 
     def __confirm(self, tips):
         check = input(tips)
@@ -97,7 +107,43 @@ class Config(metaclass=SingletonMeta):
     def __update(self):
         filename = pkg_resources.resource_filename(__name__, 'config.json')
         with open(filename, 'w') as config:
-            json.dump(self.__dict__, config, indent=4, cls=SetEncoder)
+            json.dump(self.__dict__, config, indent=4, cls=ConfigEncoder)
+
+    def request_github_access_token(self):
+        if not self.access_tokens.github:
+            print("\nThe Github access token is empty. In this case, your usage times will be limited by Github. "
+                  "You can change this situation by setting access token. ")
+        print("\nRequest a Github access token from https://github.com/settings/tokens/new .")
+        print("`code-counter` require access to the public repositories .")
+        print("Choose the `public_repo` in `Select scopes`, and click the `Generate token` to generate a token, "
+              "then copy the access token and paste it here.")
+
+        access_token = input('\nthe Github access token: ')
+        access_token = access_token.strip()
+        if access_token:
+            self.access_tokens.github = access_token
+            self.__update()
+        else:
+            print('\nNo access token set!')
+        print('======================\n')
+
+    def request_gitee_access_token(self):
+        if not self.access_tokens.gitee:
+            print("\nThe Gitee access token is empty. In this case, your usage times will be limited by Gitee. "
+                  "You can change this situation by setting access token. ")
+        print("\nRequest a Gitee access token from https://gitee.com/profile/personal_access_tokens/new .")
+        print("`code-counter` require access to the public repositories.")
+        print("Only need to choose the `projects`, and click the `submit` to generate a token, "
+              "then copy the access token and paste it here.")
+
+        access_token = input('\nthe Gitee access token: ')
+        access_token = access_token.strip()
+        if access_token:
+            self.access_tokens.gitee = access_token
+            self.__update()
+        else:
+            print('\nNo access token set!')
+        print('======================\n')
 
     def restore(self):
         self.suffix = {"c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h", "hpp", "java", "jl", "js", "kt",

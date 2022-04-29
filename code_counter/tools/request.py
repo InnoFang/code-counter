@@ -2,9 +2,11 @@
 # -*- coding: utf-8  -*-
 
 import requests
+from requests.adapters import HTTPAdapter
 from code_counter.conf.config import Config
 
 session = requests.Session()
+session.mount('https://', HTTPAdapter(max_retries=3))
 
 
 def is_gitee(url):

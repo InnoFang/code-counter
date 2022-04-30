@@ -7,6 +7,7 @@ from collections import defaultdict
 from code_counter.conf.config import Config
 from code_counter.core.visualization import GraphVisualization
 from code_counter.core.countable.iterator import CountableIterator, RemoteCountableIterator
+from code_counter.tools.progress import SearchingProgressBar
 
 
 class CodeCounter:
@@ -46,7 +47,11 @@ class CodeCounter:
         if self.args.verbose:
             self.__print_searching_verbose_title(output_file)
 
+        progress_bar = SearchingProgressBar()
+        progress_bar.start()
         asyncio.run(self.__search(input_path, output_file))
+        progress_bar.stop()
+        progress_bar.join()
 
         self.__print_result_info(output_file)
 

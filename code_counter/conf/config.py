@@ -146,11 +146,11 @@ class Config(metaclass=SingletonMeta):
         print('======================\n')
 
     def restore(self):
-        self.suffix = {"c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h", "hpp", "java", "jl", "js", "kt",
-                       "lisp", "lua", "pde", "m", "php", "py", "R", "rb", "rs", "rust", "sh", "scala", "swift", "ts",
+        self.suffix = {"asm", "c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h", "hpp", "java", "jl", "js",
+                       "kt", "lisp", "lua", "pde", "m", "php", "py", "r", "rb", "rs", "sh", "scala", "swift", "ts",
                        "vb"}
-        self.comment = {"#", "//", "/*", "*", "*/", ":", ";", '""""'}
-        self.ignore = {"out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode", "dist"}
+        self.comment = {"#", "//", "/*", "*", ":", ";", '--', ';', '%', "'"}
+        self.ignore = {"venv", ".git", ".idea", "build", "target", "node_modules", ".vscode", "dist"}
 
         if self.__confirm('The default configuration will be restored. (y/n) '):
             self.__update()

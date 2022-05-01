@@ -17,11 +17,11 @@ app_path = os.path.join(lib_path, '__main__.py')
 
 class CodeCounterConfigTest(unittest.TestCase):
     def setUp(self):
-        self.default_suffix = {"c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h",
-                               "hpp", "java", "jl", "js", "kt", "lisp", "lua", "pde", "m", "php",
-                               "py", "R", "rb", "rs", "rust", "sh", "scala", "swift", "ts", "vb"}
-        self.default_comment = {"#", "//", "/*", "*", "*/", ":", ";", '""""'}
-        self.default_ignore = {"out", "venv", ".git", ".idea", "build", "target", "node_modules", ".vscode", "dist"}
+        self.default_suffix = {"asm", "c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h", "hpp", "java", "jl", "js",
+                       "kt", "lisp", "lua", "pde", "m", "php", "py", "r", "rb", "rs", "sh", "scala", "swift", "ts",
+                       "vb"}
+        self.default_comment = {"#", "//", "/*", "*", ":", ";", '--', ';', '%', "'"}
+        self.default_ignore = {"venv", ".git", ".idea", "build", "target", "node_modules", ".vscode", "dist"}
 
     @patch('builtins.input')
     def test_Config_restore(self, mock_input):

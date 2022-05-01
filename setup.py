@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8  -*-
+
 import os
 from setuptools import setup, find_packages
 
@@ -27,7 +30,7 @@ setup(name='code-counter',
       long_description_content_type="text/markdown",
       license='Apache License',
       install_requires=["matplotlib", "numpy"],
-      python_requires='>=3.6',
+      python_requires='>=3.7',
       classifiers=[
           "Development Status :: 5 - Production/Stable",
           'Intended Audience :: Developers',
@@ -35,7 +38,6 @@ setup(name='code-counter',
           'Environment :: Console',
           'Topic :: Utilities',
           'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',

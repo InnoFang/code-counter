@@ -43,13 +43,13 @@ $ cocnt search ./code-counter/
         Totally cost 0.11359143257141113 s.
 ```
 
-更多使用方法请参考[用法](#用法)。 
+更多使用方法请参考<a href="#usage-toc">用法</a>。
 
-- [Code Counter](#code-counter)
-  - [安装](#安装)
-  - [快速开始](#快速开始)
-  - [用法](#用法)
-    - [search](#search)
+<details>
+<summary> <a id="usage-toc">用法</a> </summary>
+
+- [用法](#用法)
+    - [`search`](#search)
       - [直接搜索给定的路径](#直接搜索给定的路径)
       - [同时搜索多个路径](#同时搜索多个路径)
       - [展示详细搜索信息](#展示详细搜索信息)
@@ -57,16 +57,15 @@ $ cocnt search ./code-counter/
       - [搜索时过忽略指定的目录或文件](#搜索时过忽略指定的目录或文件)
       - [指定搜索结果的保存路径](#指定搜索结果的保存路径)
       - [可视化统计结果](#可视化统计结果)
-    - [remote](#remote)
+    - [`remote`](#remote)
       - [搜索并统计远端仓库的代码](#搜索并统计远端仓库的代码)
-    - [config](#config)
+    - [`config`](#config)
       - [显示配置信息](#显示配置信息)
       - [重置配置信息](#重置配置信息)
       - [追加配置信息](#追加配置信息)
       - [删除配置信息](#删除配置信息)
       - [更新访问令牌](#更新访问令牌)
       - [恢复默认配置](#恢复默认配置)
-  - [License](#license)
 
 ## 用法
 
@@ -92,7 +91,7 @@ optional arguments:
 
 `code-counter` 支持 3 个子命令：[`search`](#search), [`remote`](#remote) 和 [`config`](#config)
 
-### search
+### `search`
 
 搜索给定的路径并统计，`cocnt search` 的帮助信息如下。
 
@@ -271,7 +270,7 @@ $ cocnt search ./miscode -g
 
 ![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
-### remote
+### `remote`
 
 搜索并统计远端 `Git` 仓库，`cocnt remote` 的帮助信息如下。
 
@@ -333,7 +332,7 @@ $ cocnt remote https://github.com/InnoFang/code-counter.git
 
 如果想随时更新访问令牌，那么可以参考后面介绍 [`cocnt config`](#config) 时会提及的 [`--github-token` 和 `--gitee-token` 标志](#更新访问令牌)。
 
-### config
+### `config`
 
 对 `code-counter` 进行设置，`cocnt config` 的帮助信息如下。
 
@@ -510,6 +509,8 @@ the old Gitee access token will be updated to `d7ca1490523aac54a38434bf96c76ff8`
 $ cocnt config --restore
 The default configuration will be restored. (y/n) y
 ```
+
+</details>
 
 ## [License](https://github.com/InnoFang/code-counter/blob/master/LICENSE)
 

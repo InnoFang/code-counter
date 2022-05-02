@@ -177,6 +177,11 @@ These are common Code-Counter commands used in various situations:
         parser.add_argument('--ignore-del', dest='ignore_del', type=split_args,
                             help="delete some values of the 'ignore' in the config")
 
+        parser.add_argument('--github-token', dest='github_token',
+                            help="update the Github access token")
+        parser.add_argument('--gitee-token', dest='gitee_token',
+                            help="update the Gitee access token")
+
         parser.add_argument('--restore', dest='restore', action='store_true',
                             help="restore default config")
 

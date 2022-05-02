@@ -43,26 +43,29 @@ $ cocnt search ./code-counter/
         Totally cost 0.11359143257141113 s.
 ```
 
-Please refer to [Usage](#usage) for more usage.
+Please refer to <a href="#usage-toc">Usage</a> for more usage.
+
+<details>
+<summary> <a id="usage-toc">Usage</a> </summary>
 
 * [Usage](#usage)
-+ [search](#search)
-  - [Search the given path directly](#search-the-given-path-directly)
-  - [Search multiple paths at the same time](#search-multiple-paths-at-the-same-time)
-  - [Show verbose searching information](#show-verbose-searching-information)
-  - [Search code files for specific file suffixes](#search-code-files-for-specific-file-suffixes)
-  - [Ignore directories or files during the search](#ignore-directories-or-files-during-the-search)
-+ [Specify the output path to save the search results](#specify-the-output-path-to-save-the-search-results)
-+ [Visualize statistical results](#visualize-statistical-results)
-+ [remote](#remote)
-  - [Search and count the remote repository](#search-and-count-the-remote-repository)
-+ [config](#config)
-  - [List configuration information](#list-configuration-information)
-  - [Reset the value of the configuration variable](#reset-the-value-of-the-configuration-variable)
-  - [Add the value of the configuration variable](#add-the-value-of-the-configuration-variable)
-  - [Delete some configuration variable values](#delete-some-configuration-variable-values)
-  - [Update the access tokens](#update-the-access-tokens)
-+ [Restore default configuration](#restore-default-configuration)
+    + [`search`](#search)
+      - [Search the given path directly](#search-the-given-path-directly)
+      - [Search multiple paths at the same time](#search-multiple-paths-at-the-same-time)
+      - [Show verbose searching information](#show-verbose-searching-information)
+      - [Search code files for specific file suffixes](#search-code-files-for-specific-file-suffixes)
+      - [Ignore directories or files during the search](#ignore-directories-or-files-during-the-search)
+    + [Specify the output path to save the search results](#specify-the-output-path-to-save-the-search-results)
+    + [Visualize statistical results](#visualize-statistical-results)
+    + [`remote`](#remote)
+      - [Search and count the remote repository](#search-and-count-the-remote-repository)
+    + [`config`](#config)
+      - [List configuration information](#list-configuration-information)
+      - [Reset the value of the configuration variable](#reset-the-value-of-the-configuration-variable)
+      - [Add the value of the configuration variable](#add-the-value-of-the-configuration-variable)
+      - [Delete some configuration variable values](#delete-some-configuration-variable-values)
+      - [Update the access tokens](#update-the-access-tokens)
+    + [Restore default configuration](#restore-default-configuration)
 
 ## Usage
 
@@ -88,7 +91,7 @@ optional arguments:
 
 `code-counter ` supports three subcommands: [`search`](#search), [`remote`](#remote), and [`config`](#config)
 
-### search
+### `search`
 
 Search the given path and make statistics. The help information of `cocnt search` is as follows.
 
@@ -270,7 +273,7 @@ In addition to the statistical data displayed on the terminal, the statistical c
 
 ![](https://cdn.jsdelivr.net/gh/innofang/jotter/source/code-counter/result.png)
 
-### remote
+### `remote`
 
 Search and count the remote `Git` repository, the help information of `cocnt remote` is as follows.
 
@@ -334,7 +337,7 @@ $ cocnt remote https://github.com/InnoFang/code-counter.git
 
 If you want to update the access token at any time, then you can refer to the [`--github-token` and `--gitee-token` flags](#update-the-access-tokens) that will be mentioned later in the introduction of [`cocnt config`](#config).
 
-### config
+### `config`
 
 Configure `code-counter`, and the help information of `cocnt config` is as follows.
 
@@ -511,6 +514,7 @@ Use the `--restore` flag to restore the default configuration of `code-counter`.
 $ cocnt config --restore
 The default configuration will be restored. (y/n) y
 ```
+</details>
 
 ## [License](https://github.com/InnoFang/code-counter/blob/master/LICENSE)
 

@@ -55,8 +55,8 @@ Please click `TOC` below for more usage.
       - [Show verbose searching information](#show-verbose-searching-information)
       - [Search code files for specific file suffixes](#search-code-files-for-specific-file-suffixes)
       - [Ignore directories or files during the search](#ignore-directories-or-files-during-the-search)
-    + [Specify the output path to save the search results](#specify-the-output-path-to-save-the-search-results)
-    + [Visualize statistical results](#visualize-statistical-results)
+      - [Specify the output path to save the search results](#specify-the-output-path-to-save-the-search-results)
+      - [Visualize statistical results](#visualize-statistical-results)
     + [`remote`](#remote)
       - [Search and count the remote repository](#search-and-count-the-remote-repository)
     + [`config`](#config)
@@ -65,7 +65,7 @@ Please click `TOC` below for more usage.
       - [Add the value of the configuration variable](#add-the-value-of-the-configuration-variable)
       - [Delete some configuration variable values](#delete-some-configuration-variable-values)
       - [Update the access tokens](#update-the-access-tokens)
-    + [Restore default configuration](#restore-default-configuration)
+      - [Restore default configuration](#restore-default-configuration)
 
 ## Usage
 

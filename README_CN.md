@@ -43,10 +43,10 @@ $ cocnt search ./code-counter/
         Totally cost 0.11359143257141113 s.
 ```
 
-更多使用方法请参考<a href="#usage-toc">用法</a>。
+请点击下面的 `TOC` 以了解更多使用方法。
 
 <details>
-<summary> <a id="usage-toc">用法</a> </summary>
+<summary>TOC</summary>
 
 - [用法](#用法)
     - [`search`](#search)

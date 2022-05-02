@@ -43,10 +43,10 @@ $ cocnt search ./code-counter/
         Totally cost 0.11359143257141113 s.
 ```
 
-Please refer to <a href="#usage-toc">Usage</a> for more usage.
+Please click `TOC` below for more usage.
 
 <details>
-<summary> <a id="usage-toc">Usage</a> </summary>
+<summary>TOC</summary>
 
 * [Usage](#usage)
     + [`search`](#search)

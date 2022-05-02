@@ -43,6 +43,8 @@ class Config(metaclass=SingletonMeta):
         if args.restore:
             self.restore()
         else:
+            if any([args.github_token, args.gitee_token]):
+                self.__update_access_token(args.github_token, args.gitee_token)
             if any([args.suffix_reset, args.comment_reset, args.ignore_reset]):
                 self.__reset_config(args.suffix_reset, args.comment_reset, args.ignore_reset)
             if any([args.suffix_add, args.comment_add, args.ignore_add]):
@@ -58,6 +60,16 @@ class Config(metaclass=SingletonMeta):
     def __confirm(self, tips):
         check = input(tips)
         return check.strip().lower() == 'y'
+
+    def __update_access_token(self, github_access_token, gitee_access_token):
+        if github_access_token:
+            if self.__confirm("the old Github access token will be updated to `{}` . (y/n) ".format(github_access_token)):
+                self.access_tokens.github = github_access_token
+        if gitee_access_token:
+            if self.__confirm("the old Gitee access token will be updated to `{}` . (y/n) ".format(gitee_access_token)):
+                self.access_tokens.gitee = gitee_access_token
+
+        self.__update()
 
     def __reset_config(self, suffix_reset, comment_reset, ignore_reset):
         if suffix_reset:

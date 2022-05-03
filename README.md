@@ -17,6 +17,7 @@ Also, you can install it from the source code:
 ```shell
 git clone https://github.com/innofang/code-counter.git
 cd code-counter/
+pip install -r requirements.txt
 python setup.py install
 ```
 
@@ -43,10 +44,10 @@ $ cocnt search ./code-counter/
         Totally cost 0.11359143257141113 s.
 ```
 
-Please click `TOC` below for more usage.
+The following is the detailed usage instructions. Click to expand the details:
 
 <details>
-<summary>TOC</summary>
+<summary><b>The detail usage instructions</b></summary>
 
 * [Usage](#usage)
     + [`search`](#search)

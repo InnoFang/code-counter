@@ -17,6 +17,7 @@ pip install code-counter
 ```shell
 git clone https://github.com/innofang/code-counter.git
 cd code-counter/
+pip install -r requirements.txt
 python setup.py install
 ```
 
@@ -43,10 +44,10 @@ $ cocnt search ./code-counter/
         Totally cost 0.11359143257141113 s.
 ```
 
-请点击下面的 `TOC` 以了解更多使用方法。
+以下是详细的使用说明。单击展开详细信息：
 
 <details>
-<summary>TOC</summary>
+<summary><b>详细的使用说明</b></summary>
 
 - [用法](#用法)
     - [`search`](#search)

@@ -1,4 +1,5 @@
-.PHONY:
+.PHONY: test setup check build upload install uninstall reinstall clean
+
 test:
 	python -m unittest discover -s tests -p "test_*.py"
 

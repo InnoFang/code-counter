@@ -47,10 +47,9 @@ class CodeCounter:
         if self.args.verbose:
             self.__print_searching_verbose_title(output_file)
 
-        progress_bar = SearchingProgressBar()
-        progress_bar.start()
+        SearchingProgressBar().start()
         asyncio.run(self.__search(input_path, output_file))
-        progress_bar.stop()
+        SearchingProgressBar().stop()
 
         self.__print_result_info(output_file)
 

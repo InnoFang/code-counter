@@ -51,7 +51,6 @@ class CodeCounter:
         progress_bar.start()
         asyncio.run(self.__search(input_path, output_file))
         progress_bar.stop()
-        progress_bar.join()
 
         self.__print_result_info(output_file)
 

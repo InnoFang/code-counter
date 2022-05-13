@@ -5,6 +5,8 @@ import threading
 import sys
 import time
 
+from code_counter.tools import singleton
+
 
 class SearchingProgressBar(threading.Thread):
     __LEN__ = 10
@@ -16,6 +18,7 @@ class SearchingProgressBar(threading.Thread):
 
     def stop(self):
         self._stop_event.set()
+        self.join()
 
     def stopped(self):
         return self._stop_event.is_set()

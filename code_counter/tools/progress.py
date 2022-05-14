@@ -43,23 +43,24 @@ class SearchingProgressBar(threading.Thread, metaclass=singleton.SingletonMeta):
         sys.stdout.flush()
 
     def run(self):
-        self._stop_event.clear()
         while True:
+            if self.is_stopped():
+                return
             if self.is_paused():
-                self.__clear()
                 continue
             progress = "searching "
             for i in range(self.__LEN__):
-                if self.is_stopped():
+                if self.is_stopped() or self.is_paused():
                     self.__clear()
-                    return
+                    break
                 time.sleep(0.1)
                 sys.stdout.write("\r")
                 progress += " ."
                 sys.stdout.write(progress)
                 sys.stdout.flush()
                 sys.stdout.write("\r")
-            sys.stdout.write("\r")
-            sys.stdout.write("searching " + "  " * self.__LEN__)
-            sys.stdout.write("\r")
-            sys.stdout.flush()
+            if not self.is_stopped() and not self.is_paused():
+                sys.stdout.write("\r")
+                sys.stdout.write("searching " + "  " * self.__LEN__)
+                sys.stdout.write("\r")
+                sys.stdout.flush()

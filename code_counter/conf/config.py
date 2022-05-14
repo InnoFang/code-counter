@@ -3,6 +3,7 @@
 
 import json
 import pkg_resources
+from code_counter.tools import singleton
 
 
 class ConfigEncoder(json.JSONEncoder):
@@ -14,16 +15,7 @@ class ConfigEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-class SingletonMeta(type):
-    _instance = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instance:
-            cls._instance[cls] = super(SingletonMeta, cls).__call__(*args, **kwargs)
-        return cls._instance[cls]
-
-
-class Config(metaclass=SingletonMeta):
+class Config(metaclass=singleton.SingletonMeta):
     class AccessTokens:
         def __init__(self, github='', gitee=''):
             self.github = github
@@ -63,7 +55,8 @@ class Config(metaclass=SingletonMeta):
 
     def __update_access_token(self, github_access_token, gitee_access_token):
         if github_access_token:
-            if self.__confirm("the old Github access token will be updated to `{}` . (y/n) ".format(github_access_token)):
+            if self.__confirm(
+                    "the old Github access token will be updated to `{}` . (y/n) ".format(github_access_token)):
                 self.access_tokens.github = github_access_token
         if gitee_access_token:
             if self.__confirm("the old Gitee access token will be updated to `{}` . (y/n) ".format(gitee_access_token)):
@@ -130,14 +123,16 @@ class Config(metaclass=SingletonMeta):
         print("Choose the `public_repo` in `Select scopes`, and click the `Generate token` to generate a token, "
               "then copy the access token and paste it here.")
 
-        access_token = input('\nthe Github access token: ')
+        access_token = input('\nthe Github access token: \n')
         access_token = access_token.strip()
         if access_token:
             self.access_tokens.github = access_token
             self.__update()
-        else:
-            print('\nNo access token set!')
+            print('======================\n')
+            return True
+        print('\nNo access token obtained!')
         print('======================\n')
+        return False
 
     def request_gitee_access_token(self):
         if not self.access_tokens.gitee:
@@ -148,14 +143,16 @@ class Config(metaclass=SingletonMeta):
         print("Only need to choose the `projects`, and click the `submit` to generate a token, "
               "then copy the access token and paste it here.")
 
-        access_token = input('\nthe Gitee access token: ')
+        access_token = input('\nthe Gitee access token: \n')
         access_token = access_token.strip()
         if access_token:
             self.access_tokens.gitee = access_token
             self.__update()
-        else:
-            print('\nNo access token set!')
+            print('======================\n')
+            return True
+        print('\nNo access token obtained!')
         print('======================\n')
+        return False
 
     def restore(self):
         self.suffix = {"asm", "c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h", "hpp", "java", "jl", "js",

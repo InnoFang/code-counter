@@ -5,19 +5,35 @@ import threading
 import sys
 import time
 
+from code_counter.tools import singleton
 
-class SearchingProgressBar(threading.Thread):
+
+class SearchingProgressBar(threading.Thread, metaclass=singleton.SingletonMeta):
     __LEN__ = 10
 
     def __init__(self):
         super(SearchingProgressBar, self).__init__()
         self.daemon = True
         self._stop_event = threading.Event()
+        self._pause_event = threading.Event()
 
     def stop(self):
-        self._stop_event.set()
+        if not self.is_stopped():
+            self._stop_event.set()
+            self.join()
 
-    def stopped(self):
+    def pause(self):
+        if not self.is_stopped():
+            self._pause_event.set()
+
+    def resume(self):
+        if self.is_paused():
+            self._pause_event.clear()
+
+    def is_paused(self):
+        return self._pause_event.is_set()
+
+    def is_stopped(self):
         return self._stop_event.is_set()
 
     def __clear(self):
@@ -28,18 +44,23 @@ class SearchingProgressBar(threading.Thread):
 
     def run(self):
         while True:
+            if self.is_stopped():
+                return
+            if self.is_paused():
+                continue
             progress = "searching "
             for i in range(self.__LEN__):
-                if self.stopped():
+                if self.is_stopped() or self.is_paused():
                     self.__clear()
-                    return
+                    break
                 time.sleep(0.1)
                 sys.stdout.write("\r")
                 progress += " ."
                 sys.stdout.write(progress)
                 sys.stdout.flush()
                 sys.stdout.write("\r")
-            sys.stdout.write("\r")
-            sys.stdout.write("searching " + "  " * self.__LEN__)
-            sys.stdout.write("\r")
-            sys.stdout.flush()
+            if not self.is_stopped() and not self.is_paused():
+                sys.stdout.write("\r")
+                sys.stdout.write("searching " + "  " * self.__LEN__)
+                sys.stdout.write("\r")
+                sys.stdout.flush()

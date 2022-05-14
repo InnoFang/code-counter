@@ -128,9 +128,11 @@ class Config(metaclass=singleton.SingletonMeta):
         if access_token:
             self.access_tokens.github = access_token
             self.__update()
-        else:
-            print('\nNo access token set!')
+            print('======================\n')
+            return True
+        print('\nNo access token obtained!')
         print('======================\n')
+        return False
 
     def request_gitee_access_token(self):
         if not self.access_tokens.gitee:
@@ -146,9 +148,11 @@ class Config(metaclass=singleton.SingletonMeta):
         if access_token:
             self.access_tokens.gitee = access_token
             self.__update()
-        else:
-            print('\nNo access token set!')
+            print('======================\n')
+            return True
+        print('\nNo access token obtained!')
         print('======================\n')
+        return False
 
     def restore(self):
         self.suffix = {"asm", "c", "cc", "clj", "cpp", "cs", "cu", "cuh", "dart", "go", "h", "hpp", "java", "jl", "js",

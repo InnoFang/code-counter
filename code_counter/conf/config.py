@@ -123,7 +123,7 @@ class Config(metaclass=singleton.SingletonMeta):
         print("Choose the `public_repo` in `Select scopes`, and click the `Generate token` to generate a token, "
               "then copy the access token and paste it here.")
 
-        access_token = input('\nthe Github access token: ')
+        access_token = input('\nthe Github access token: \n')
         access_token = access_token.strip()
         if access_token:
             self.access_tokens.github = access_token
@@ -141,7 +141,7 @@ class Config(metaclass=singleton.SingletonMeta):
         print("Only need to choose the `projects`, and click the `submit` to generate a token, "
               "then copy the access token and paste it here.")
 
-        access_token = input('\nthe Gitee access token: ')
+        access_token = input('\nthe Gitee access token: \n')
         access_token = access_token.strip()
         if access_token:
             self.access_tokens.gitee = access_token

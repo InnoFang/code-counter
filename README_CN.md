@@ -1,5 +1,7 @@
 # Code Counter
 
+[![](https://img.shields.io/pypi/v/code-counter)](https://pypi.org/project/code-counter/) ![](https://img.shields.io/pypi/dm/code-counter)
+
 一个可以帮助你轻松进行代码行数统计的命令行小工具。
 
 [English](./README.md) | 中文

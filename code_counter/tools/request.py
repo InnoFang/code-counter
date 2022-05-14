@@ -11,28 +11,34 @@ session = requests.Session()
 session.mount('https://', HTTPAdapter(max_retries=3))
 
 
-def is_gitee(url):
-    return url.lower().startswith('https://gitee.com')
+def check_if_is_github(url):
+    return url.lower().startswith('https://github.com')
 
 
 def get_access_token_for(url):
-    if is_gitee(url):
-        return Config().access_tokens.gitee
-    return Config().access_tokens.github
-
-
-lock = threading.Lock()
+    if check_if_is_github(url):
+        return Config().access_tokens.github
+    return Config().access_tokens.gitee
 
 
 def fetch(url, to_json=False):
+    is_github = check_if_is_github(url)
+    content, status_code = fetch_content(url, is_github)
+    if status_code != 200:
+        should_retry = handle_error_status_code(status_code, is_github)
+        if not should_retry:
+            print("fetch `{}` failed, error code {}.".format(url, status_code))
+            exit(1)
+        # re-try to fetch content
+        content, _ = fetch_content(url, is_github)
+    if to_json:
+        return content.json()
+    return content.text
+
+
+def fetch_content(url, is_github):
     access_token = get_access_token_for(url)
-    if is_gitee(url):
-        param = {'access_token': access_token}
-        if access_token:
-            res = session.get(url=url, params=param, timeout=10)
-        else:
-            res = session.get(url=url, timeout=10)
-    else:
+    if is_github:
         headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/vnd.github.v3.raw',
@@ -42,38 +48,43 @@ def fetch(url, to_json=False):
             res = session.get(url=url, headers=headers, timeout=10)
         else:
             res = session.get(url=url, timeout=10)
-
-    # TODO: callback should be used to optimize the handling of status codes
-    if res.status_code == 200:
-        if to_json:
-            return res.json()
+    else:
+        param = {'access_token': access_token}
+        if access_token:
+            res = session.get(url=url, params=param, timeout=10)
         else:
-            return res.text
-    elif res.status_code in [401, 403]:
+            res = session.get(url=url, timeout=10)
+    return res, res.status_code
+
+
+lock = threading.Lock()
+
+
+def handle_error_status_code(status_code, is_github):
+    if status_code in [401, 403]:
         lock.acquire()
         if SearchingProgressBar().is_alive():
             SearchingProgressBar().pause()
-        if res.status_code == 401:
+        if status_code == 401:
             print("Access token doesn't exist. Please re-enter or empty the access token.")
-        elif res.status_code == 403:
+        elif status_code == 403:
             print('"API rate limit exceeded. Please update access token.')
 
-        if is_gitee(url):
-            Config().request_gitee_access_token()
+        if is_github:
+            changed = Config().request_github_access_token()
         else:
-            Config().request_github_access_token()
-        if access_token == get_access_token_for(url):
+            changed = Config().request_gitee_access_token()
+        if not changed:
             print("\nAccess token has not changed")
-            lock.release()
             if SearchingProgressBar().is_alive() or SearchingProgressBar().is_paused():
                 SearchingProgressBar().stop()
-            exit(1)
+            lock.release()
+            return False
         if SearchingProgressBar().is_paused():
             SearchingProgressBar().resume()
         lock.release()
-    elif res.status_code == 404:
+        return True
+    elif status_code == 404:
         print("Not Found Project.")
-        exit(1)
-    else:
-        print("fetch `{}` failed, error code {}.", url, res.status_code)
-        exit(1)
+        return False
+    return False

@@ -1,5 +1,7 @@
 # Code Counter
 
+[![](https://img.shields.io/pypi/v/code-counter)](https://pypi.org/project/code-counter/) ![](https://img.shields.io/pypi/dm/code-counter)
+
 A command-line interface (CLI) utility that can help you easily count code lines and display detailed results.
 
 English | [中文](./README_CN.md)

@@ -14,13 +14,10 @@
 pip install code-counter
 ```
 
-也可以下载源码后再安装。
+如果你想使用最新的代码，你可以使用 `pip install` 从 GitHub 上下载。
 
 ```shell
-git clone https://github.com/innofang/code-counter.git
-cd code-counter/
-pip install -r requirements.txt
-python setup.py install
+pip install git+https://github.com/innofang/code-counter.git
 ```
 
 ## 快速开始

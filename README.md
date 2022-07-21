@@ -16,11 +16,10 @@ pip install code-counter
 
 Also, you can install it from the source code: 
 
+If you want the latest code to run,  you can `pip install` directly from GitHub:
+
 ```shell
-git clone https://github.com/innofang/code-counter.git
-cd code-counter/
-pip install -r requirements.txt
-python setup.py install
+pip install git+https://github.com/innofang/code-counter.git
 ```
 
 ## Quick Start

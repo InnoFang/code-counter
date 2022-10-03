@@ -115,11 +115,15 @@ class CodeCounter:
               .format("Type", "Files", 'Ratio', 'Lines', 'Ratio'), file=output_file)
         print("\t{}".format('-' * 65), file=output_file)
 
-        for tp, file_count in self.files_of_language.items():
-            count_count = self.lines_of_language[tp]
+        result_list = [(tp, file_count, self.lines_of_language[tp])
+                       for tp, file_count in self.files_of_language.items()]
+
+        result_list.sort(key=lambda x: (-x[2], -x[1]))  # priority: code_cont > file_count, descend
+
+        for tp, file_count, code_count in result_list:
             print("\t{:>10}  |{:>10}  |{:>10}  |{:>10}  |{:>10}".format(
                 tp, file_count, '%.2f%%' % (file_count / total_files * 100),
-                count_count, '%.2f%%' % (count_count / self.total_code_lines * 100)), file=output_file)
+                code_count, '%.2f%%' % (code_count / self.total_code_lines * 100)), file=output_file)
 
     def visualize(self):
         gv = GraphVisualization(

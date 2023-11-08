@@ -28,7 +28,7 @@ def main():
     else:
         raise Exception('wrong command')
 
-    code_counter.setArgs(args)
+    code_counter.set_args(args)
 
     time_start = time.time()
     code_counter.search()

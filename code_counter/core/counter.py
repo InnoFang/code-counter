@@ -6,7 +6,7 @@ import asyncio
 from collections import defaultdict
 from code_counter.conf.config import Config
 from code_counter.core.visualization import GraphVisualization
-from code_counter.core.countable.iterator import CountableIterator, RemoteCountableIterator
+from code_counter.core.countable.basecountableiterator import LocalFileIterator, RemoteFileIterator
 from code_counter.tools.progress import SearchingProgressBar
 
 
@@ -61,10 +61,10 @@ class CodeCounter:
         if isinstance(input_path, list):
             for path in input_path:
                 if os.path.exists(path):
-                    for cf in CountableIterator().iter(path):
+                    for cf in LocalFileIterator(path):
                         tasks.append(asyncio.create_task(self.__resolve_counting_file(cf, output_file)))
         else:
-            for cf in RemoteCountableIterator().iter(input_path):
+            for cf in RemoteFileIterator(input_path):
                 tasks.append(asyncio.create_task(self.__resolve_counting_file(cf, output_file)))
         await asyncio.gather(*tasks)
 

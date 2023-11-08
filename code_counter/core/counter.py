@@ -8,7 +8,7 @@ from collections import defaultdict
 from typing import List, Optional, Dict
 
 from code_counter.conf.config import Config
-from code_counter.core.visualization import GraphVisualization
+from code_counter.core.vis import GraphVisualization
 from code_counter.core.countable.file import CountableFile
 from code_counter.core.countable.iterators import LocalFileIterator, RemoteFileIterator
 from code_counter.tools.progress import SearchingProgressBar

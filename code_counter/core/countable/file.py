@@ -11,9 +11,30 @@ class CountableFile:
     """
     Class for counting lines in a file.
 
-    Args:
-        file_path (str): The file path to count.
-        display_path (str, optional): The display path (default is the same as url_path).
+    Parameters
+    ----------
+    file_path: str
+        The file path to count.
+
+    display_path: str, optional
+        The display path (default is the same as file_path).
+
+    Attributes
+    ----------
+    file_type: str
+        The file suffix used for counting.
+
+    file_lines: int
+        The total number of lines in the file.
+
+    code_lines: int
+        The number of lines containing code in the file.
+
+    blank_lines: int
+        The number of blank lines in the file.
+
+    comment_lines: int
+        The number of lines containing comments in the file.
     """
 
     def __init__(self, file_path: str, display_path: Optional[str] = ''):
@@ -24,10 +45,10 @@ class CountableFile:
         self._content: List[str] = []
 
         self.file_type: str = os.path.splitext(file_path)[1][1:]
-        self.file_lines = 0
-        self.code_lines = 0
-        self.blank_lines = 0
-        self.comment_lines = 0
+        self.file_lines: int = 0
+        self.code_lines: int = 0
+        self.blank_lines: int = 0
+        self.comment_lines: int = 0
 
     def file_content(self) -> List[str]:
         """

@@ -16,8 +16,10 @@ class BaseCountableIterator(ABC):
     This class provides a common interface and functionality for iterating and counting files.
     Subclasses should implement the _generate_files method for specific file sources.
 
-    Args:
-        path (str): The path or URL to the source of files
+    Parameters
+    ----------
+    path: str
+        The path or URL to the source of files
 
     """
 
@@ -57,9 +59,14 @@ class LocalFileIterator(BaseCountableIterator):
 
     This iterator is used to count local files and supports recursive directory traversal.
 
-    Args:
-        path (str): The local directory path to start the iteration.
+    Parameters
+    ----------
+    path :str
+        The local directory path to start the iteration.
     """
+
+    def __init__(self, path: str):
+        super().__init__(path)
 
     def _generate_files(self) -> Iterator[CountableFile]:
         for root, dirs, files in os.walk(self._path):
@@ -93,14 +100,19 @@ class LocalFileIterator(BaseCountableIterator):
 
 class RemoteFileIterator(BaseCountableIterator):
     """
-        Iterator for counting remote files.
+    Iterator for counting remote files.
 
-        This iterator is used to count files from a remote source, such as a GitHub or Gitee repository.
-        It supports remote file retrieval from a project hosted on these platforms.
+    This iterator is used to count files from a remote source, such as a GitHub or Gitee repository.
+    It supports remote file retrieval from a project hosted on these platforms.
 
-        Args:
-            path (str): The URL of the remote source (GitHub or Gitee repository) to start the iteration.
+    Parameters
+    ----------
+    path : str
+        The URL of the remote source (GitHub or Gitee repository) to start the iteration.
     """
+
+    def __init__(self, path: str):
+        super().__init__(path)
 
     def _generate_files(self) -> Iterator[CountableFile]:
         content = request.fetch(self._path, to_json=True)

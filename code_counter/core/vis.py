@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8  -*-
 
+import os
+import time
+import datetime
 from collections import defaultdict
-from typing import DefaultDict, List
+from typing import DefaultDict, Optional
 
 import numpy as np
 from matplotlib import cm
@@ -60,7 +63,7 @@ class GraphVisualization:
             self.code_type_count[tp] = count_count
             self.file_type_count[tp] = file_count
 
-    def _configure_plot(self, title: str, legend_title: str, legend_location: str) -> None:
+    def __configure_plot(self, title: str, legend_title: str, legend_location: str) -> None:
         """
         Configure common plot settings.
 
@@ -78,7 +81,7 @@ class GraphVisualization:
         plt.title(title)
         plt.legend(title=legend_title, loc=legend_location, bbox_to_anchor=(1.05, 1))
 
-    def _set_font_properties(self, prop: fm.FontProperties, size: str) -> None:
+    def __set_font_properties(self, prop: fm.FontProperties, size: str) -> None:
         """
         Set font properties.
 
@@ -91,6 +94,20 @@ class GraphVisualization:
             Font size.
         """
         prop.set_size(size)
+
+    def __save_plot(self, filename: Optional[str]) -> None:
+        """
+        Save the current plot to a file.
+
+        Parameters
+        ----------
+        filename: str
+            The name of the file to save.
+        """
+        if not filename:
+            filename = f"CodeCounter_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.png"
+        plt.savefig(filename, bbox_inches='tight')
+        print(f"Plot saved to: {os.path.abspath(filename)}")
 
     def visualize_total_statistics(self) -> None:
         """
@@ -105,11 +122,11 @@ class GraphVisualization:
 
         patches, l_text, p_text = plt.pie(total_values, labels=total_keys, autopct='%2.1f%%',
                                           explode=explode, startangle=90)
-        self._set_font_properties(fm.FontProperties(), GraphVisualization.BASE_FONT_SIZE)
+        self.__set_font_properties(fm.FontProperties(), GraphVisualization.BASE_FONT_SIZE)
         plt.setp(l_text, fontproperties=fm.FontProperties(size=GraphVisualization.BASE_FONT_SIZE))
         plt.setp(p_text, fontproperties=fm.FontProperties(size=GraphVisualization.BASE_FONT_SIZE))
         plt.axis('equal')
-        self._configure_plot("Total Statistics", "Index", 'best')
+        self.__configure_plot("Total Statistics", "Index", 'best')
 
     def visualize_code_files_and_lines(self) -> None:
         """
@@ -130,16 +147,16 @@ class GraphVisualization:
                                              radius=1 - size,
                                              wedgeprops=wedge_props, colors=colors, pctdistance=0.8, labeldistance=0.4)
 
-        self._set_font_properties(fm.FontProperties(), GraphVisualization.BASE_FONT_SIZE)
-        self._set_font_properties(fm.FontProperties(), 'large')
+        self.__set_font_properties(fm.FontProperties(), GraphVisualization.BASE_FONT_SIZE)
+        self.__set_font_properties(fm.FontProperties(), 'large')
         plt.setp(p_text1, fontproperties=fm.FontProperties(size=GraphVisualization.BASE_FONT_SIZE))
         plt.setp(p_text2, fontproperties=fm.FontProperties(size='medium'))
         plt.setp(l_text1, fontproperties=fm.FontProperties(size='x-large'))
         plt.setp(l_text2, fontproperties=fm.FontProperties(size='small'))
         plt.axis('equal')
-        self._configure_plot("Inner Pie: Code Files, Outer Pie: Code Lines", "Abbreviation", 'best')
+        self.__configure_plot("Inner Pie: Code Files, Outer Pie: Code Lines", "Abbreviation", 'best')
 
-    def visualize(self):
+    def visualize(self, filename: Optional[str] = None):
         """
         Visualize statistical results using subplots.
         """
@@ -147,7 +164,8 @@ class GraphVisualization:
             plt.figure('Visualization of Statistical Results', figsize=(15, 6))
             self.visualize_total_statistics()
             self.visualize_code_files_and_lines()
-            plt.show()
+            # plt.show()
+            self.__save_plot(filename)
 
     @PendingDeprecationWarning
     def visualize_old(self):
